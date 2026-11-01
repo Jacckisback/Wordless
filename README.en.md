@@ -1,7 +1,7 @@
 <p align="center"><a href="README.md">Français</a> · <b>English</b></p>
 
 <p align="center">
-  <img src=".github/assets/hero-en.svg" alt="Wordless, the lightweight CMS that outperforms WordPress: 58 times lighter, 2 requests per page, 0.5 ms cached server time, 1.05 s mobile LCP" width="100%">
+  <img src=".github/assets/hero-en.svg" alt="Wordless, the lightweight CMS that outperforms WordPress: 56 times lighter, 2 requests per page, 0.5 ms cached server time, 1.05 s mobile LCP" width="100%">
 </p>
 
 <p align="center">
@@ -24,7 +24,7 @@
 
 # Wordless: the lightweight, fast and secure CMS, a WordPress alternative
 
-**Wordless is a PHP CMS that does what WordPress does, plus what WordPress hands off to a dozen plugins, in a package 58 times lighter.** A visual page builder, built-in SEO and GEO (visibility in Google *and* in ChatGPT, Claude, Perplexity), an AI writing assistant, an MCP connector to run the site from Claude or ChatGPT, hardened security and a complete dashboard: everything is included and configured from the first minute.
+**Wordless is a PHP CMS that does what WordPress does, plus what WordPress hands off to a dozen plugins, in a package 56 times lighter.** A visual page builder, built-in SEO and GEO (visibility in Google *and* in ChatGPT, Claude, Perplexity), an AI writing assistant, an MCP connector to run the site from Claude or ChatGPT, hardened security and a complete dashboard: everything is included and configured from the first minute.
 
 Moving from WordPress takes **a few clicks**, with **the same URLs**: your pages keep their rankings and your links keep working.
 
@@ -60,7 +60,7 @@ Moving from WordPress takes **a few clicks**, with **the same URLs**: your pages
 
 | Strength | In practice |
 |---|---|
-| **58× lighter** | 1.9 MB and 170 files, vs 110 MB and 3,782 files for WordPress 7.1.4. |
+| **56× lighter** | 1.95 MB and 172 files, vs 110 MB and 3,782 files for WordPress 7.1.4. |
 | **6× less data per page** | 42 KB and 2 requests for the demo home page, vs 252 KB and 7 requests with WordPress. |
 | **0.5 ms server response** | Pages are served from a built-in cache, without booting the application or touching the database. |
 | **2× faster rendering** | 1.05 s mobile LCP vs 2.10 s (Lighthouse 13.6), Lighthouse SEO 100 vs 92. |
@@ -81,14 +81,14 @@ Moving from WordPress takes **a few clicks**, with **the same URLs**: your pages
 
 ### The numbers, on the same website
 
-The “Atelier Lumière” site (7 pages, 11 posts, 5 images, menus, comments) was built on WordPress 7.1.4 with its default theme, then migrated to Wordless with the built-in tool. Same content, same images, same URLs.
+The “Atelier Lumière” site (7 pages, 11 posts, 5 images, menus, comments) was built on WordPress 7.1.4 with its default theme, then migrated to Wordless with the built-in tool. Same content, same images, same URLs. Package size is that of version 1.0.1; performance was measured with 1.0.0, which serves the same pages (1.0.1 only adds the “Key takeaways” summary to the structured data).
 
 | Metric | WordPress 7.1.4 | Wordless 1.0 | Difference |
 |---|---:|---:|---:|
-| Download size | 37.2 MB | 606 KB | 61× smaller |
-| Installed size | 110.1 MB | 1.9 MB | 58× lighter |
-| Number of files | 3,782 | 170 | 22× fewer |
-| Lines of PHP | 635,602 | 28,018 | 23× fewer |
+| Download size | 37.2 MB | 620 KB | 60× smaller |
+| Installed size | 110.1 MB | 1.95 MB | 56× lighter |
+| Number of files | 3,782 | 172 | 22× fewer |
+| Lines of PHP | 635,602 | 28,529 | 22× fewer |
 | Home page weight | 252 KB | 42 KB | 6× lighter |
 | Requests to render the home page | 7 | 2 | 3.5× fewer |
 | JavaScript on the home page | 67 KB (3 files) | 0 | none |

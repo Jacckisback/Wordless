@@ -1,7 +1,7 @@
 <p align="center"><b>Français</b> · <a href="README.en.md">English</a></p>
 
 <p align="center">
-  <img src=".github/assets/hero-fr.svg" alt="Wordless, le CMS léger qui fait mieux que WordPress : 58 fois plus léger, 2 requêtes par page, 0,5 ms de temps serveur en cache, LCP de 1,05 s sur mobile" width="100%">
+  <img src=".github/assets/hero-fr.svg" alt="Wordless, le CMS léger qui fait mieux que WordPress : 56 fois plus léger, 2 requêtes par page, 0,5 ms de temps serveur en cache, LCP de 1,05 s sur mobile" width="100%">
 </p>
 
 <p align="center">
@@ -24,7 +24,7 @@
 
 # Wordless : le CMS léger, rapide et sécurisé, alternative à WordPress
 
-**Wordless est un CMS en PHP qui fait ce que fait WordPress, et ce que WordPress confie à une dizaine d'extensions, dans un logiciel 58 fois plus léger.** Page builder visuel, SEO et GEO natifs (visibilité dans Google *et* dans ChatGPT, Claude, Perplexity), assistant IA, connecteur MCP pour piloter le site depuis Claude ou ChatGPT, sécurité renforcée et tableau de bord complet : tout est inclus et réglé dès l'installation.
+**Wordless est un CMS en PHP qui fait ce que fait WordPress, et ce que WordPress confie à une dizaine d'extensions, dans un logiciel 56 fois plus léger.** Page builder visuel, SEO et GEO natifs (visibilité dans Google *et* dans ChatGPT, Claude, Perplexity), assistant IA, connecteur MCP pour piloter le site depuis Claude ou ChatGPT, sécurité renforcée et tableau de bord complet : tout est inclus et réglé dès l'installation.
 
 Le passage depuis WordPress se fait **en quelques clics**, avec **les mêmes adresses** : vos pages gardent leur référencement, vos liens restent valides.
 
@@ -60,7 +60,7 @@ Le passage depuis WordPress se fait **en quelques clics**, avec **les mêmes adr
 
 | Atout | En pratique |
 |---|---|
-| **58× plus léger** | 1,9 Mo et 170 fichiers, contre 110 Mo et 3 782 fichiers pour WordPress 7.1.4. |
+| **56× plus léger** | 1,95 Mo et 172 fichiers, contre 110 Mo et 3 782 fichiers pour WordPress 7.1.4. |
 | **6× moins de données par page** | 42 Ko et 2 requêtes pour l'accueil du site de démonstration, contre 252 Ko et 7 requêtes avec WordPress. |
 | **Réponse serveur en 0,5 ms** | Les pages sont servies depuis un cache intégré, sans démarrer l'application ni interroger la base. |
 | **Affichage 2× plus rapide** | LCP mobile de 1,05 s contre 2,10 s (Lighthouse 13.6), Lighthouse SEO 100 contre 92. |
@@ -81,14 +81,14 @@ Le passage depuis WordPress se fait **en quelques clics**, avec **les mêmes adr
 
 ### Les chiffres, sur le même site
 
-Le site « Atelier Lumière » (7 pages, 11 articles, 5 images, menus, commentaires) a été construit sous WordPress 7.1.4 avec son thème par défaut, puis migré vers Wordless avec l'outil intégré. Mêmes contenus, mêmes images, mêmes adresses.
+Le site « Atelier Lumière » (7 pages, 11 articles, 5 images, menus, commentaires) a été construit sous WordPress 7.1.4 avec son thème par défaut, puis migré vers Wordless avec l'outil intégré. Mêmes contenus, mêmes images, mêmes adresses. Le poids du logiciel est celui de la version 1.0.1 ; les mesures de performance ont été faites avec la 1.0.0, qui produit les mêmes pages (la 1.0.1 ajoute seulement le résumé « L'essentiel » aux données structurées).
 
 | Mesure | WordPress 7.1.4 | Wordless 1.0 | Écart |
 |---|---:|---:|---:|
-| Archive à télécharger | 37,2 Mo | 606 Ko | 61× plus petite |
-| Taille installée | 110,1 Mo | 1,9 Mo | 58× plus léger |
-| Nombre de fichiers | 3 782 | 170 | 22× moins |
-| Lignes de code PHP | 635 602 | 28 018 | 23× moins |
+| Archive à télécharger | 37,2 Mo | 620 Ko | 60× plus petite |
+| Taille installée | 110,1 Mo | 1,95 Mo | 56× plus léger |
+| Nombre de fichiers | 3 782 | 172 | 22× moins |
+| Lignes de code PHP | 635 602 | 28 529 | 22× moins |
 | Poids de la page d'accueil | 252 Ko | 42 Ko | 6× plus léger |
 | Requêtes pour afficher l'accueil | 7 | 2 | 3,5× moins |
 | JavaScript chargé sur l'accueil | 67 Ko (3 fichiers) | 0 | aucun |
