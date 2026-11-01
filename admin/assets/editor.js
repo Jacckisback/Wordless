@@ -156,6 +156,7 @@
     else if (d.type === 'action') { act(d.action, d.id); }
     else if (d.type === 'title') { S.c.title = d.title; $('#ed-title').value = d.title; autoSlug(); dirty(); }
     else if (d.type === 'save') { save(); }
+    else if (d.type === 'search') { if (WL.openSearch) WL.openSearch(); }
     else if (d.type === 'undo') { undo(); }
     else if (d.type === 'redo') { redo(); }
   });

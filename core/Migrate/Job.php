@@ -87,6 +87,21 @@ final class Job
         return is_array($data) && ($data['id'] ?? '') === $id ? new self($data) : null;
     }
 
+    /** Tâche la plus récente (null s'il n'y en a pas) : sert à reprendre une migration interrompue. */
+    public static function latest(): ?self
+    {
+        $latest = null;
+        $rank = static fn (self $j): array => [(int) $j->d['updated_at'], $j->d['finished'] ? 0 : 1, (int) $j->d['created_at']];
+        foreach (glob(self::dir() . '/*.json') ?: [] as $file) {
+            $job = self::load(basename($file, '.json'));
+            // À la même seconde, une tâche inachevée l'emporte : c'est elle qu'il faut pouvoir reprendre.
+            if ($job && (!$latest || $rank($job) > $rank($latest))) {
+                $latest = $job;
+            }
+        }
+        return $latest;
+    }
+
     /** Écriture atomique (fichier temporaire puis renommage). */
     public function save(): void
     {

@@ -7,7 +7,6 @@ use Wordless\Blocks;
 use Wordless\Content;
 use Wordless\Db;
 use Wordless\Html;
-use Wordless\I18n;
 use Wordless\Media;
 use Wordless\Settings;
 
@@ -39,7 +38,8 @@ final class Assistant
 
     private static function langName(?string $code = null): string
     {
-        return self::LANGS[$code ?? I18n::lang()] ?? 'français';
+        // Langue du contenu : celle du site, même si l'administration s'affiche dans une autre langue.
+        return self::LANGS[$code ?? (string) Settings::get('language', 'fr')] ?? 'français';
     }
 
     /** @return array<string, mixed> résultat appliqué par l'éditeur */
@@ -295,7 +295,7 @@ final class Assistant
         }
         $group = $c['tgroup'] ?: bin2hex(random_bytes(8));
         if (!$c['tgroup']) {
-            Db::update('content', ['tgroup' => $group, 'lang' => $c['lang'] !== '' ? $c['lang'] : I18n::lang()], ['id' => $id]);
+            Db::update('content', ['tgroup' => $group, 'lang' => $c['lang'] !== '' ? $c['lang'] : (string) Settings::get('language', 'fr')], ['id' => $id]);
         }
         $title = $map['_title'] ?? $c['title'];
         $newId = Content::save([

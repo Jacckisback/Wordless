@@ -9,12 +9,12 @@
   <img alt="PHP 8.1 ou plus" src="https://img.shields.io/badge/PHP-8.1%2B-777bb4">
   <img alt="Aucune dépendance" src="https://img.shields.io/badge/d%C3%A9pendances-0-2ea043">
   <img alt="Base SQLite intégrée" src="https://img.shields.io/badge/base-SQLite-0f80cc">
-  <img alt="518 vérifications automatiques" src="https://img.shields.io/badge/tests-518%20v%C3%A9rifications-2ea043">
+  <img alt="609 vérifications automatiques" src="https://img.shields.io/badge/tests-609%20v%C3%A9rifications-2ea043">
   <img alt="Interface en français, anglais et espagnol" src="https://img.shields.io/badge/interface-FR%20%C2%B7%20EN%20%C2%B7%20ES-555">
 </p>
 
 <p align="center">
-  <a href="https://github.com/Jacckisback/Wordless/raw/main/dist/wordless-1.0.0.zip"><b>Télécharger Wordless 1.0</b></a> (606 Ko)
+  <a href="https://github.com/Jacckisback/Wordless/raw/main/dist/wordless-1.0.1.zip"><b>Télécharger Wordless 1.0.1</b></a> (620 Ko)
   · <a href="#installation">Installer en 3 minutes</a>
   · <a href="#migrer-depuis-wordpress">Migrer depuis WordPress</a>
   · <a href="docs/BENCHMARK.md">Voir les mesures</a>
@@ -175,7 +175,7 @@ Chaque page est analysée pendant que vous écrivez. L'onglet **SEO & GEO** mont
 **Ce que Wordless fait pour vous, sans réglage :**
 
 - **Balises** : titre SEO avec modèle (`{titre} – {site}`), méta-description (rédigée par vous, par l'IA ou générée automatiquement), URL canonique, Open Graph et cartes Twitter/X, image de partage par défaut.
-- **Données structurées JSON-LD** : organisation ou personne, site avec moteur de recherche interne, page, fil d'Ariane, article (BlogPosting, Article, NewsArticle), FAQ, guide pratique (HowTo), vidéo, image.
+- **Données structurées JSON-LD** : organisation ou personne, site avec moteur de recherche interne, page, fil d'Ariane, article (BlogPosting, Article, NewsArticle), FAQ, guide pratique (HowTo), vidéo, image ; le bloc « L'essentiel » devient le résumé de la page (`abstract`) et la partie à lire à voix haute (`speakable`).
 - **Plans du site XML** par type de contenu, avec les images, déclarés dans `robots.txt`. **IndexNow** prévient Bing, Yandex et Seznam à chaque publication.
 - **Adresses propres** et configurables (`/{slug}`, `/{year}/{month}/{slug}`, `/{category}/{slug}`…), barre finale au choix.
 - **Redirections 301 automatiques** quand une adresse change (y compris pour les pages enfants), gestionnaire de redirections avec import CSV, **journal des pages introuvables** avec suggestion de la page la plus proche.
@@ -201,7 +201,7 @@ Le **GEO** (Generative Engine Optimization) consiste à être lu, compris et **c
 - **`/llms.txt` et `/llms-full.txt`**, la carte de votre site au format proposé pour les modèles de langage.
 - **Une version Markdown de chaque page** : ajoutez `.md` à n'importe quelle adresse (`/mon-article.md`) pour obtenir le texte propre, sans mise en page. Ces versions ne sont pas indexées par Google (pas de contenu dupliqué).
 - **Le choix des robots d'IA**, un par un : GPTBot, OAI-SearchBot, ChatGPT-User, ClaudeBot, Claude-SearchBot, Claude-User, PerplexityBot, Perplexity-User, Google-Extended, Applebot-Extended, Meta-ExternalAgent, CCBot… Vous décidez qui peut entraîner ses modèles sur votre contenu et qui peut le citer.
-- **Des blocs pensés pour être repris** : « L'essentiel » (résumé en points clés), FAQ balisée, étapes (HowTo), sommaire.
+- **Des blocs pensés pour être repris** : « L'essentiel » (résumé en points clés, repris dans les données structurées), FAQ balisée, étapes (HowTo), sommaire.
 - **Un score GEO sur 100 pour chaque page**, qui vérifie : réponse directe en introduction (40 à 60 mots), sous-titres formulés comme des questions, FAQ d'au moins 3 questions, listes, tableaux et étapes, chiffres datés, sources citées avec un lien, citation d'expert ou de client, auteur identifié avec biographie (E-E-A-T), fraîcheur du contenu, robots d'IA autorisés.
 - **La mesure** : le tableau de bord compte les visites venues des assistants IA, les passages des robots d'IA et les lectures de `llms.txt` et des pages `.md`.
 
@@ -295,7 +295,7 @@ Wordless intègre un serveur **MCP** (Model Context Protocol, le standard ouvert
 | Claude Code | `claude mcp add --transport http wordless https://votre-site.fr/mcp --header "Authorization: Bearer wl_…"` |
 | Cursor, VS Code, autres | Clé API créée dans l'administration, ajoutée à la configuration MCP de l'outil. |
 
-**Sécurité du connecteur :** OAuth 2.1 avec PKCE obligatoire et inscription dynamique des clients, clés API à usage dédié, jetons enregistrés hachés et révocables, droits limités à ceux du compte qui autorise, 240 requêtes par minute au maximum, chaque action inscrite au journal d'activité, HTML reçu de l'IA toujours nettoyé. Guide complet : [docs/MCP.md](docs/MCP.md).
+**Sécurité du connecteur :** OAuth 2.1 avec PKCE obligatoire, inscription dynamique des clients ou fiche d'identité publiée par l'application (« Client ID Metadata Documents » de la spécification MCP), clés API à usage dédié, jetons enregistrés hachés et révocables, droits limités à ceux du compte qui autorise, 240 requêtes par minute au maximum, chaque action inscrite au journal d'activité, HTML reçu de l'IA toujours nettoyé. Guide complet : [docs/MCP.md](docs/MCP.md).
 
 <img src=".github/assets/fr/mcp.webp" alt="Page Connecteur Claude / ChatGPT : adresse du connecteur, instructions, applications autorisées et clés API" width="100%">
 
@@ -329,7 +329,7 @@ Wordless intègre un serveur **MCP** (Model Context Protocol, le standard ouvert
 | Adresses | **Identiques**. Redirections 301 automatiques pour les anciennes adresses d'images (`/wp-content/uploads/…`, y compris les variantes `-300x200` et `-scaled`), les liens `?p=123`, les pages de pièces jointes et les anciens slugs. |
 | Le reste | Catégories, étiquettes, commentaires (fils de discussion sur 3 niveaux), menus et leurs emplacements, auteurs, nom du site, page d'accueil, structure des permaliens, fuseau horaire. |
 
-**Fiabilité :** votre site WordPress n'est jamais modifié ; la migration reprend où elle s'est arrêtée en cas de coupure ; la relancer ne crée aucun doublon ; un rapport liste tout ce qui a été importé, ignoré ou mérite une relecture. Le site de démonstration (7 pages, 11 articles, 5 images, 8 commentaires, 2 menus) a été migré en 3 secondes, avec 14 adresses sur 14 identiques. Le module est couvert par 305 vérifications automatiques. Guide détaillé : [docs/MIGRATION.md](docs/MIGRATION.md).
+**Fiabilité :** votre site WordPress n'est jamais modifié ; après une coupure ou un onglet fermé, un bouton « Reprendre la migration » la relance là où elle s'était arrêtée ; la relancer ne crée aucun doublon ; un rapport liste tout ce qui a été importé, ignoré ou mérite une relecture. Le site de démonstration (7 pages, 11 articles, 5 images, 8 commentaires, 2 menus) a été migré en 3 secondes, avec 14 adresses sur 14 identiques. Le module est couvert par 309 vérifications automatiques. Guide détaillé : [docs/MIGRATION.md](docs/MIGRATION.md).
 
 ---
 
@@ -367,7 +367,7 @@ Les comportements de WordPress ci-dessus ont été vérifiés sur une installati
 **Ce que Wordless intègre :**
 
 - **Connexion** : mots de passe Argon2id, vérification à temps constant, blocage progressif par adresse et par compte, **double authentification** par application (Google Authenticator, Microsoft Authenticator, 1Password…) avec codes de secours, obligation de la 2FA activable pour les administrateurs.
-- **Sessions** : stockées en base, cookie aléatoire, déconnexion de tous les appareils, protection CSRF sur chaque action.
+- **Sessions** : stockées en base, cookie aléatoire, déconnexion de tous vos autres appareils, protection CSRF sur chaque action.
 - **Navigateur** : politique de sécurité du contenu (CSP) stricte sur le site public, avec l'empreinte du seul style autorisé ; en-têtes de sécurité (protection contre l'intégration en iframe, anti-sniffing, politique de référent, caméra, micro et géolocalisation désactivés, HSTS en option).
 - **Contenu** : HTML nettoyé par liste blanche, y compris celui produit par l'IA ou importé de WordPress ; iframes limitées à YouTube et Vimeo.
 - **Serveur** : seul `index.php` s'exécute ; dossiers `data/` et `core/` inaccessibles depuis le web ; aucun script exécutable dans `media/`.
@@ -383,7 +383,7 @@ Les comportements de WordPress ci-dessus ont été vérifiés sur une installati
 
 ### Sur un hébergement mutualisé (FTP)
 
-1. [Téléchargez Wordless](https://github.com/Jacckisback/Wordless/raw/main/dist/wordless-1.0.0.zip) (606 Ko) et décompressez l'archive.
+1. [Téléchargez Wordless](https://github.com/Jacckisback/Wordless/raw/main/dist/wordless-1.0.1.zip) (620 Ko) et décompressez l'archive. Nouveautés : [CHANGELOG.md](CHANGELOG.md).
 2. Envoyez le contenu du dossier `wordless/` à la racine de votre site par FTP.
 3. Ouvrez l'adresse du site : renseignez le nom du site, votre e-mail et un mot de passe. **C'est tout** : la base de données se crée seule.
 
@@ -434,6 +434,18 @@ server {
 ```
 </details>
 
+<details>
+<summary><b>Derrière un CDN ou un proxy</b> (Cloudflare, répartiteur de charge…)</summary>
+
+Wordless voit alors l'adresse du proxy au lieu de celle de vos visiteurs : le blocage après des tentatives de connexion répétées et les statistiques les confondraient tous. Déclarez les adresses de vos proxys dans `data/config.php` (adresses exactes ou plages CIDR, IPv4 et IPv6) :
+
+```php
+'trusted_proxies' => ['173.245.48.0/20', '103.21.244.0/22' /* … */],
+```
+
+ou dans la variable d'environnement `WL_TRUSTED_PROXIES` (valeurs séparées par des virgules). Pour Cloudflare, la liste complète est publiée sur [cloudflare.com/ips](https://www.cloudflare.com/ips/). Wordless lit alors l'adresse réelle dans `X-Forwarded-For` (à défaut `X-Real-IP`), en ne faisant confiance qu'aux proxys déclarés. Sans déclaration, ces en-têtes sont ignorés : un visiteur ne peut pas se faire passer pour un autre.
+</details>
+
 ### Ligne de commande
 
 ```bash
@@ -461,7 +473,7 @@ php bin/wordless user:2fa-reset <e-mail>       # téléphone perdu
 - **SQLite** (mode WAL) avec recherche plein texte FTS5, migrations de schéma automatiques.
 - **Architecture** : point d'entrée unique, cache rapide servi avant l'application, routeur, vues PHP, thème en templates PHP et CSS minifié intégré. Détails : [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md).
 - **Extensions** : actions et filtres (`wl_on`, `wl_filter`, `wl_do`), activées en ligne de commande. Voir [plugins/README.md](plugins/README.md).
-- **Tests** : `php tests/migrate_test.php` (305 vérifications, sur un vrai site WordPress de test généré par `tests/wp-fixture/build.sh`) et `php tests/mcp_test.php` (213 vérifications).
+- **Tests** : `php tests/migrate_test.php` (309 vérifications, sur un vrai site WordPress de test généré par `tests/wp-fixture/build.sh`) `php tests/mcp_test.php` (249 vérifications) et `php tests/core_test.php` (51 vérifications sur les correctifs de la version 1.0.1).
 - **Traductions** : les textes source sont en français ; `php bin/i18n-missing.php` liste ce qui manque dans `core/lang/en.php` et `core/lang/es.php`.
 - **Archive d'installation** : `php bin/build-dist.php`.
 - **Schémas de ce README** : `python3 .github/assets/src/make_diagrams.py` (chiffres dans `metrics.json`).

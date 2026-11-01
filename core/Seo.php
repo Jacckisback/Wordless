@@ -137,7 +137,7 @@ final class Seo
         } else {
             $add($seo, 'keyword', 'warn', __('Aucun mot-clé principal défini'), __('Indiquez l’expression que vos lecteurs tapent dans Google.'), 1);
         }
-        $read = self::readability($text);
+        $read = self::readability($text, (string) ($c['lang'] ?? ''));
         if ($read !== null && $words >= 100) {
             $add($seo, 'readability', $read >= 50 ? 'good' : ($read >= 30 ? 'warn' : 'bad'), __('Lisibilité : {s}/100', ['s' => (int) $read]),
                 $read < 50 ? __('Phrases plus courtes et mots plus simples aideront vos lecteurs.') : '', 1);
@@ -168,7 +168,7 @@ final class Seo
             || (bool) preg_match('#<(ul|ol|table)\b#', implode('', array_map(static fn ($b) => (string) ($b['data']['html'] ?? ''), $blocks)));
         $add($geo, 'structure', $structured ? 'good' : 'warn', $structured ? __('Contenu structuré (listes, tableaux, étapes)') : __('Peu de structure exploitable'),
             $structured ? '' : __('Listes, tableaux et étapes sont repris tels quels par les moteurs IA.'), 2);
-        $hasStats = (bool) preg_match('/\d+(?:[.,]\d+)?\s?(%|€|\$|£|k€|M€|millions?|milliards?|ans|heures|jours|minutes|fois|x\b)/iu', $text) || in_array('stats', $types, true);
+        $hasStats = self::hasFigures($text) || in_array('stats', $types, true);
         $add($geo, 'statistics', $hasStats ? 'good' : 'warn', $hasStats ? __('Chiffres et données présents') : __('Aucun chiffre précis'),
             $hasStats ? '' : __('Ajoutez des données chiffrées et datées : elles augmentent les chances d’être cité.'), 2);
         $add($geo, 'sources', $external > 0 ? 'good' : 'warn', _n('{n} source externe citée', '{n} sources externes citées', $external),
@@ -209,6 +209,24 @@ final class Seo
         return $total > 0 ? (int) round($got / $total * 100) : 0;
     }
 
+    /**
+     * Chiffres précis : un nombre suivi d'une unité ou d'un symbole, en français, anglais ou espagnol
+     * (93 %, 1,9 Mo, 42 KB, 0.5 ms, 3 ans, 2 days, 16 times, 58×, 10 veces…) ou un montant (€10, $5).
+     * Les unités sont des mots entiers : « 2 answers » ou « 3 sites » ne comptent pas.
+     */
+    public const FIGURE_PATTERN = '/(?:[€$£]\s?\d|\d(?:[\d.,\x{00A0}\x{202F}]*\d)?\s?(?:%|‰|×|€|£|\$'
+        . '|(?:x|k€|M€|ko|Mo|Go|To|kB|KB|MB|GB|TB|ms|s|min|h|px|km|kg|cm|mm|m²|kWh)\b'
+        . '|(?:millions?|milliards?|billions?|thousands?|millones?|mil|pour\s?cent|per\s?cent|percent|por\s?ciento'
+        . '|ans?|années?|mois|semaines?|jours?|heures?|minutes?|secondes?|fois'
+        . '|years?|months?|weeks?|days?|hours?|seconds?|times'
+        . '|años?|meses|semanas?|días?|horas?|minutos?|segundos?|veces'
+        . '|euros?|dollars?|dólares?|pounds?|libras?)\b))/iu';
+
+    public static function hasFigures(string $text): bool
+    {
+        return (bool) preg_match(self::FIGURE_PATTERN, $text);
+    }
+
     public static function fold(string $s): string
     {
         $s = mb_strtolower($s);
@@ -225,8 +243,9 @@ final class Seo
     }
 
     /** Lisibilité 0-100 (Kandel-Moles en français, Flesch en anglais, Fernández-Huerta en espagnol). */
-    public static function readability(string $text): ?float
+    public static function readability(string $text, ?string $lang = null): ?float
     {
+        $lang = $lang !== null && $lang !== '' ? substr($lang, 0, 2) : (string) Settings::get('language', 'fr');
         $sentences = preg_split('/[.!?…]+(\s|$)/u', $text, -1, PREG_SPLIT_NO_EMPTY) ?: [];
         $sentences = array_filter($sentences, static fn ($s) => word_count($s) > 0);
         $words = preg_split('/[\s\x{00A0}]+/u', trim($text), -1, PREG_SPLIT_NO_EMPTY) ?: [];
@@ -239,14 +258,14 @@ final class Seo
         foreach ($words as $w) {
             $w = mb_strtolower(preg_replace('/[^\p{L}]/u', '', $w) ?? '');
             $n = preg_match_all('/[aeiouyàâäéèêëîïôöùûüáíóú]+/u', $w);
-            if (I18n::lang() !== 'es' && preg_match('/[^aeiouy]e$/u', $w) && $n > 1) {
+            if ($lang !== 'es' && preg_match('/[^aeiouy]e$/u', $w) && $n > 1) {
                 $n--;
             }
             $syl += max(1, (int) $n);
         }
         $asl = $nw / $ns;
         $asw = $syl / $nw;
-        $score = match (I18n::lang()) {
+        $score = match ($lang) {
             'en' => 206.835 - 1.015 * $asl - 84.6 * $asw,
             'es' => 206.84 - 0.60 * ($asw * 100) - 1.02 * ($ns / $nw * 100),
             default => 207 - 1.015 * $asl - 73.6 * $asw,
@@ -402,6 +421,12 @@ final class Seo
             $graph[] = ['@type' => 'BreadcrumbList', '@id' => $url . '#breadcrumb', 'itemListElement' => $items];
             $page['breadcrumb'] = ['@id' => $url . '#breadcrumb'];
         }
+        // « L'essentiel » : résumé repris comme abstract (schema.org) et marqué « speakable ».
+        $abstract = $c ? implode(' ', array_map(static fn (string $t): string => preg_match('/[.!?…]$/u', $t) ? $t : $t . '.', Blocks::takeaways($c['blocks']))) : '';
+        if ($abstract !== '') {
+            $page['abstract'] = $abstract;
+            $page['speakable'] = ['@type' => 'SpeakableSpecification', 'cssSelector' => ['.wl-takeaways']];
+        }
         $graph[] = $page;
 
         if ($c) {
@@ -427,6 +452,9 @@ final class Seo
                     'mainEntityOfPage' => ['@id' => $url . '#webpage'], 'isPartOf' => ['@id' => $url . '#webpage'],
                     'publisher' => ['@id' => $base . '/#org'], 'wordCount' => (int) $c['word_count'],
                 ];
+                if ($abstract !== '') {
+                    $art['abstract'] = $abstract;
+                }
                 if ($img) {
                     $art['image'] = ['@id' => $url . '#primaryimage'];
                 }
@@ -546,7 +574,7 @@ final class Seo
 
     public static function robots(): string
     {
-        $lines = ['# robots.txt généré par Wordless'];
+        $lines = ['# ' . __('robots.txt généré par Wordless')];
         if (Settings::get('seo.noindex_site', false)) {
             return implode("\n", [...$lines, 'User-agent: *', 'Disallow: /', '']);
         }
@@ -573,7 +601,10 @@ final class Seo
             $out .= '> ' . str_replace("\n", ' ', $tagline) . "\n\n";
         }
         $org = (string) (Settings::get('site.org_name') ?: $site);
-        $out .= __('Site officiel de {o}. Chaque page existe aussi en Markdown : ajoutez .md à son adresse.', ['o' => $org]) . "\n\n";
+        $markdown = (bool) Settings::get('geo.markdown', true);
+        $out .= ($markdown
+            ? __('Site officiel de {o}. Chaque page existe aussi en Markdown : ajoutez .md à son adresse.', ['o' => $org])
+            : __('Site officiel de {o}.', ['o' => $org])) . "\n\n";
         $sections = ['page' => __('Pages'), 'post' => __('Articles')];
         foreach ($sections as $type => $label) {
             $rows = Db::all("SELECT * FROM content WHERE type = ? AND status = 'published' AND published_at <= ? ORDER BY " . ($type === 'page' ? 'menu_order, title' : 'published_at DESC') . ' LIMIT ' . ($full ? 2000 : 200), [$type, time()]);
@@ -586,8 +617,9 @@ final class Seo
                 if ($full) {
                     $items[] = "\n---\n\n# " . $c['title'] . "\n\n" . __('Source : {u}', ['u' => Content::permalink($c)]) . "\n" . __('Mis à jour : {d}', ['d' => gmdate('Y-m-d', (int) $c['updated_at'])]) . "\n\n" . Blocks::toMarkdown($c['blocks']);
                 } else {
-                    $md = Content::isHome($c) ? Config::baseUrl() . '/index.md' : rtrim(Content::permalink($c), '/') . '.md';
-                    $items[] = '- [' . $c['title'] . '](' . $md . '): ' . Content::summary($c, 140);
+                    // Version Markdown si elle est publiée, sinon la page elle-même (jamais de lien mort).
+                    $link = !$markdown ? Content::permalink($c) : (Content::isHome($c) ? Config::baseUrl() . '/index.md' : rtrim(Content::permalink($c), '/') . '.md');
+                    $items[] = '- [' . $c['title'] . '](' . $link . '): ' . Content::summary($c, 140);
                 }
             }
             if ($items) {

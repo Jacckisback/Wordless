@@ -10,7 +10,7 @@ namespace Wordless;
  */
 final class HttpClient
 {
-    public const UA = 'Wordless/' . WL_VERSION . ' (+https://wordless.dev)';
+    public const UA = 'Wordless/' . WL_VERSION . ' (+https://wordless.cloud)';
 
     /**
      * @return array{status: int, headers: array<string, string>, body: string, url: string}

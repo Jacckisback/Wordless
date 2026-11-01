@@ -446,7 +446,7 @@ final class Front
                 fastcgi_finish_request();
             }
             require_once WL_CORE . '/hit.php';
-            wl_track_hit(Http::path(), $type !== 'html');
+            wl_track_hit(Http::path(), $type !== 'html', (array) Config::get('trusted_proxies', []));
         }
     }
 }

@@ -5,6 +5,7 @@ namespace Wordless\Admin;
 
 use Wordless\Http;
 use Wordless\Migrate\Importer;
+use Wordless\Migrate\Job;
 
 /** Migration WordPress : assistant (fichier d'export ou connexion directe). */
 final class ImportController
@@ -12,9 +13,12 @@ final class ImportController
     public function index(): string
     {
         Kernel::need('import');
+        // Migration interrompue (onglet fermé, connexion perdue) : on propose de la reprendre.
+        $last = class_exists(Job::class) ? Job::latest() : null;
+        $resume = $last && !$last->d['finished'] && (int) $last->d['updated_at'] > time() - 7 * 86400 ? $last->publicState() : null;
         return Kernel::page('import', [
             'maxUpload' => ini_get('upload_max_filesize'), 'welcome' => !empty($_GET['welcome']),
-            'available' => class_exists(Importer::class),
+            'available' => class_exists(Importer::class), 'resume' => $resume,
         ], __('Migration depuis WordPress'), 'import', '', ['scripts' => ['import.js']]);
     }
 
@@ -59,6 +63,15 @@ final class ImportController
             json_response(['error' => $e->getMessage()], 422);
         }
         json_response(['ok' => true, 'job' => $job]);
+    }
+
+    /** Abandonne une migration interrompue (elle n'est plus proposée à la reprise). */
+    public function cancel(): never
+    {
+        Kernel::need('import');
+        $id = preg_replace('/[^a-zA-Z0-9_-]/', '', (string) (Http::json()['id'] ?? '')) ?? '';
+        Importer::cancel($id);
+        json_response(['ok' => true]);
     }
 
     public function step(): never

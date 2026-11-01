@@ -1,5 +1,14 @@
-<?php /** @var string $maxUpload @var bool $welcome @var bool $available */ ?>
+<?php /** @var string $maxUpload @var bool $welcome @var bool $available @var ?array $resume */ ?>
 <?php if ($welcome): ?><div class="notice notice--good"><?= icon('check') ?><p><?= e(__('Votre site Wordless est installé. Importons maintenant votre site WordPress : comptez quelques minutes.')) ?></p></div><div class="stack"></div><?php endif ?>
+<?php if (!empty($resume)):
+    $done = count(array_filter($resume['phases'], static fn ($p) => ($p['status'] ?? '') === 'done'));
+    $from = ($resume['source']['type'] ?? '') === 'wxr' ? __('fichier d’export') : (string) ($resume['source']['url'] ?? '');
+?>
+<div class="notice notice--warn" id="import-resume"><?= icon('alert') ?><div class="stack-s">
+  <p><strong><?= e(__('Une migration n’est pas terminée.')) ?></strong> <?= e(__('Source : {s} · étape {d} sur {t} · dernière activité {w}.', ['s' => $from, 'd' => min($done + 1, count($resume['phases'])), 't' => count($resume['phases']), 'w' => human_time((int) $resume['updated_at'])])) ?></p>
+  <p class="actions-row"><button class="btn btn-primary btn-sm" type="button" data-resume="<?= e($resume['id']) ?>"><?= icon('import') ?><?= e(__('Reprendre la migration')) ?></button><button class="btn btn-sm" type="button" data-discard="<?= e($resume['id']) ?>"><?= e(__('Abandonner')) ?></button></p>
+</div></div><div class="stack"></div>
+<?php endif ?>
 <div class="split" id="import-app">
   <div class="stack">
   <form class="panel" id="import-form" enctype="multipart/form-data">

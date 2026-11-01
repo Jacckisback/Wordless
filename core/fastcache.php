@@ -82,7 +82,7 @@ declare(strict_types=1);
             fastcgi_finish_request();
         }
         require __DIR__ . '/hit.php';
-        wl_track_hit($path, $ext !== 'html');
+        wl_track_hit($path, $ext !== 'html', (array) ($meta['proxies'] ?? []));
     }
     exit;
 })();

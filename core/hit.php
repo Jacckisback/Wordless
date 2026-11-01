@@ -8,6 +8,8 @@
  */
 declare(strict_types=1);
 
+require_once __DIR__ . '/ip.php';
+
 if (!function_exists('wl_track_hit')) {
     /** Robots connus : nom affiché => motif dans le User-Agent. */
     function wl_known_bots(): array
@@ -42,7 +44,8 @@ if (!function_exists('wl_track_hit')) {
      * Enregistre une vue. $botsOnly : versions pour les IA (.md, llms.txt) — on ne compte
      * que le passage des robots, pour savoir si les moteurs d'IA lisent ces fichiers.
      */
-    function wl_track_hit(string $path, bool $botsOnly = false): void
+    /** @param list<string> $proxies proxys de confiance (configuration), pour retrouver l'adresse du visiteur */
+    function wl_track_hit(string $path, bool $botsOnly = false, array $proxies = []): void
     {
         if ($botsOnly && !preg_match('#(\.md|/llms(-full)?\.txt)$#', $path)) {
             return;
@@ -78,7 +81,7 @@ if (!function_exists('wl_track_hit')) {
             $salt = bin2hex(random_bytes(16));
             @file_put_contents($saltFile, $salt, LOCK_EX);
         }
-        $ip = (string) ($_SERVER['REMOTE_ADDR'] ?? '');
+        $ip = wl_client_ip(wl_trusted_proxies($proxies));
         $visitor = substr(hash('sha256', $salt . '|' . $ip . '|' . $ua), 0, 16);
 
         $ref = (string) ($_SERVER['HTTP_REFERER'] ?? '');

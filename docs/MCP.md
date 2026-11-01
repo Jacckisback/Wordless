@@ -160,7 +160,7 @@ Utilisez une clé API : l'adresse de retour OAuth de Cursor (`cursor://…`) n'e
 }
 ```
 
-**Autres clients** : tout client compatible avec le transport MCP « Streamable HTTP » fonctionne, soit avec l'en-tête `Authorization: Bearer wl_...`, soit avec OAuth 2.1 (inscription dynamique et PKCE, que Wordless prend en charge).
+**Autres clients** : tout client compatible avec le transport MCP « Streamable HTTP » fonctionne, soit avec l'en-tête `Authorization: Bearer wl_...`, soit avec OAuth 2.1 et PKCE : le client s'inscrit lui-même (inscription dynamique, RFC 7591) ou se présente avec l'adresse de sa fiche d'identité (« Client ID Metadata Documents », spécification MCP du 25 novembre 2025). Wordless accepte les deux.
 Pour tester : `npx @modelcontextprotocol/inspector`, transport *Streamable HTTP*, URL `https://votre-site.fr/mcp`.
 
 ---
@@ -254,6 +254,7 @@ Les consignes envoyées à l'assistant lui demandent : une réponse directe dès
 - **Révocation.** Administration › Connecteur Claude / ChatGPT › Applications autorisées › Révoquer. Pour tout couper d'un coup, désactivez le connecteur : `/mcp` et l'autorisation OAuth cessent alors de répondre.
 - **Clés API.** Une clé par appareil ou par usage, avec un libellé clair. Elle n'est affichée qu'une fois, reste valable 10 ans et donne les droits du compte : révoquez-la immédiatement si elle a pu fuiter, et ne la publiez jamais (dépôt Git, capture d'écran…).
 - **Injections de consignes.** Une IA qui lit des pages web ou des documents peut tomber sur des instructions cachées. Gardez la confirmation pour les actions qui modifient le site, surtout la corbeille, le design et les réglages.
+- **Applications identifiées par une adresse.** Quand l'application se présente avec l'adresse de sa fiche d'identité (`https://…/client.json`), Wordless lit cette fiche après votre connexion, jamais pour un visiteur anonyme : 5 Ko au plus, en HTTPS, sans suivre de redirection, adresses internes refusées. La fiche doit porter exactement cette adresse dans `client_id`, et le code d'autorisation n'est renvoyé qu'à une adresse qu'elle déclare. L'écran de consentement affiche le site qui publie la fiche ; si le retour se fait vers votre ordinateur (`localhost`), un avertissement rappelle qu'un programme local peut reprendre la fiche d'une autre application. La fiche est gardée en cache selon ses en-têtes HTTP (24 h au plus) ; une fiche invalide ne l'est jamais.
 - **Protections techniques.** HTTPS, PKCE obligatoire, codes d'autorisation à usage unique (10 minutes), contrôle de l'origine des requêtes (protection contre le « DNS rebinding »), limitation à 240 requêtes par minute et par jeton.
 
 ---
@@ -302,6 +303,7 @@ Une réécriture interne vers le `index.php` de Wordless (au lieu d'une redirect
 | Erreur 401 en boucle, même après autorisation | Le serveur web ne transmet pas l'en-tête `Authorization` à PHP. Apache : gardez la règle du `.htaccess` fourni. Nginx + PHP-FPM : ajoutez `fastcgi_param HTTP_AUTHORIZATION $http_authorization;`. |
 | « Application inconnue » sur l'écran d'autorisation | L'inscription de l'application a expiré ou a été supprimée : retirez le connecteur dans Claude ou ChatGPT, puis ajoutez-le de nouveau. |
 | « Adresse de retour refusée » | L'application n'utilise pas l'adresse qu'elle a déclarée, ou une adresse non autorisée (voir Limites). |
+| « Application non vérifiable » | L'application s'identifie par l'adresse de sa fiche, mais Wordless n'a pas pu la lire ou la valider ; la raison est affichée (fiche introuvable, `client_id` différent de l'adresse, adresse de retour non conforme…). Réessayez quelques minutes plus tard ; si cela persiste, signalez-le à l'éditeur de l'application. Votre hébergeur doit aussi autoriser les requêtes sortantes en HTTPS. |
 | La page de connexion de l'administration s'affiche | Normal si vous n'étiez pas connecté : connectez-vous, vous serez ramené à l'écran d'autorisation. |
 | « Vérifiez la demande, puis cliquez à nouveau » | Protection contre le clic piégé : relisez l'écran et cliquez de nouveau sur « Autoriser ». |
 | Erreur 403 depuis un navigateur | La page qui appelle le connecteur n'est pas une origine autorisée (le site lui-même, claude.ai, claude.com, chatgpt.com, chat.openai.com ou localhost). |
@@ -318,6 +320,7 @@ Une réécriture interne vers le `index.php` de Wordless (au lieu d'une redirect
 | `GET /.well-known/oauth-protected-resource` | Métadonnées de la ressource protégée (RFC 9728), aussi sous `/mcp` |
 | `GET /.well-known/oauth-authorization-server` | Métadonnées du serveur d'autorisation (RFC 8414), aussi à `/.well-known/openid-configuration` |
 | `POST /oauth/register` | Inscription dynamique des clients (RFC 7591) |
+| `client_id` en adresse `https://` | Client ID Metadata Documents (MCP 2025-11-25) : `client_id_metadata_document_supported: true` dans les métadonnées ; fiche lue à l'autorisation, `token_endpoint_auth_method` `none` (ou `private_key_jwt`, traité comme un client public) |
 | `GET/POST /oauth/authorize` | Autorisation par code avec PKCE S256 obligatoire, paramètre `iss` dans la réponse (RFC 9207) |
 | `POST /oauth/token` | Jetons (`authorization_code`, `refresh_token` avec rotation) |
 | `POST /oauth/revoke` | Révocation (RFC 7009) |

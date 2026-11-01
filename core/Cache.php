@@ -114,6 +114,7 @@ final class Cache
             'expires' => $expires,
             'headers' => array_values(array_filter($headers)),
             'stats' => (bool) Settings::get('stats.enabled', true),
+            'proxies' => array_values((array) Config::get('trusted_proxies', [])),
         ];
         $tmp = $file . '.tmp';
         @file_put_contents($tmp, "<?php\nreturn " . var_export($meta, true) . ";\n");

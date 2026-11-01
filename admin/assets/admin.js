@@ -123,7 +123,7 @@
   var dlg = document.getElementById('cmdk');
   if (dlg) {
     var input = dlg.querySelector('input'), list = dlg.querySelector('ul'), items = [], sel = 0, timer;
-    var pages = Array.prototype.map.call(document.querySelectorAll('.sidebar .nav a[href]'), function (a) {
+    var pages = Array.prototype.map.call(document.querySelectorAll('.sidebar .nav a[href], [data-cmdk-pages] a[href]'), function (a) {
       return { label: a.textContent.trim(), href: a.href, group: WL.t('Aller à', 'Go to', 'Ir a') };
     }).concat([
       { label: WL.t('Écrire un article', 'Write a post', 'Escribir un artículo'), href: WL.base + '/content/new?type=post', group: WL.t('Action', 'Action', 'Acción') },
@@ -153,7 +153,8 @@
         }, 180);
       }
     };
-    var open = function () { input.value = ''; filter(); dlg.showModal(); input.focus(); };
+    var open = function () { if (dlg.open) return; input.value = ''; filter(); dlg.showModal(); input.focus(); };
+    WL.openSearch = open; // aussi depuis l'aperçu de l'éditeur (iframe)
     document.addEventListener('keydown', function (e) {
       if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === 'k') { e.preventDefault(); dlg.open ? dlg.close() : open(); }
     });
