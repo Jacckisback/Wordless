@@ -19,7 +19,7 @@ $root = dirname(__DIR__);
 preg_match("/WL_VERSION'?\s*[,=]\s*'([^']+)'/", (string) file_get_contents($root . '/core/bootstrap.php'), $m);
 $version = $m[1] ?? '0.0.0';
 
-$include = ['index.php', 'router.php', '.htaccess', 'README.md', 'core', 'admin', 'themes', 'plugins', 'bin/wordless', 'docs',
+$include = ['index.php', 'router.php', '.htaccess', 'README.md', 'LICENSE', 'core', 'admin', 'themes', 'plugins', 'bin/wordless', 'docs',
     'data/.htaccess', 'data/index.html', 'media/.htaccess', 'media/index.html'];
 $files = [];
 foreach ($include as $item) {

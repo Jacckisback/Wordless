@@ -6,9 +6,9 @@ Mesures faites le 1er novembre 2026, sur la même machine et dans les mêmes con
 
 | | WordPress 7.1.4 | Wordless 1.0 |
 |---|---:|---:|
-| Archive à télécharger | 37,2 Mo | 554 Ko |
+| Archive à télécharger | 37,2 Mo | 567 Ko |
 | Taille une fois décompressé | 110,1 Mo | 1,8 Mo |
-| Nombre de fichiers | 3 782 | 168 |
+| Nombre de fichiers | 3 782 | 169 |
 | Lignes de PHP | 635 602 | 27 988 (dont 3 200 de traductions) |
 | JavaScript livré | 64,4 Mo | 127 Ko |
 | CSS livré | 8,7 Mo | 64 Ko |

@@ -2,7 +2,9 @@
 
 **Le CMS léger, rapide et sûr, pensé pour être trouvé sur Google et cité par les IA.** On passe de WordPress à Wordless en quelques clics, sans perdre ses adresses ni son référencement.
 
-- **1,8 Mo** et **168 fichiers**, contre 110 Mo et 3 782 fichiers pour WordPress 7.1.4.
+**[Télécharger Wordless 1.0.0](https://github.com/Jacckisback/Wordless/raw/main/dist/wordless-1.0.0.zip)** (567 Ko) · Logiciel libre sous licence [GNU AGPL-3.0](LICENSE)
+
+- **1,8 Mo** et **169 fichiers**, contre 110 Mo et 3 782 fichiers pour WordPress 7.1.4.
 - **1 requête et 32 Ko** pour afficher une page d'accueil, contre 7 requêtes et 252 Ko pour WordPress avec son thème par défaut.
 - **3 ms** de temps serveur sans cache, **0,5 ms** avec le cache intégré, contre 50 à 57 ms pour WordPress mesuré dans les mêmes conditions ([détails](docs/BENCHMARK.md)).
 - **Aucune dépendance** : pas de Composer, pas de npm, pas de base MySQL à créer. Un hébergement PHP 8.1 suffit.
@@ -29,7 +31,7 @@ Ce qu'un site WordPress obtient avec une dizaine d'extensions est ici intégré 
 
 ### Sur un hébergement mutualisé (FTP)
 
-1. Téléchargez l'archive [`dist/wordless-1.0.0.zip`](dist/wordless-1.0.0.zip) (554 Ko), décompressez-la et envoyez le contenu du dossier `wordless/` à la racine de votre site par FTP.
+1. Téléchargez l'archive [`wordless-1.0.0.zip`](https://github.com/Jacckisback/Wordless/raw/main/dist/wordless-1.0.0.zip) (567 Ko), décompressez-la et envoyez le contenu du dossier `wordless/` à la racine de votre site par FTP.
 2. Ouvrez l'adresse du site dans le navigateur.
 3. Renseignez le nom du site, votre e-mail et un mot de passe. C'est tout : la base de données est créée automatiquement.
 
@@ -151,4 +153,8 @@ Le directeur artistique reprend et adapte les principes et règles d'[Impeccable
 
 Wordless n'est ni affilié ni approuvé par la WordPress Foundation ou Automattic. WordPress est une marque de la WordPress Foundation.
 
-Licence du code de Wordless : à définir par l'auteur avant toute diffusion publique.
+Copyright © 2026 Thierry Gustin.
+
+Wordless est un logiciel libre : vous pouvez le redistribuer et le modifier selon les termes de la licence publique générale GNU Affero, version 3 (AGPL-3.0-only), publiée par la Free Software Foundation. Il est distribué sans aucune garantie. Le texte complet est dans le fichier [LICENSE](LICENSE).
+
+En pratique : vous pouvez l'utiliser librement, y compris pour un usage commercial. Si vous modifiez Wordless et le mettez à disposition d'autres personnes, y compris en ligne comme service hébergé, vous devez publier le code source de votre version sous la même licence (pensez alors à changer l'adresse `WL_SOURCE` dans `core/bootstrap.php`).

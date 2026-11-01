@@ -6,6 +6,9 @@
     </tbody></table></div>
   </section>
   <aside class="stack">
+    <div class="panel"><div class="panel-body stack-s"><h2>Wordless <?= e(WL_VERSION) ?></h2>
+      <p class="muted small"><?= e(__('Logiciel libre sous licence GNU AGPL-3.0.')) ?> <a href="<?= e(WL_SOURCE) ?>" target="_blank" rel="noopener"><?= e(__('Code source')) ?></a></p>
+    </div></div>
     <div class="panel"><div class="panel-body stack-s"><h2><?= e(__('Poids')) ?></h2>
       <p><?= e(__('Code de Wordless : {s} ({n} fichiers)', ['s' => fmt_bytes($code['bytes']), 'n' => $code['files']])) ?></p>
       <p><?= e(__('Base de données : {s}', ['s' => fmt_bytes($sizes['db'])])) ?></p>

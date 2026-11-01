@@ -10,6 +10,8 @@ if (PHP_VERSION_ID < 80100) {
 }
 
 const WL_VERSION = '1.0.0';
+/** Adresse du code source (licence AGPL-3.0, article 13 : à adapter dans une version modifiée). */
+const WL_SOURCE = 'https://github.com/Jacckisback/Wordless';
 defined('WL_ROOT') || define('WL_ROOT', dirname(__DIR__));
 defined('WL_T0') || define('WL_T0', hrtime(true));
 define('WL_CORE', WL_ROOT . '/core');
