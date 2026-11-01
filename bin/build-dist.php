@@ -19,7 +19,7 @@ $root = dirname(__DIR__);
 preg_match("/WL_VERSION'?\s*[,=]\s*'([^']+)'/", (string) file_get_contents($root . '/core/bootstrap.php'), $m);
 $version = $m[1] ?? '0.0.0';
 
-$include = ['index.php', 'router.php', '.htaccess', 'README.md', 'LICENSE', 'core', 'admin', 'themes', 'plugins', 'bin/wordless', 'docs',
+$include = ['index.php', 'router.php', '.htaccess', 'README.md', 'README.en.md', 'LICENSE', 'core', 'admin', 'themes', 'plugins', 'bin/wordless', 'docs',
     'data/.htaccess', 'data/index.html', 'media/.htaccess', 'media/index.html'];
 $files = [];
 foreach ($include as $item) {
@@ -50,7 +50,13 @@ if ($zip->open($zipPath, ZipArchive::CREATE) !== true) {
     exit(1);
 }
 $zip->addEmptyDir('wordless');
+// Les README de l'archive pointent vers les images du dépôt (elles ne sont pas incluses).
+$assets = 'https://raw.githubusercontent.com/Jacckisback/Wordless/main/.github/assets/';
 foreach ($files as $rel) {
+    if (preg_match('#^README(\.[a-z]{2})?\.md$#', $rel)) {
+        $zip->addFromString('wordless/' . $rel, str_replace('.github/assets/', $assets, (string) file_get_contents($root . '/' . $rel)));
+        continue;
+    }
     $zip->addFile($root . '/' . $rel, 'wordless/' . $rel);
     if ($rel === 'bin/wordless') {
         $zip->setExternalAttributesName('wordless/' . $rel, ZipArchive::OPSYS_UNIX, 0100755 << 16);

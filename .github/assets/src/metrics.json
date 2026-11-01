@@ -1,0 +1,18 @@
+{
+  "date": "2026-11-01",
+  "conditions": "Même machine, PHP 8.3.6, serveur intégré (php -S), OPcache désactivé. WordPress 7.1.4 avec l'extension officielle SQLite Database Integration 1.8.0 et le thème Twenty Twenty-Five. Site de démonstration « Atelier Lumière » migré de WordPress vers Wordless (contenu identique).",
+  "software": {"wp_zip_mb": 37.2, "wp_size_mb": 110.1, "wp_files": 3782, "wp_php_lines": 635602},
+  "home": {"wp_requests": 7, "wp_kb": 252, "wp_js_kb": 67, "wp_font_kb": 52, "wp_dom": 189, "wl_requests": 2, "wl_kb": 42, "wl_js_kb": 0, "wl_dom": 130,
+           "wp_ttfb_ms": 65.9, "wl_ttfb_cache_ms": 0.5, "wl_ttfb_nocache_ms": 4.2,
+           "wp_php_files": 530, "wp_sql": 32, "wp_mem_mb": 10, "wl_php_files_cache": 4, "wl_sql_cache": 0, "wl_php_files_nocache": 30, "wl_sql_nocache": 24, "wl_mem_mb": 2,
+           "lighthouse_wp": {"performance": 99, "accessibility": 98, "best_practices": 100, "seo": 92, "fcp_s": 1.20, "lcp_s": 2.10},
+           "lighthouse_wl": {"performance": 100, "accessibility": 98, "best_practices": 100, "seo": 100, "fcp_s": 0.85, "lcp_s": 1.05}},
+  "article": {"wp_requests": 11, "wp_kb": 346, "wl_requests": 3, "wl_kb": 54, "wp_ttfb_ms": 89.8, "wl_ttfb_cache_ms": 0.5, "wl_ttfb_nocache_ms": 3.9,
+              "wp_php_files": 534, "wp_sql": 50, "wl_php_files_nocache": 33, "wl_sql_nocache": 28,
+              "lighthouse_wp": {"performance": 99, "accessibility": 100, "best_practices": 100, "seo": 92, "fcp_s": 1.35, "lcp_s": 2.01},
+              "lighthouse_wl": {"performance": 100, "accessibility": 100, "best_practices": 100, "seo": 100, "fcp_s": 0.87, "lcp_s": 1.05}},
+  "security_wp_default": {"xmlrpc_methods": 80, "rest_users_public": true, "author_enum_redirect": true},
+  "patchstack_2022": {"plugins_pct": 93, "themes_pct": 6.7, "core_pct": 0.6, "total": 4528, "source": "https://wptavern.com/patchstack-tracks-328-more-security-bugs-reported-in-wordpress-plugins-in-2022"},
+  "migration_demo": {"pages": 7, "posts": 11, "media": 5, "comments": 8, "menus": 2, "urls_identical": 14, "urls_total": 14, "seconds": 3},
+  "tests": {"migration_checks": 305, "mcp_checks": 213}
+}

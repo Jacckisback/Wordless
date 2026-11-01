@@ -70,7 +70,7 @@ main{display:block;outline:0}
 .entry-content{padding-bottom:clamp(3rem,8vw,6rem)}
 .entry--page .entry-content:has(>[class*=tone-]:not(.tone-default):last-child){padding-bottom:0}
 /* Pages : toutes les sections partagent le même bord gauche ; le texte garde une longueur de ligne confortable. */
-.entry--page .entry-content>.wl-text,.entry--page .entry-content>.wl-heading,.entry--page .entry-content>.wl-faq,.entry--page .entry-content>.wl-steps,.entry--page .entry-content>.wl-quote,.entry--page .entry-content>.wl-contact,.entry--page .entry-content>.wl-button,.entry--page .entry-content>.wl-video,.entry--page .entry-content>.wl-image.size-content,.entry--page .entry-content>.wl-divider{max-width:var(--wide)}
+.entry--page .entry-content>.wl-text,.entry--page .entry-content>.wl-heading,.entry--page .entry-content>.wl-faq,.entry--page .entry-content>.wl-steps,.entry--page .entry-content>.wl-quote,.entry--page .entry-content>.wl-contact,.entry--page .entry-content>.wl-button,.entry--page .entry-content>.wl-buttons,.entry--page .entry-content>.wl-video,.entry--page .entry-content>.wl-image.size-content,.entry--page .entry-content>.wl-divider{max-width:var(--wide)}
 .entry--page .entry-content>.wl-prose>*,.entry--page .wl-faq__list,.entry--page .wl-steps__list,.entry--page .wl-contact>*,.entry--page .wl-quote blockquote,.entry--page .wl-video>*,.entry--page .wl-image.size-content>*{max-width:var(--measure)}
 .entry--page .entry-content>.wl-takeaways,.entry--page .entry-content>.wl-toc{max-width:var(--measure);margin-left:calc(max(0px,(100% - var(--wide))/2) + clamp(1.25rem,4vw,2.5rem));margin-right:auto}
 .entry-content>*{max-width:calc(var(--measure) + 2*clamp(1.25rem,4vw,2.5rem));margin-inline:auto;padding-inline:clamp(1.25rem,4vw,2.5rem)}
@@ -112,6 +112,7 @@ h2.wl-heading,h3.wl-heading,h4.wl-heading{margin-top:calc(var(--space)*1.9)}
 
 /* Boutons */
 .wl-actions{display:flex;flex-wrap:wrap;gap:.75rem;margin-top:2rem}
+.wl-buttons{display:flex;flex-wrap:wrap;align-items:center;gap:.75rem 1rem}.wl-buttons>.wl-button{margin:0}
 .wl-btn{display:inline-flex;align-items:center;justify-content:center;gap:.5rem;min-height:2.9rem;padding:.75em 1.35em;border-radius:max(3px,calc(var(--radius)*.8));border:2px solid transparent;font-weight:600;line-height:1.2;text-decoration:none;cursor:pointer;transition:background-color .2s cubic-bezier(.22,1,.36,1),border-color .2s,color .2s}
 .wl-btn--primary{background:var(--c-accent);color:var(--c-accent-text)}
 .wl-btn--primary:hover{background:color-mix(in oklab,var(--c-accent) 86%,var(--c-text))}

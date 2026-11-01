@@ -105,6 +105,15 @@ final class Front
     private static function special(string $path): bool
     {
         switch ($path) {
+            case '/favicon.ico':
+                // Demandé d'office par les navigateurs : l'icône du site, sinon une réponse vide (pas d'erreur 404).
+                $icon = Media::find(Settings::get('site.icon_id') ? (int) Settings::get('site.icon_id') : null);
+                if ($icon) {
+                    redirect(Media::url($icon, 480), 301);
+                }
+                http_response_code(204);
+                header('Cache-Control: public, max-age=86400');
+                return true;
             case '/robots.txt':
                 self::send(Seo::robots(), 'txt', 200, $path);
                 return true;

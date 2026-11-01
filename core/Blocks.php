@@ -349,11 +349,23 @@ final class Blocks
         $ctx += ['edit' => false, 'content' => null];
         $ctx['headings'] = self::headings($blocks);
         $html = '';
+        $run = ''; // boutons consécutifs : regroupés sur une même ligne
         foreach ($blocks as $i => $b) {
             $ctx['index'] = $i;
-            $html .= self::renderOne($b, $ctx);
+            $out = self::renderOne($b, $ctx);
+            if (($b['type'] ?? '') === 'button' && $out !== '') {
+                $run .= $out;
+                continue;
+            }
+            $html .= self::buttonRun($run) . $out;
+            $run = '';
         }
-        return $html;
+        return $html . self::buttonRun($run);
+    }
+
+    private static function buttonRun(string $run): string
+    {
+        return substr_count($run, 'wl-button') > 1 ? '<div class="wl-b wl-buttons">' . $run . '</div>' : $run;
     }
 
     public static function renderOne(array $b, array $ctx): string

@@ -1,0 +1,260 @@
+{
+  "fr": {
+    "hero": {
+      "aria": "Wordless : le CMS léger qui fait mieux que WordPress",
+      "badge": "Logiciel libre · AGPL-3.0",
+      "title": "Le CMS léger qui fait mieux que WordPress",
+      "subtitle": "SEO et GEO natifs, page builder, assistant IA, connecteur MCP pour Claude et ChatGPT, migration WordPress en quelques clics.",
+      "tiles": [
+        ["{ratio_size}×", "plus léger que WordPress", "{wl_size} au lieu de 110 Mo"],
+        ["2", "requêtes par page", "contre 7, à contenu identique"],
+        ["0,5 ms", "de temps serveur", "page en cache, contre 66 ms"],
+        ["1,05 s", "pour afficher la page (LCP)", "contre 2,1 s sur mobile"]
+      ]
+    },
+    "bench": {
+      "title": "WordPress 7.1.4 face à Wordless 1.0, sur le même site",
+      "subtitle": "Site de démonstration « Atelier Lumière » migré de WordPress vers Wordless : mêmes pages, mêmes images, mêmes adresses.",
+      "wp": "WordPress 7.1.4",
+      "wl": "Wordless 1.0",
+      "panels": [
+        {"title": "Le logiciel", "metrics": [
+          {"label": "Archive à télécharger", "wp": 37200, "wl": {wl_zip_kb}, "wp_txt": "37,2 Mo", "wl_txt": "{wl_zip}", "ratio": "{ratio_zip}× plus petite"},
+          {"label": "Fichiers", "wp": 3782, "wl": {wl_files}, "wp_txt": "3 782", "wl_txt": "{wl_files_txt}", "ratio": "{ratio_files}× moins"},
+          {"label": "Lignes de code PHP", "wp": 635602, "wl": {wl_php}, "wp_txt": "635 602", "wl_txt": "{wl_php_txt}", "ratio": "{ratio_php}× moins"}
+        ]},
+        {"title": "Page d'accueil, contenu identique", "metrics": [
+          {"label": "Poids transféré", "wp": 252, "wl": 42, "wp_txt": "252 Ko", "wl_txt": "42 Ko", "ratio": "6× plus léger"},
+          {"label": "Requêtes HTTP", "wp": 7, "wl": 2, "wp_txt": "7", "wl_txt": "2", "ratio": "3,5× moins"},
+          {"label": "JavaScript chargé", "wp": 67, "wl": 0, "wp_txt": "67 Ko (3 fichiers)", "wl_txt": "0 Ko", "ratio": "aucun"}
+        ]},
+        {"title": "Vitesse", "metrics": [
+          {"label": "Temps serveur, sans cache", "wp": 65.9, "wl": 4.2, "wp_txt": "65,9 ms", "wl_txt": "4,2 ms", "ratio": "16× plus rapide"},
+          {"label": "Affichage du contenu (LCP, mobile)", "wp": 2.10, "wl": 1.05, "wp_txt": "2,10 s", "wl_txt": "1,05 s", "ratio": "2× plus rapide"},
+          {"label": "Fichiers PHP chargés, sans cache", "wp": 530, "wl": 30, "wp_txt": "530", "wl_txt": "30", "ratio": "18× moins"}
+        ]}
+      ],
+      "footer": "Mesures du 1er novembre 2026, même machine (PHP 8.3, OPcache désactivé). Poids et requêtes : Chromium. Temps serveur : médiane de 40 requêtes. LCP : Lighthouse 13.6, mobile. Détails : docs/BENCHMARK.md"
+    },
+    "flow": {
+      "title": "Ce qui se passe quand un visiteur ouvre une page",
+      "subtitle": "Page d'accueil du site de démonstration, contenu identique des deux côtés.",
+      "wp": "WordPress 7.1.4 (thème Twenty Twenty-Five)",
+      "wp_steps": [["Démarrage", "530 fichiers PHP chargés"], ["Base de données", "32 requêtes SQL"], ["Thème et extensions", "assemblent la page"], ["Le navigateur", "charge CSS, 3 JS, police, image"]],
+      "wp_total": ["66 ms côté serveur", "7 requêtes · 252 Ko", "LCP mobile : 2,1 s"],
+      "wl": "Wordless 1.0",
+      "wl_steps": [["Page déjà prête", "lue en cache : 4 fichiers PHP"], ["0 requête SQL", "aucune base consultée"], ["Envoi immédiat", "HTML 33 Ko, CSS intégré, 0 JS"]],
+      "wl_total": ["0,5 ms côté serveur", "2 requêtes · 42 Ko", "LCP mobile : 1,05 s"],
+      "footer": "Sans cache (visiteur connecté, première visite), Wordless répond en 4,2 ms avec 30 fichiers PHP et 24 requêtes SQL. Mémoire : 2 Mo contre 10 Mo."
+    },
+    "migration": {
+      "title": "Migrer de WordPress à Wordless en quelques clics",
+      "subtitle": "Votre site WordPress n'est jamais modifié : Wordless lit son contenu, le convertit et vérifie chaque adresse.",
+      "src_title": "Votre site WordPress",
+      "src_items": [
+        ["Connexion directe", "Collez l'adresse du site. Avec un mot de passe d'application, les brouillons, pages privées et menus suivent aussi."],
+        ["Fichier d'export", "Outils › Exporter › Tout le contenu, puis envoyez le fichier .xml. Idéal pour les gros sites et Elementor."]
+      ],
+      "tool_title": "Assistant de migration",
+      "phases": ["Catégories et étiquettes", "Auteurs", "Images et fichiers", "Pages et articles", "Commentaires", "Menus", "Finalisation"],
+      "tool_note": "Reprend où il s'est arrêté, sans doublon",
+      "res_title": "Votre site Wordless",
+      "results": [
+        "Mêmes adresses : 14 sur 14 sur le site de démonstration",
+        "Redirections 301 pour les anciennes images, les liens ?p=123 et les anciens slugs",
+        "Titres et descriptions Yoast, Rank Math, SEOPress et AIOSEO repris",
+        "Blocs Gutenberg, Elementor et codes courts convertis",
+        "Images converties en WebP, en trois tailles",
+        "Rapport clair : importé, à revoir, ignoré"
+      ],
+      "footer": "Site de démonstration : 7 pages, 11 articles, 5 images, 8 commentaires et 2 menus importés en 3 secondes."
+    },
+    "mcp": {
+      "title": "Pilotez votre site depuis Claude, ChatGPT ou votre éditeur de code",
+      "subtitle": "Le connecteur MCP est intégré : l'IA lit, rédige, publie et optimise avec les droits de votre compte.",
+      "clients": [["Claude.ai · Claude Desktop", "Connecteur personnalisé · OAuth"], ["ChatGPT", "Mode développeur · OAuth"], ["Claude Code · Cursor · VS Code", "Clé API"], ["API Claude ou OpenAI", "Clé API · vos propres agents"]],
+      "server": ["OAuth 2.1 avec PKCE, ou clé API", "Les droits de votre compte, ni plus ni moins", "Jetons enregistrés hachés, révocables", "240 requêtes par minute au maximum", "Chaque action inscrite au journal"],
+      "tools_title": "22 outils",
+      "tools": [
+        ["Comprendre", ["site_overview", "search", "fetch", "get_analytics", "analyze_content"]],
+        ["Écrire et publier", ["list_content", "get_content", "create_content", "update_content", "publish_content", "delete_content"]],
+        ["Médias", ["list_media", "upload_media", "update_media"]],
+        ["Organiser", ["list_terms", "create_term", "manage_redirects", "list_comments", "moderate_comment"]],
+        ["Design et réglages", ["get_design", "update_design", "update_site_settings"]]
+      ],
+      "example": "« Écris un article sur la cuisson raku, optimisé pour Google et les IA, et programme-le pour lundi 9 h. »",
+      "footer": "Compatible avec tout client MCP « Streamable HTTP ». Guide complet : docs/MCP.md"
+    },
+    "security": {
+      "title": "La sécurité est intégrée, pas ajoutée",
+      "subtitle": "Comportements vérifiés sur une installation neuve de WordPress 7.1.4 et de Wordless 1.0.",
+      "wp": "WordPress 7.1.4, installation par défaut",
+      "wp_items": [
+        "xmlrpc.php actif : 80 méthodes accessibles à distance",
+        "Identifiants des comptes publics via /wp-json/wp/v2/users et ?author=1",
+        "Aucune limite aux tentatives de connexion",
+        "Pas de double authentification dans le cœur",
+        "Sécurité, cache, SEO, sauvegardes : autant d'extensions à surveiller"
+      ],
+      "wl": "Wordless 1.0, d'origine",
+      "wl_items": [
+        "Ni xmlrpc, ni liste publique des comptes",
+        "Blocage progressif des tentatives de connexion",
+        "Double authentification (application TOTP) et codes de secours",
+        "Mots de passe Argon2id, sessions en base, protection CSRF",
+        "Politique CSP stricte : un script injecté ne s'exécute pas",
+        "HTML nettoyé par liste blanche, clés d'API chiffrées",
+        "Seul index.php s'exécute, données privées hors d'atteinte"
+      ],
+      "note": "Selon Patchstack, 93 % des failles WordPress recensées en 2022 venaient des extensions, 6,7 % des thèmes et 0,6 % du cœur. Wordless intègre ces fonctions au lieu de les confier à des extensions tierces.",
+      "footer": "Source : Patchstack, rapporté par WP Tavern. Tests : requêtes HTTP sur les deux sites de démonstration."
+    },
+    "geo": {
+      "title": "GEO : être lu, compris et cité par les IA",
+      "subtitle": "ChatGPT, Claude, Perplexity et les AI Overviews de Google citent les sites qu'ils peuvent lire facilement.",
+      "engines_title": "Les moteurs de réponse",
+      "engines": [["ChatGPT", "GPTBot · OAI-SearchBot"], ["Claude", "ClaudeBot · Claude-SearchBot"], ["Perplexity", "PerplexityBot"], ["Google (Gemini, AI Overviews)", "Googlebot · Google-Extended"], ["Copilot, Mistral, Meta…", "Bingbot · MistralAI-User"]],
+      "serves_title": "Ce que Wordless leur sert",
+      "serves": [
+        ["robots.txt sur mesure", "Vous autorisez ou bloquez chaque robot d'IA, un par un."],
+        ["llms.txt et llms-full.txt", "La carte de votre site, au format attendu par les modèles de langage."],
+        ["Une version Markdown de chaque page", "Ajoutez .md à une adresse : texte propre, sans mise en page."],
+        ["Données structurées JSON-LD", "Article, FAQ, guide pratique, organisation, fil d'Ariane."],
+        ["Un contenu facile à citer", "Réponse directe, bloc « L'essentiel », FAQ, score GEO et conseils par page."]
+      ],
+      "result_title": "Ce que vous mesurez",
+      "result_text": "Le tableau de bord montre qui vous lit et qui vous recommande, sans cookie.",
+      "kpis": [["visites venues des assistants IA", "1 568"], ["passages de robots d'IA", "1 791"], ["lectures de llms.txt et des pages .md", "469"]],
+      "footer": "Chiffres sur 30 jours du tableau de bord du site de démonstration (données de démonstration)."
+    }
+  },
+  "en": {
+    "hero": {
+      "aria": "Wordless: the lightweight CMS that outperforms WordPress",
+      "badge": "Free software · AGPL-3.0",
+      "title": "The lightweight CMS that outperforms WordPress",
+      "subtitle": "Built-in SEO and GEO, page builder, AI assistant, MCP connector for Claude and ChatGPT, and a few-click migration from WordPress.",
+      "tiles": [
+        ["{ratio_size}×", "lighter than WordPress", "{wl_size_en} instead of 110 MB"],
+        ["2", "requests per page", "vs 7, same content"],
+        ["0.5 ms", "server time", "cached page, vs 66 ms"],
+        ["1.05 s", "to render the page (LCP)", "vs 2.1 s on mobile"]
+      ]
+    },
+    "bench": {
+      "title": "WordPress 7.1.4 vs Wordless 1.0, on the same website",
+      "subtitle": "The “Atelier Lumière” demo site migrated from WordPress to Wordless: same pages, same images, same URLs.",
+      "wp": "WordPress 7.1.4",
+      "wl": "Wordless 1.0",
+      "panels": [
+        {"title": "The software", "metrics": [
+          {"label": "Download size", "wp": 37200, "wl": {wl_zip_kb}, "wp_txt": "37.2 MB", "wl_txt": "{wl_zip_en}", "ratio": "{ratio_zip}× smaller"},
+          {"label": "Files", "wp": 3782, "wl": {wl_files}, "wp_txt": "3,782", "wl_txt": "{wl_files_en}", "ratio": "{ratio_files}× fewer"},
+          {"label": "Lines of PHP", "wp": 635602, "wl": {wl_php}, "wp_txt": "635,602", "wl_txt": "{wl_php_en}", "ratio": "{ratio_php}× fewer"}
+        ]},
+        {"title": "Home page, same content", "metrics": [
+          {"label": "Transferred size", "wp": 252, "wl": 42, "wp_txt": "252 KB", "wl_txt": "42 KB", "ratio": "6× lighter"},
+          {"label": "HTTP requests", "wp": 7, "wl": 2, "wp_txt": "7", "wl_txt": "2", "ratio": "3.5× fewer"},
+          {"label": "JavaScript loaded", "wp": 67, "wl": 0, "wp_txt": "67 KB (3 files)", "wl_txt": "0 KB", "ratio": "none"}
+        ]},
+        {"title": "Speed", "metrics": [
+          {"label": "Server time, uncached", "wp": 65.9, "wl": 4.2, "wp_txt": "65.9 ms", "wl_txt": "4.2 ms", "ratio": "16× faster"},
+          {"label": "Largest Contentful Paint (mobile)", "wp": 2.10, "wl": 1.05, "wp_txt": "2.10 s", "wl_txt": "1.05 s", "ratio": "2× faster"},
+          {"label": "PHP files loaded, uncached", "wp": 530, "wl": 30, "wp_txt": "530", "wl_txt": "30", "ratio": "18× fewer"}
+        ]}
+      ],
+      "footer": "Measured on November 1, 2026, same machine (PHP 8.3, OPcache off). Size and requests: Chromium. Server time: median of 40 requests. LCP: Lighthouse 13.6, mobile. Details: docs/BENCHMARK.md"
+    },
+    "flow": {
+      "title": "What happens when a visitor opens a page",
+      "subtitle": "Home page of the demo site, identical content on both sides.",
+      "wp": "WordPress 7.1.4 (Twenty Twenty-Five theme)",
+      "wp_steps": [["Bootstrap", "530 PHP files loaded"], ["Database", "32 SQL queries"], ["Theme and plugins", "assemble the page"], ["The browser", "loads CSS, 3 JS, a font, an image"]],
+      "wp_total": ["66 ms on the server", "7 requests · 252 KB", "Mobile LCP: 2.1 s"],
+      "wl": "Wordless 1.0",
+      "wl_steps": [["Page already built", "read from cache: 4 PHP files"], ["0 SQL queries", "no database access"], ["Sent right away", "33 KB of HTML, inline CSS, 0 JS"]],
+      "wl_total": ["0.5 ms on the server", "2 requests · 42 KB", "Mobile LCP: 1.05 s"],
+      "footer": "Uncached (logged-in visitor, first visit), Wordless answers in 4.2 ms with 30 PHP files and 24 SQL queries. Memory: 2 MB vs 10 MB."
+    },
+    "migration": {
+      "title": "Move from WordPress to Wordless in a few clicks",
+      "subtitle": "Your WordPress site is never modified: Wordless reads its content, converts it and checks every URL.",
+      "src_title": "Your WordPress site",
+      "src_items": [
+        ["Direct connection", "Paste the site URL. With an application password, drafts, private pages and menus come along too."],
+        ["Export file", "Tools › Export › All content, then upload the .xml file. Best for large sites and Elementor."]
+      ],
+      "tool_title": "Migration assistant",
+      "phases": ["Categories and tags", "Authors", "Images and files", "Pages and posts", "Comments", "Menus", "Finishing"],
+      "tool_note": "Resumes where it stopped, no duplicates",
+      "res_title": "Your Wordless site",
+      "results": [
+        "Same URLs: 14 out of 14 on the demo site",
+        "301 redirects for old images, ?p=123 links and old slugs",
+        "Yoast, Rank Math, SEOPress and AIOSEO titles and descriptions kept",
+        "Gutenberg blocks, Elementor and shortcodes converted",
+        "Images converted to WebP, in three sizes",
+        "A clear report: imported, to review, skipped"
+      ],
+      "footer": "Demo site: 7 pages, 11 posts, 5 images, 8 comments and 2 menus imported in 3 seconds."
+    },
+    "mcp": {
+      "title": "Run your site from Claude, ChatGPT or your code editor",
+      "subtitle": "The MCP connector is built in: the AI reads, writes, publishes and optimizes with your account's permissions.",
+      "clients": [["Claude.ai · Claude Desktop", "Custom connector · OAuth"], ["ChatGPT", "Developer mode · OAuth"], ["Claude Code · Cursor · VS Code", "API key"], ["Claude or OpenAI API", "API key · your own agents"]],
+      "server": ["OAuth 2.1 with PKCE, or an API key", "Your account's permissions, nothing more", "Tokens stored hashed, revocable", "At most 240 requests per minute", "Every action written to the log"],
+      "tools_title": "22 tools",
+      "tools": [
+        ["Understand", ["site_overview", "search", "fetch", "get_analytics", "analyze_content"]],
+        ["Write and publish", ["list_content", "get_content", "create_content", "update_content", "publish_content", "delete_content"]],
+        ["Media", ["list_media", "upload_media", "update_media"]],
+        ["Organize", ["list_terms", "create_term", "manage_redirects", "list_comments", "moderate_comment"]],
+        ["Design and settings", ["get_design", "update_design", "update_site_settings"]]
+      ],
+      "example": "“Write a post about raku firing, optimized for Google and AI search, and schedule it for Monday 9 a.m.”",
+      "footer": "Works with any “Streamable HTTP” MCP client. Full guide (French): docs/MCP.md"
+    },
+    "security": {
+      "title": "Security is built in, not bolted on",
+      "subtitle": "Behavior checked on fresh installs of WordPress 7.1.4 and Wordless 1.0.",
+      "wp": "WordPress 7.1.4, default install",
+      "wp_items": [
+        "xmlrpc.php enabled: 80 remotely callable methods",
+        "Account logins exposed via /wp-json/wp/v2/users and ?author=1",
+        "No limit on login attempts",
+        "No two-factor authentication in core",
+        "Security, caching, SEO, backups: that many plugins to keep an eye on"
+      ],
+      "wl": "Wordless 1.0, out of the box",
+      "wl_items": [
+        "No xmlrpc, no public list of accounts",
+        "Progressive lockout of login attempts",
+        "Two-factor authentication (TOTP app) and recovery codes",
+        "Argon2id passwords, server-side sessions, CSRF protection",
+        "Strict CSP: an injected script does not run",
+        "Allowlist HTML sanitizer, encrypted API keys",
+        "Only index.php executes, private data out of reach"
+      ],
+      "note": "According to Patchstack, 93% of the WordPress vulnerabilities recorded in 2022 were in plugins, 6.7% in themes and 0.6% in core. Wordless builds these features in instead of relying on third-party plugins.",
+      "footer": "Source: Patchstack, as reported by WP Tavern. Tests: HTTP requests on both demo sites."
+    },
+    "geo": {
+      "title": "GEO: get read, understood and cited by AI",
+      "subtitle": "ChatGPT, Claude, Perplexity and Google's AI Overviews cite the sites they can read easily.",
+      "engines_title": "Answer engines",
+      "engines": [["ChatGPT", "GPTBot · OAI-SearchBot"], ["Claude", "ClaudeBot · Claude-SearchBot"], ["Perplexity", "PerplexityBot"], ["Google (Gemini, AI Overviews)", "Googlebot · Google-Extended"], ["Copilot, Mistral, Meta…", "Bingbot · MistralAI-User"]],
+      "serves_title": "What Wordless serves them",
+      "serves": [
+        ["A tailored robots.txt", "Allow or block each AI crawler, one by one."],
+        ["llms.txt and llms-full.txt", "A map of your site, in the format language models expect."],
+        ["A Markdown version of every page", "Add .md to any URL: clean text, no layout."],
+        ["JSON-LD structured data", "Article, FAQ, how-to, organization, breadcrumbs."],
+        ["Content that is easy to quote", "Direct answer, “Key takeaways” block, FAQ, GEO score and advice per page."]
+      ],
+      "result_title": "What you can measure",
+      "result_text": "The dashboard shows who reads you and who recommends you, without cookies.",
+      "kpis": [["visits from AI assistants", "1,568"], ["visits from AI crawlers", "1,791"], ["reads of llms.txt and .md pages", "469"]],
+      "footer": "30-day figures from the demo site's dashboard (demo data)."
+    }
+  }
+}
