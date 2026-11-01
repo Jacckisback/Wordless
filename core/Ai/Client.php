@@ -26,6 +26,17 @@ final class Client
         'claude-fable-5-1' => 'Claude Fable 5.1 — le plus puissant',
     ];
 
+    /** Libellés traduits des modèles Claude (pour les listes de choix). */
+    public static function anthropicModels(): array
+    {
+        return [
+            'claude-opus-5-5' => 'Claude Opus 5.5 — ' . __('recommandé'),
+            'claude-sonnet-5-5' => 'Claude Sonnet 5.5 — ' . __('rapide'),
+            'claude-haiku-5-5' => 'Claude Haiku 5.5 — ' . __('économique'),
+            'claude-fable-5-1' => 'Claude Fable 5.1 — ' . __('le plus puissant'),
+        ];
+    }
+
     /** Tarifs Claude en $ par million de jetons (entrée, sortie), pour l'estimation des coûts. */
     public const ANTHROPIC_PRICES = [
         'claude-opus-5-5' => [4.0, 20.0], 'claude-sonnet-5-5' => [2.0, 10.0], 'claude-haiku-5-5' => [0.10, 0.50], 'claude-fable-5-1' => [10.0, 50.0],
@@ -33,6 +44,13 @@ final class Client
 
     /** Modèles qui acceptent le repli automatique en cas de refus (paramètre fallbacks: "default"). */
     private const FALLBACK_MODELS = ['claude-opus-5-5', 'claude-sonnet-5-5', 'claude-fable-5-1', 'claude-opus-5'];
+
+    /** Adresse de l'API (surcharge possible par variable d'environnement pour les tests). */
+    private static function base(string $provider): string
+    {
+        $env = getenv($provider === 'openai' ? 'WL_OPENAI_BASE' : 'WL_ANTHROPIC_BASE');
+        return is_string($env) && $env !== '' ? rtrim($env, '/') : ($provider === 'openai' ? 'https://api.openai.com' : 'https://api.anthropic.com');
+    }
 
     public static function key(string $provider): string
     {
@@ -163,7 +181,7 @@ final class Client
         $error = null;
         $served = $model;
         $onDelta = $o['on_delta'] ?? null;
-        self::sse('https://api.anthropic.com/v1/messages', $headers, $body, static function (array $ev) use (&$text, &$usage, &$stop, &$error, &$served, $onDelta): void {
+        self::sse(self::base('anthropic') . '/v1/messages', $headers, $body, static function (array $ev) use (&$text, &$usage, &$stop, &$error, &$served, $onDelta): void {
             switch ($ev['type'] ?? '') {
                 case 'message_start':
                     $usage['input'] = (int) ($ev['message']['usage']['input_tokens'] ?? 0) + (int) ($ev['message']['usage']['cache_read_input_tokens'] ?? 0) + (int) ($ev['message']['usage']['cache_creation_input_tokens'] ?? 0);
@@ -241,7 +259,7 @@ final class Client
         $usage = ['input' => 0, 'output' => 0];
         $error = null;
         $onDelta = $o['on_delta'] ?? null;
-        self::sse('https://api.openai.com/v1/chat/completions', [
+        self::sse(self::base('openai') . '/v1/chat/completions', [
             'content-type: application/json', 'authorization: Bearer ' . self::key('openai'),
         ], $body, static function (array $ev) use (&$text, &$usage, &$error, $onDelta): void {
             if (isset($ev['error'])) {
@@ -369,7 +387,7 @@ final class Client
         $headers = $provider === 'openai'
             ? ['authorization: Bearer ' . $key]
             : ['x-api-key: ' . $key, 'anthropic-version: ' . self::ANTHROPIC_VERSION];
-        $url = $provider === 'openai' ? 'https://api.openai.com/v1/models' : 'https://api.anthropic.com/v1/models?limit=100';
+        $url = self::base($provider) . ($provider === 'openai' ? '/v1/models' : '/v1/models?limit=100');
         $res = \Wordless\HttpClient::request('GET', $url, ['headers' => $headers, 'timeout' => 20, 'trusted' => true]);
         if ($res['status'] === 401 || $res['status'] === 403) {
             throw new \RuntimeException(__('Clé refusée par le fournisseur.'));

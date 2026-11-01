@@ -28,14 +28,7 @@ final class Front
         if (self::legacy($path)) {
             return;
         }
-        // Adresse canonique : avec ou sans barre finale selon le réglage du site.
-        if ($path !== '/' && !preg_match('#\.[a-z0-9]{2,5}$#i', $path)) {
-            $wantSlash = (bool) Settings::get('trailing_slash', true);
-            if ($wantSlash !== str_ends_with($path, '/')) {
-                $q = Http::query();
-                redirect(Config::basePath() . link_path($path) . ($q !== '' ? '?' . $q : ''), 301);
-            }
-        }
+        // Redirections d'abord : une ancienne adresse va à sa cible en un seul saut.
         $r = Redirects::match($path, Http::query());
         if ($r) {
             if ((int) $r['code'] === 410) {
@@ -44,6 +37,14 @@ final class Front
             }
             $target = preg_match('#^https?://#', $r['target']) ? $r['target'] : href($r['target']);
             redirect($target, (int) $r['code']);
+        }
+        // Adresse canonique : avec ou sans barre finale selon le réglage du site.
+        if ($path !== '/' && !preg_match('#\.[a-z0-9]{2,5}$#i', $path)) {
+            $wantSlash = (bool) Settings::get('trailing_slash', true);
+            if ($wantSlash !== str_ends_with($path, '/')) {
+                $q = Http::query();
+                redirect(Config::basePath() . link_path($path) . ($q !== '' ? '?' . $q : ''), 301);
+            }
         }
         if (str_ends_with($path, '.md') && Settings::get('geo.markdown', true)) {
             self::markdown(substr($path, 0, -3));
@@ -169,13 +170,21 @@ final class Front
         if ($path === '/wp-admin' || str_starts_with($path, '/wp-admin/')) {
             redirect(admin_url(), 302);
         }
-        if (str_starts_with($path, '/wp-content/uploads/')) {
-            $rel = substr($path, strlen('/wp-content/uploads/'));
+        // Anciennes images : /wp-content/uploads/… (aussi sous un sous-dossier ou en multisite).
+        if (preg_match('#^(?:/[^/]+)*?/wp-content/uploads/(?:sites/\d+/)?(.+)$#', $path, $m)) {
+            $rel = $m[1];
             if (!str_contains($rel, '..')) {
                 if (!is_file(WL_MEDIA . '/' . $rel)) {
-                    $alt = preg_replace('#-\d+x\d+(\.[a-z0-9]+)$#i', '$1', $rel) ?? $rel;
-                    $alt2 = preg_replace('#-scaled(\.[a-z0-9]+)$#i', '$1', $alt) ?? $alt;
-                    $rel = is_file(WL_MEDIA . '/' . $alt) ? $alt : (is_file(WL_MEDIA . '/' . $alt2) ? $alt2 : $rel);
+                    // Variantes créées par WordPress : -300x200, -scaled, -rotated, -e1700000000000 (image retouchée).
+                    $a = preg_replace('#-\d+x\d+(\.[a-z0-9]+)$#i', '$1', $rel) ?? $rel;
+                    $b = preg_replace('#-(?:scaled|rotated)(\.[a-z0-9]+)$#i', '$1', $a) ?? $a;
+                    $c = preg_replace('#-e\d{13}(\.[a-z0-9]+)$#i', '$1', $b) ?? $b;
+                    foreach ([$a, $b, $c] as $cand) {
+                        if (is_file(WL_MEDIA . '/' . $cand)) {
+                            $rel = $cand;
+                            break;
+                        }
+                    }
                 }
                 if (is_file(WL_MEDIA . '/' . $rel)) {
                     redirect(media_url($rel), 301);
@@ -358,10 +367,10 @@ final class Front
         $author = $c['author_id'] ? Db::val('SELECT name FROM users WHERE id = ?', [(int) $c['author_id']]) : '';
         $md = '# ' . $c['title'] . "\n\n"
             . '> ' . Seo::description($c) . "\n\n"
-            . '- ' . __('Source') . ' : ' . Content::permalink($c) . "\n"
-            . ($author ? '- ' . __('Auteur') . ' : ' . $author . "\n" : '')
-            . '- ' . __('Publié le') . ' : ' . gmdate('Y-m-d', (int) $c['published_at']) . "\n"
-            . '- ' . __('Mis à jour le') . ' : ' . gmdate('Y-m-d', (int) $c['updated_at']) . "\n\n"
+            . '- ' . __('Source : {v}', ['v' => Content::permalink($c)]) . "\n"
+            . ($author ? '- ' . __('Auteur : {v}', ['v' => $author]) . "\n" : '')
+            . '- ' . __('Publié le : {v}', ['v' => gmdate('Y-m-d', (int) $c['published_at'])]) . "\n"
+            . '- ' . __('Mis à jour le : {v}', ['v' => gmdate('Y-m-d', (int) $c['updated_at'])]) . "\n\n"
             . Blocks::toMarkdown($c['blocks']) . "\n";
         header('Link: <' . Content::permalink($c) . '>; rel="canonical"');
         self::send($md, 'md', 200, $path === '' ? '/index.md' : $path . '.md');
@@ -423,12 +432,12 @@ final class Front
         if (Http::method() !== 'HEAD') {
             echo $body;
         }
-        if ($type === 'html' && $status === 200 && !$logged && Settings::get('stats.enabled', true)) {
+        if (in_array($type, ['html', 'md', 'txt'], true) && $status === 200 && !$logged && Settings::get('stats.enabled', true)) {
             if (function_exists('fastcgi_finish_request')) {
                 fastcgi_finish_request();
             }
             require_once WL_CORE . '/hit.php';
-            wl_track_hit(Http::path());
+            wl_track_hit(Http::path(), $type !== 'html');
         }
     }
 }

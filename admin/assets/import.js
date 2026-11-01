@@ -26,19 +26,69 @@
   }
   function report(job) {
     var box = document.getElementById('import-report-body'); box.innerHTML = '';
-    var r = job.report || {};
-    var add = function (tag, text, cls) { var el = document.createElement(tag); el.textContent = text; if (cls) el.className = cls; box.appendChild(el); return el; };
-    add('p', T('Migration terminée.', 'Migration complete.', 'Migración terminada.'), 'status is-good');
-    if (r.summary) add('p', r.summary);
-    if (r.counts) { var ul = add('ul', '', 'checklist small'); Object.keys(r.counts).forEach(function (k) { var c = r.counts[k]; var li = document.createElement('li'); li.textContent = k + ' : ' + (typeof c === 'object' ? JSON.stringify(c) : c); ul.appendChild(li); }); }
-    (r.warnings || []).slice(0, 20).forEach(function (w) { add('p', '⚠ ' + (typeof w === 'string' ? w : JSON.stringify(w)), 'small muted'); });
-    (r.next_steps || r.nextSteps || []).forEach(function (s) { add('p', '→ ' + s, 'small'); });
-    var links = document.createElement('div'); links.className = 'actions-row';
-    [[T('Voir les articles', 'View posts', 'Ver artículos'), WL.base + '/content?type=post'], [T('Voir le site', 'View site', 'Ver el sitio'), WL.base.replace(/\/[^/]+$/, '/')], [T('Choisir le design', 'Pick a design', 'Elegir el diseño'), WL.base + '/design']].forEach(function (l) {
-      var a = document.createElement('a'); a.className = 'btn btn-sm'; a.href = l[1]; a.textContent = l[0]; links.appendChild(a);
+    var r = job.report || {}, c = r.counts || {};
+    var el = function (tag, text, cls, parent) { var n = document.createElement(tag); if (text != null) n.textContent = text; if (cls) n.className = cls; (parent || box).appendChild(n); return n; };
+    var num = function (n) { return Number(n || 0).toLocaleString(document.documentElement.lang || 'fr'); };
+    var dur = r.duration ? (r.duration < 60 ? r.duration + ' s' : Math.round(r.duration / 60) + ' min') : '';
+    el('p', T('Migration terminée', 'Migration complete', 'Migración terminada') + (dur ? ' · ' + dur : ''), 'status is-good');
+
+    // Ce qui a été importé
+    var rows = [['pages', T('Pages', 'Pages', 'Páginas')], ['posts', T('Articles', 'Posts', 'Artículos')], ['other', T('Autres contenus', 'Other content', 'Otros contenidos')],
+      ['media', T('Images et fichiers', 'Images and files', 'Imágenes y archivos')], ['categories', T('Catégories', 'Categories', 'Categorías')], ['tags', T('Étiquettes', 'Tags', 'Etiquetas')],
+      ['users', T('Auteurs', 'Authors', 'Autores')], ['comments', T('Commentaires', 'Comments', 'Comentarios')], ['menus', T('Menus', 'Menus', 'Menús')], ['redirects', T('Redirections 301', '301 redirects', 'Redirecciones 301')]];
+    var wrap = el('div', null, 'table-wrap'), table = el('table', null, 'table', wrap), head = el('tr', null, null, el('thead', null, null, table)), body = el('tbody', null, null, table);
+    [T('Élément', 'Item', 'Elemento'), T('Importés', 'Imported', 'Importados'), T('Mis à jour', 'Updated', 'Actualizados'), T('Ignorés', 'Skipped', 'Omitidos')].forEach(function (h, i) { el('th', h, i ? 'num' : '', head); });
+    rows.forEach(function (row) {
+      var k = c[row[0]]; if (!k || !(k.imported || k.updated || k.skipped)) return;
+      var tr = el('tr', null, null, body);
+      el('td', row[1], null, tr); el('td', num(k.imported), 'num', tr); el('td', num(k.updated), 'num', tr); el('td', num(k.skipped), 'num', tr);
     });
-    box.appendChild(links);
-    document.getElementById('import-report').hidden = false;
+
+    // Adresses conservées
+    var u = r.urls || {};
+    if (u.total) {
+      el('p', num(u.identical) + ' / ' + num(u.total) + ' ' + T('adresses identiques à WordPress', 'URLs identical to WordPress', 'direcciones idénticas a WordPress')
+        + (u.redirected ? ', ' + num(u.redirected) + ' ' + T('redirigées automatiquement (301)', 'redirected automatically (301)', 'redirigidas automáticamente (301)') : '') + '.', 'status ' + ((u.conflicts || []).length ? 'is-warn' : 'is-good'));
+      (u.conflicts || []).slice(0, 10).forEach(function (x) { el('p', '⚠ ' + x.path + ' : ' + x.reason, 'small'); });
+    }
+
+    // Contenus à revoir
+    if ((r.review || []).length) {
+      el('h3', T('À revoir', 'To review', 'Por revisar') + ' (' + r.review.length + ')');
+      var ul = el('ul', null, 'small');
+      r.review.slice(0, 50).forEach(function (it) {
+        var li = el('li', null, null, ul), a = el('a', it.title || it.path, null, li);
+        a.href = WL.base + '/content/' + it.id;
+        if ((it.issues || []).length) el('span', ' — ' + it.issues.join(' '), 'muted', li);
+      });
+    }
+
+    // Fichiers non récupérés, remarques
+    var failed = (r.media && r.media.failed) || [];
+    if (failed.length) {
+      el('p', '⚠ ' + failed.length + ' ' + T('fichier(s) non récupéré(s) :', 'file(s) not retrieved:', 'archivo(s) no recuperado(s):'), 'small');
+      failed.slice(0, 8).forEach(function (f) { el('p', f.url + (f.error ? ' (' + f.error + ')' : ''), 'small muted mono'); });
+    }
+    (r.warnings || []).slice(0, 20).forEach(function (w) {
+      if (typeof w === 'string') { el('p', '⚠ ' + w, 'small'); return; }
+      el('p', '⚠ ' + w.message + (w.count > 1 ? ' (' + w.count + ')' : '') + ((w.examples || []).length ? ' : ' + w.examples.slice(0, 3).join(', ') : ''), 'small');
+    });
+    (r.notices || []).slice(0, 10).forEach(function (n) { el('p', n, 'small muted'); });
+
+    // Prochaines étapes
+    var steps = r.next_steps || [];
+    if (steps.length) {
+      el('h3', T('Prochaines étapes', 'Next steps', 'Próximos pasos'));
+      var ol = el('ol', null, 'small');
+      steps.forEach(function (s) { el('li', s, null, ol); });
+    }
+    var links = el('div', null, 'actions-row');
+    [[T('Voir le site', 'View site', 'Ver el sitio'), WL.base.replace(/\/[^/]+$/, '/'), 'btn btn-primary btn-sm'], [T('Voir les articles', 'View posts', 'Ver artículos'), WL.base + '/content?type=post', 'btn btn-sm'], [T('Choisir le design', 'Pick a design', 'Elegir el diseño'), WL.base + '/design', 'btn btn-sm']].forEach(function (l) {
+      var a = el('a', l[0], l[2], links); a.href = l[1];
+    });
+    var rep = document.getElementById('import-report');
+    rep.hidden = false;
+    rep.scrollIntoView({ behavior: 'smooth', block: 'start' });
   }
   function loop(job) {
     render(job);

@@ -11,6 +11,8 @@ body.wl-editor{height:100vh;overflow:hidden;display:flex;flex-direction:column}
 .seg{display:inline-flex;border:1px solid var(--line-2);border-radius:var(--radius-s);overflow:hidden}
 .seg button{border:0;background:var(--panel);padding:.4rem .55rem;cursor:pointer;color:var(--ink-3);display:inline-flex}
 .seg button[aria-pressed=true]{background:var(--accent-soft);color:var(--accent-ink)}
+.seg button:disabled{opacity:.35;cursor:default}
+.seg button:not(:disabled):hover{color:var(--ink)}
 .ed-body{flex:1;display:grid;grid-template-columns:17rem minmax(0,1fr) 22rem;min-height:0}
 .ed-left,.ed-right{background:var(--panel);display:flex;flex-direction:column;min-height:0}
 .ed-left{border-right:1px solid var(--line)}
@@ -31,7 +33,7 @@ body.wl-editor{height:100vh;overflow:hidden;display:flex;flex-direction:column}
   .ed-right{right:0;transform:translateX(102%)}
   .ed-left.is-open,.ed-right.is-open{transform:none}
   .ed-toggle{display:inline-flex}
-  .ed-actions .seg,.ed-state{display:none}
+  .ed-actions .seg:not(.seg-hist),.ed-state{display:none}
 }
 @media (max-width:40rem){#ed-preview span,#ed-view span{display:none}}
 

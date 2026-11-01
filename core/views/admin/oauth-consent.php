@@ -56,7 +56,7 @@ $logo = WL_ROOT . '/admin/assets/logo.svg';
   <?php else: ?>
     <div class="notice notice--bad" role="alert"><p><?= e(__('Votre compte n’a aucun droit utilisable par un assistant IA.')) ?></p></div>
   <?php endif ?>
-  <p class="muted"><?= e(__('Elle ne verra jamais votre mot de passe et ne pourra ni gérer les comptes, ni modifier les clés d’API. Chaque action est inscrite au journal d’activité. Vous pourrez retirer cet accès à tout moment dans Réglages > Connecteur IA.')) ?></p>
+  <p class="muted"><?= e(__('Elle ne verra jamais votre mot de passe et ne pourra ni gérer les comptes, ni modifier les clés d’API. Chaque action est inscrite au journal d’activité. Vous pourrez retirer cet accès à tout moment dans l’administration, menu « Connecteur Claude / ChatGPT ».')) ?></p>
 
   <form method="post" action="<?= e($action) ?>" class="form-stack">
     <?= csrf_field() ?>

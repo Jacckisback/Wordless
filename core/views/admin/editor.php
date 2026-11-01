@@ -27,6 +27,10 @@ $back = admin_url('content?type=' . $c['type']);
   <input class="ed-title" id="ed-title" maxlength="300" autocomplete="off" placeholder="<?= e($c['type'] === 'page' ? __('Titre de la page') : __('Titre de l’article')) ?>">
   <span class="ed-state" id="ed-state" aria-live="polite"></span>
   <div class="ed-actions">
+    <div class="seg seg-hist" role="group" aria-label="<?= e(__('Historique des modifications')) ?>">
+      <button type="button" id="ed-undo" disabled title="<?= e(__('Annuler')) ?> (Ctrl+Z)"><?= icon('undo') ?><span class="sr"><?= e(__('Annuler')) ?></span></button>
+      <button type="button" id="ed-redo" disabled title="<?= e(__('Rétablir')) ?> (Ctrl+Maj+Z)"><?= icon('redo') ?><span class="sr"><?= e(__('Rétablir')) ?></span></button>
+    </div>
     <div class="seg" role="group" aria-label="<?= e(__('Taille de l’aperçu')) ?>">
       <button type="button" data-device="desktop" aria-pressed="true" title="<?= e(__('Ordinateur')) ?>"><?= icon('desktop') ?><span class="sr"><?= e(__('Ordinateur')) ?></span></button>
       <button type="button" data-device="mobile" aria-pressed="false" title="<?= e(__('Mobile')) ?>"><?= icon('mobile') ?><span class="sr"><?= e(__('Mobile')) ?></span></button>

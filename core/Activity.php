@@ -30,7 +30,7 @@ final class Activity
 
     public static function describe(array $row): string
     {
-        $label = $row['label'] !== '' ? '« ' . $row['label'] . ' »' : '';
+        $label = $row['label'] !== '' ? __('« {l} »', ['l' => $row['label']]) : '';
         return match ($row['action']) {
             'login' => __('s’est connecté'),
             'login_failed' => __('Échec de connexion {l}', ['l' => $label]),

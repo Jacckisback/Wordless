@@ -1,6 +1,7 @@
 <?php /** @var string $maxUpload @var bool $welcome @var bool $available */ ?>
 <?php if ($welcome): ?><div class="notice notice--good"><?= icon('check') ?><p><?= e(__('Votre site Wordless est installé. Importons maintenant votre site WordPress : comptez quelques minutes.')) ?></p></div><div class="stack"></div><?php endif ?>
 <div class="split" id="import-app">
+  <div class="stack">
   <form class="panel" id="import-form" enctype="multipart/form-data">
     <div class="panel-head"><div><h2><?= e(__('1. Comment récupérer votre site ?')) ?></h2><p class="muted small"><?= e(__('Articles, pages, images, catégories, étiquettes, commentaires, menus, auteurs et balises SEO (Yoast, Rank Math, SEOPress…). Vos adresses restent identiques.')) ?></p></div></div>
     <div class="panel-body form-stack">
@@ -42,12 +43,13 @@
     </div>
     <div class="panel-foot"><button class="btn btn-primary btn-lg" type="submit" <?= $available ? '' : 'disabled' ?>><?= icon('import') ?><?= e(__('Lancer la migration')) ?></button></div>
   </form>
+    <section class="panel" id="import-report" hidden><div class="panel-head"><h2><?= e(__('Résultat')) ?></h2></div><div class="panel-body stack" id="import-report-body"></div></section>
+  </div>
   <aside class="stack">
     <section class="panel" id="import-progress" hidden>
       <div class="panel-head"><h2><?= e(__('Progression')) ?></h2><span class="muted small" id="import-status"></span></div>
       <div class="panel-body stack"><ul class="progress-phases" id="import-phases"></ul><div class="log-box" id="import-log" aria-live="polite"></div></div>
     </section>
-    <section class="panel" id="import-report" hidden><div class="panel-head"><h2><?= e(__('Résultat')) ?></h2></div><div class="panel-body stack" id="import-report-body"></div></section>
     <div class="panel"><div class="panel-body stack-s"><h2><?= e(__('Ce qui est garanti')) ?></h2>
       <ul class="checklist small">
         <li><?= e(__('Mêmes adresses (URL) que sur WordPress : aucune perte de référencement')) ?></li>

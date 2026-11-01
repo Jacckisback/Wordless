@@ -107,14 +107,25 @@ final class Analytics
                 continue;
             }
             $bots = [];
+            $files = []; // fichiers prévus pour les IA (llms.txt, versions .md) lus par leurs robots
             foreach (file($tmp, FILE_IGNORE_NEW_LINES | FILE_SKIP_EMPTY_LINES) ?: [] as $line) {
                 $p = explode("\t", $line);
                 if (isset($p[1])) {
                     $bots[$p[1]] = ($bots[$p[1]] ?? 0) + 1;
+                    $path = (string) ($p[2] ?? '');
+                    if (in_array($p[1], wl_ai_bots(), true)) {
+                        $f = str_ends_with($path, '.md') ? 'md' : (preg_match('#/(llms(-full)?\.txt)$#', $path, $m) ? $m[1] : null);
+                        if ($f !== null) {
+                            $files[$f] = ($files[$f] ?? 0) + 1;
+                        }
+                    }
                 }
             }
             foreach ($bots as $name => $n) {
                 Db::run("INSERT INTO stats_sources (day, kind, source, views) VALUES (?, 'bot', ?, ?) ON CONFLICT(day, kind, source) DO UPDATE SET views = views + excluded.views", [$day, $name, $n]);
+            }
+            foreach ($files as $name => $n) {
+                Db::run("INSERT INTO stats_sources (day, kind, source, views) VALUES (?, 'aifile', ?, ?) ON CONFLICT(day, kind, source) DO UPDATE SET views = views + excluded.views", [$day, $name, $n]);
             }
             @unlink($tmp);
         }
@@ -163,6 +174,7 @@ final class Analytics
             'sources' => $sources,
             'channels' => ['search' => $sum('search'), 'ai' => $sum('ai'), 'social' => $sum('social'), 'referral' => $sum('referral'), 'direct' => $sum('direct')],
             'bots' => $sources['bot'] ?? [],
+            'ai_files' => array_column($sources['aifile'] ?? [], 'views', 'source'),
         ];
     }
 }

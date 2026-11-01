@@ -10,6 +10,10 @@ index.php            Point d'entrée unique (cache rapide puis App::run)
 router.php           Routeur pour `php -S` (développement)
 .htaccess            Réécritures Apache/LiteSpeed + protections
 bin/wordless         Ligne de commande (install, cron, backup, import…)
+bin/build-dist.php   Construit l'archive à installer : dist/wordless-<version>.zip
+bin/i18n-missing.php Liste les chaînes de l'interface non traduites (en, es)
+tests/               Tests de bout en bout : migration (php tests/migrate_test.php) et MCP
+dist/                Archive prête à envoyer par FTP
 core/                Code PHP, namespace Wordless\ (chargement automatique core/<Classe>.php)
   fastcache.php      Sert une page en cache sans démarrer l'application
   hit.php            Statistiques sans cookie (journal du jour)

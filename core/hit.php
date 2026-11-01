@@ -38,8 +38,15 @@ if (!function_exists('wl_track_hit')) {
         return (defined('WL_DATA') ? WL_DATA : WL_ROOT . '/data') . '/stats';
     }
 
-    function wl_track_hit(string $path): void
+    /**
+     * Enregistre une vue. $botsOnly : versions pour les IA (.md, llms.txt) — on ne compte
+     * que le passage des robots, pour savoir si les moteurs d'IA lisent ces fichiers.
+     */
+    function wl_track_hit(string $path, bool $botsOnly = false): void
     {
+        if ($botsOnly && !preg_match('#(\.md|/llms(-full)?\.txt)$#', $path)) {
+            return;
+        }
         $ua = (string) ($_SERVER['HTTP_USER_AGENT'] ?? '');
         $purpose = strtolower((string) ($_SERVER['HTTP_SEC_PURPOSE'] ?? $_SERVER['HTTP_PURPOSE'] ?? ''));
         if (str_contains($purpose, 'prefetch')) {
@@ -57,6 +64,9 @@ if (!function_exists('wl_track_hit')) {
                 @file_put_contents("$dir/bots-$day.log", time() . "\t$name\t$path\n", FILE_APPEND | LOCK_EX);
                 return;
             }
+        }
+        if ($botsOnly) {
+            return;
         }
         if ($ua === '' || preg_match('/bot|crawl|spider|slurp|facebookexternalhit|preview|monitor|curl|wget|python|java\/|go-http|okhttp|headless|lighthouse|pingdom|uptime|scrapy|httpclient|axios|node-fetch|phantom/i', $ua)) {
             return;

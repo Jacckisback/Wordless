@@ -1,0 +1,7 @@
+# Généré par build.sh (WordPress, base SQLite, serveur de test)
+/site/
+/vendor/
+/server.log
+/server.pid
+/debug.log
+/.seed-manifest.json

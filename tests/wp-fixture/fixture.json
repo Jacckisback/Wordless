@@ -1,0 +1,3568 @@
+{
+    "fixture": {
+        "name": "Atelier Lumière - WordPress 7.1.4 migration test fixture",
+        "version": 1,
+        "generated_at": "2026-11-01T07:54:29+00:00",
+        "deterministic_note": "Rebuilding with build.sh reproduces the same IDs, slugs, dates, URLs and files. Only generated_at, the WXR pubDate/created header, password hashes and the application password UUID differ."
+    },
+    "paths": {
+        "base": "/tmp/wp-test",
+        "docroot": "/tmp/wp-test/site/",
+        "wp_config": "/tmp/wp-test/site/wp-config.php",
+        "database": "/tmp/wp-test/site/wp-content/database/.ht.sqlite",
+        "uploads": "/tmp/wp-test/site/wp-content/uploads",
+        "router": "/tmp/wp-test/router.php",
+        "start_script": "/tmp/wp-test/start.sh",
+        "build_script": "/tmp/wp-test/build.sh",
+        "install_script": "/tmp/wp-test/install.php",
+        "seed_script": "/tmp/wp-test/seed.php",
+        "export_script": "/tmp/wp-test/export.php",
+        "verify_script": "/tmp/wp-test/verify.sh",
+        "export_file": "/tmp/wp-test/export.xml",
+        "server_log": "/tmp/wp-test/server.log",
+        "debug_log": "/tmp/wp-test/debug.log",
+        "mu_plugin": "/tmp/wp-test/site/wp-content/mu-plugins/fixture-tweaks.php",
+        "db_dropin": "/tmp/wp-test/site/wp-content/db.php"
+    },
+    "environment": {
+        "wordpress": "7.1.4",
+        "db_version": 61833,
+        "php": "8.3.6",
+        "database_engine": "sqlite (SQLite Database Integration plugin 3.1.2, db.php drop-in 1.8.0)",
+        "web_server": "PHP built-in server (php -S 127.0.0.1:8081 -t site router.php, PHP_CLI_SERVER_WORKERS=4)",
+        "theme": {
+            "stylesheet": "twentytwentyfive",
+            "name": "Twenty Twenty-Five",
+            "version": "1.5",
+            "is_block_theme": true,
+            "nav_menu_locations": []
+        },
+        "active_plugins": [
+            "sqlite-database-integration/load.php"
+        ],
+        "installed_plugins": [
+            "akismet/akismet.php",
+            "hello.php",
+            "sqlite-database-integration/load.php"
+        ],
+        "mu_plugins": [
+            "fixture-tweaks.php"
+        ],
+        "wp_config_constants": {
+            "DB_PATH": "/tmp/wp-test/site/wp-content/database/.ht.sqlite",
+            "WP_HTTP_BLOCK_EXTERNAL": true,
+            "DISABLE_WP_CRON": true,
+            "AUTOMATIC_UPDATER_DISABLED": true,
+            "WP_DEBUG": true,
+            "WP_DEBUG_DISPLAY": false,
+            "WP_DEBUG_LOG": "/tmp/wp-test/debug.log"
+        },
+        "application_passwords_available": true,
+        "attachment_pages_enabled": false
+    },
+    "site": {
+        "url": "http://127.0.0.1:8081",
+        "siteurl": "http://127.0.0.1:8081",
+        "rest_root": "http://127.0.0.1:8081/wp-json/",
+        "title": "Atelier Lumière",
+        "tagline": "Céramique artisanale à Lyon",
+        "admin_email": "admin@example.com",
+        "language": "en_US",
+        "content_language": "fr",
+        "timezone_string": "Europe/Paris",
+        "date_format": "j F Y",
+        "time_format": "H:i",
+        "permalink_structure": "/%postname%/",
+        "category_base": "/category/",
+        "tag_base": "/tag/",
+        "show_on_front": "page",
+        "page_on_front": 10,
+        "page_for_posts": 11,
+        "wp_page_for_privacy_policy": 3,
+        "posts_per_page": 10,
+        "default_category": 1,
+        "sticky_posts": [
+            16
+        ],
+        "blog_public": 1,
+        "thread_comments_depth": 5
+    },
+    "credentials": {
+        "admin": {
+            "login": "admin",
+            "password": "Admin-Test-2026!",
+            "email": "admin@example.com",
+            "role": "administrator"
+        },
+        "application_password": {
+            "user": "admin",
+            "name": "Migration fixture (REST import)",
+            "uuid": "39364295-fdda-4cdb-9867-27aa54d97ea3",
+            "password": "Fixt Atel Lumi 2026 Rest ApiK",
+            "password_nospace": "FixtAtelLumi2026RestApiK",
+            "curl_example": "curl -u 'admin:Fixt Atel Lumi 2026 Rest ApiK' 'http://127.0.0.1:8081/wp-json/wp/v2/posts?context=edit&status=any&per_page=100'",
+            "basic_auth_header": "Authorization: Basic YWRtaW46Rml4dCBBdGVsIEx1bWkgMjAyNiBSZXN0IEFwaUs="
+        },
+        "claire": {
+            "login": "claire",
+            "password": "Claire-Test-2026!",
+            "email": "claire@example.com",
+            "role": "editor"
+        },
+        "lucas": {
+            "login": "lucas",
+            "password": "Lucas-Test-2026!",
+            "email": "lucas@example.com",
+            "role": "author"
+        }
+    },
+    "users": [
+        {
+            "id": 1,
+            "login": "admin",
+            "slug": "admin",
+            "email": "admin@example.com",
+            "display_name": "Émilie Roux",
+            "first_name": "Émilie",
+            "last_name": "Roux",
+            "nickname": "Émilie",
+            "role": "administrator",
+            "url": "https://www.atelier-lumiere.example/",
+            "description": "Céramiste et fondatrice de l'Atelier Lumière. Formée à Saint-Quentin-la-Poterie, Émilie tourne le grès depuis quinze ans et anime les stages intensifs.",
+            "registered": "2025-11-03 08:12:00",
+            "author_url": "http://127.0.0.1:8081/author/admin/",
+            "posts": {
+                "publish": 2,
+                "draft": 0,
+                "future": 1,
+                "private": 1
+            }
+        },
+        {
+            "id": 2,
+            "login": "claire",
+            "slug": "claire",
+            "email": "claire@example.com",
+            "display_name": "Claire Martin",
+            "first_name": "Claire",
+            "last_name": "Martin",
+            "nickname": "Claire",
+            "role": "editor",
+            "url": "",
+            "description": "Responsable de l'émaillage et des cuissons. Claire anime le cours du jeudi soir et teste chaque semaine de nouvelles recettes d'émaux.",
+            "registered": "2026-01-05 09:00:00",
+            "author_url": "http://127.0.0.1:8081/author/claire/",
+            "posts": {
+                "publish": 3,
+                "draft": 1,
+                "future": 0,
+                "private": 0
+            }
+        },
+        {
+            "id": 3,
+            "login": "lucas",
+            "slug": "lucas",
+            "email": "lucas@example.com",
+            "display_name": "Lucas Petit",
+            "first_name": "Lucas",
+            "last_name": "Petit",
+            "nickname": "Lucas",
+            "role": "author",
+            "url": "https://lucas-raku.example/",
+            "description": "Passionné de raku et de modelage, Lucas encadre les ateliers enfants du mercredi et les cuissons raku du samedi.",
+            "registered": "2026-01-08 13:30:00",
+            "author_url": "http://127.0.0.1:8081/author/lucas/",
+            "posts": {
+                "publish": 3,
+                "draft": 0,
+                "future": 0,
+                "private": 0
+            }
+        }
+    ],
+    "categories": [
+        {
+            "id": 1,
+            "name": "Uncategorized",
+            "slug": "uncategorized",
+            "parent": 0,
+            "parent_slug": null,
+            "description": "",
+            "count": 1,
+            "url": "http://127.0.0.1:8081/category/uncategorized/"
+        },
+        {
+            "id": 2,
+            "name": "Ateliers",
+            "slug": "ateliers",
+            "parent": 0,
+            "parent_slug": null,
+            "description": "Tous nos ateliers de poterie et de céramique : cours réguliers, stages et séances découverte.",
+            "count": 2,
+            "url": "http://127.0.0.1:8081/category/ateliers/"
+        },
+        {
+            "id": 3,
+            "name": "Ateliers enfants",
+            "slug": "ateliers-enfants",
+            "parent": 2,
+            "parent_slug": "ateliers",
+            "description": "Modelage et poterie pour les 6–12 ans, le mercredi et pendant les vacances scolaires.",
+            "count": 1,
+            "url": "http://127.0.0.1:8081/category/ateliers/ateliers-enfants/"
+        },
+        {
+            "id": 4,
+            "name": "Ateliers adultes",
+            "slug": "ateliers-adultes",
+            "parent": 2,
+            "parent_slug": "ateliers",
+            "description": "Cours hebdomadaires, stages intensifs et soirées découverte pour adultes.",
+            "count": 1,
+            "url": "http://127.0.0.1:8081/category/ateliers/ateliers-adultes/"
+        },
+        {
+            "id": 5,
+            "name": "Techniques",
+            "slug": "techniques",
+            "parent": 0,
+            "parent_slug": null,
+            "description": "Tournage, émaillage, cuisson : nos articles pour comprendre et progresser.",
+            "count": 3,
+            "url": "http://127.0.0.1:8081/category/techniques/"
+        },
+        {
+            "id": 6,
+            "name": "Émaillage",
+            "slug": "emaillage",
+            "parent": 5,
+            "parent_slug": "techniques",
+            "description": "Recettes, modes d'application et défauts d'émail expliqués.",
+            "count": 2,
+            "url": "http://127.0.0.1:8081/category/techniques/emaillage/"
+        },
+        {
+            "id": 7,
+            "name": "Actualités",
+            "slug": "actualites",
+            "parent": 0,
+            "parent_slug": null,
+            "description": "La vie de l'atelier : nouveautés, événements, marchés et portes ouvertes.",
+            "count": 2,
+            "url": "http://127.0.0.1:8081/category/actualites/"
+        }
+    ],
+    "tags": [
+        {
+            "id": 8,
+            "name": "argile",
+            "slug": "argile",
+            "parent": 0,
+            "parent_slug": null,
+            "description": "Terres et argiles : grès, faïence, porcelaine…",
+            "count": 2,
+            "url": "http://127.0.0.1:8081/tag/argile/"
+        },
+        {
+            "id": 9,
+            "name": "émail",
+            "slug": "email",
+            "parent": 0,
+            "parent_slug": null,
+            "description": "Tout sur les émaux céramiques : composition, application, cuisson.",
+            "count": 2,
+            "url": "http://127.0.0.1:8081/tag/email/"
+        },
+        {
+            "id": 10,
+            "name": "grès",
+            "slug": "gres",
+            "parent": 0,
+            "parent_slug": null,
+            "description": "Le grès, terre reine de la vaisselle utilitaire.",
+            "count": 2,
+            "url": "http://127.0.0.1:8081/tag/gres/"
+        },
+        {
+            "id": 11,
+            "name": "raku",
+            "slug": "raku",
+            "parent": 0,
+            "parent_slug": null,
+            "description": "Technique de cuisson d'origine japonaise, spectaculaire et imprévisible.",
+            "count": 1,
+            "url": "http://127.0.0.1:8081/tag/raku/"
+        },
+        {
+            "id": 12,
+            "name": "tournage",
+            "slug": "tournage",
+            "parent": 0,
+            "parent_slug": null,
+            "description": "Le travail au tour de potier : centrage, montée, tournassage.",
+            "count": 1,
+            "url": "http://127.0.0.1:8081/tag/tournage/"
+        },
+        {
+            "id": 13,
+            "name": "cuisson",
+            "slug": "cuisson",
+            "parent": 0,
+            "parent_slug": null,
+            "description": "Fours, températures et courbes de cuisson.",
+            "count": 2,
+            "url": "http://127.0.0.1:8081/tag/cuisson/"
+        },
+        {
+            "id": 14,
+            "name": "porcelaine",
+            "slug": "porcelaine",
+            "parent": 0,
+            "parent_slug": null,
+            "description": "Travailler la porcelaine, fine et translucide.",
+            "count": 1,
+            "url": "http://127.0.0.1:8081/tag/porcelaine/"
+        },
+        {
+            "id": 15,
+            "name": "Lyon",
+            "slug": "lyon",
+            "parent": 0,
+            "parent_slug": null,
+            "description": "Ateliers et événements céramique à Lyon et alentours.",
+            "count": 3,
+            "url": "http://127.0.0.1:8081/tag/lyon/"
+        }
+    ],
+    "post_formats": [
+        {
+            "id": 16,
+            "name": "Video",
+            "slug": "post-format-video",
+            "parent": 0,
+            "parent_slug": null,
+            "description": "",
+            "count": 1,
+            "url": "http://127.0.0.1:8081/type/video/"
+        }
+    ],
+    "media": [
+        {
+            "id": 4,
+            "key": "img_tour",
+            "title": "Le tour de potier",
+            "slug": "le-tour-de-potier",
+            "mime_type": "image/jpeg",
+            "author": "admin",
+            "date": "2026-01-12 10:00:00",
+            "date_gmt": "2026-01-12 09:00:00",
+            "parent": 0,
+            "guid": "http://127.0.0.1:8081/wp-content/uploads/2026/01/atelier-tour-de-potier.jpg",
+            "attached_file": "2026/01/atelier-tour-de-potier.jpg",
+            "url": "http://127.0.0.1:8081/wp-content/uploads/2026/01/atelier-tour-de-potier.jpg",
+            "original_image_url": null,
+            "width": 1600,
+            "height": 1000,
+            "filesize": 67446,
+            "alt": "Mains de potière façonnant un bol sur le tour",
+            "caption": "Le tour de potier, cœur de l'atelier.",
+            "description": "Image d'illustration (générée) : le coin tournage de l'atelier.",
+            "sizes": {
+                "medium": {
+                    "file": "2026/01/atelier-tour-de-potier-300x188.jpg",
+                    "width": 300,
+                    "height": 188,
+                    "url": "http://127.0.0.1:8081/wp-content/uploads/2026/01/atelier-tour-de-potier-300x188.jpg"
+                },
+                "large": {
+                    "file": "2026/01/atelier-tour-de-potier-1024x640.jpg",
+                    "width": 1024,
+                    "height": 640,
+                    "url": "http://127.0.0.1:8081/wp-content/uploads/2026/01/atelier-tour-de-potier-1024x640.jpg"
+                },
+                "thumbnail": {
+                    "file": "2026/01/atelier-tour-de-potier-150x150.jpg",
+                    "width": 150,
+                    "height": 150,
+                    "url": "http://127.0.0.1:8081/wp-content/uploads/2026/01/atelier-tour-de-potier-150x150.jpg"
+                },
+                "medium_large": {
+                    "file": "2026/01/atelier-tour-de-potier-768x480.jpg",
+                    "width": 768,
+                    "height": 480,
+                    "url": "http://127.0.0.1:8081/wp-content/uploads/2026/01/atelier-tour-de-potier-768x480.jpg"
+                },
+                "1536x1536": {
+                    "file": "2026/01/atelier-tour-de-potier-1536x960.jpg",
+                    "width": 1536,
+                    "height": 960,
+                    "url": "http://127.0.0.1:8081/wp-content/uploads/2026/01/atelier-tour-de-potier-1536x960.jpg"
+                }
+            },
+            "notes": [
+                "JPEG 1600x1000, unattached (post_parent 0)",
+                "medium size is -300x188"
+            ]
+        },
+        {
+            "id": 5,
+            "key": "img_panorama",
+            "title": "Panorama de l'atelier",
+            "slug": "panorama-de-latelier",
+            "mime_type": "image/jpeg",
+            "author": "admin",
+            "date": "2026-02-08 16:20:00",
+            "date_gmt": "2026-02-08 15:20:00",
+            "parent": 16,
+            "guid": "http://127.0.0.1:8081/wp-content/uploads/2026/02/panorama-atelier-croix-rousse.jpg",
+            "attached_file": "2026/02/panorama-atelier-croix-rousse-scaled.jpg",
+            "url": "http://127.0.0.1:8081/wp-content/uploads/2026/02/panorama-atelier-croix-rousse-scaled.jpg",
+            "original_image_url": "http://127.0.0.1:8081/wp-content/uploads/2026/02/panorama-atelier-croix-rousse.jpg",
+            "width": 2560,
+            "height": 1707,
+            "filesize": 141014,
+            "alt": "Vue d'ensemble de l'atelier avec les étagères de pièces crues",
+            "caption": "L'atelier de la Croix-Rousse vu depuis la mezzanine.",
+            "description": "Image d'illustration (générée), plus grande que le seuil big_image_size_threshold (2560 px).",
+            "sizes": {
+                "medium": {
+                    "file": "2026/02/panorama-atelier-croix-rousse-300x200.jpg",
+                    "width": 300,
+                    "height": 200,
+                    "url": "http://127.0.0.1:8081/wp-content/uploads/2026/02/panorama-atelier-croix-rousse-300x200.jpg"
+                },
+                "large": {
+                    "file": "2026/02/panorama-atelier-croix-rousse-1024x683.jpg",
+                    "width": 1024,
+                    "height": 683,
+                    "url": "http://127.0.0.1:8081/wp-content/uploads/2026/02/panorama-atelier-croix-rousse-1024x683.jpg"
+                },
+                "thumbnail": {
+                    "file": "2026/02/panorama-atelier-croix-rousse-150x150.jpg",
+                    "width": 150,
+                    "height": 150,
+                    "url": "http://127.0.0.1:8081/wp-content/uploads/2026/02/panorama-atelier-croix-rousse-150x150.jpg"
+                },
+                "medium_large": {
+                    "file": "2026/02/panorama-atelier-croix-rousse-768x512.jpg",
+                    "width": 768,
+                    "height": 512,
+                    "url": "http://127.0.0.1:8081/wp-content/uploads/2026/02/panorama-atelier-croix-rousse-768x512.jpg"
+                },
+                "1536x1536": {
+                    "file": "2026/02/panorama-atelier-croix-rousse-1536x1024.jpg",
+                    "width": 1536,
+                    "height": 1024,
+                    "url": "http://127.0.0.1:8081/wp-content/uploads/2026/02/panorama-atelier-croix-rousse-1536x1024.jpg"
+                },
+                "2048x2048": {
+                    "file": "2026/02/panorama-atelier-croix-rousse-2048x1365.jpg",
+                    "width": 2048,
+                    "height": 1365,
+                    "url": "http://127.0.0.1:8081/wp-content/uploads/2026/02/panorama-atelier-croix-rousse-2048x1365.jpg"
+                }
+            },
+            "notes": [
+                "JPEG 3000x2000 > 2560 px: WordPress created a \"-scaled\" copy (_wp_attached_file = ...-scaled.jpg, original_image in metadata)",
+                "medium size is -300x200"
+            ]
+        },
+        {
+            "id": 6,
+            "key": "img_bols",
+            "title": "Bols en grès émaillés",
+            "slug": "bols-en-gres-emailles",
+            "mime_type": "image/jpeg",
+            "author": "claire",
+            "date": "2026-03-16 11:45:00",
+            "date_gmt": "2026-03-16 10:45:00",
+            "parent": 17,
+            "guid": "http://127.0.0.1:8081/wp-content/uploads/2026/03/bols-gres-emailles.jpg",
+            "attached_file": "2026/03/bols-gres-emailles.jpg",
+            "url": "http://127.0.0.1:8081/wp-content/uploads/2026/03/bols-gres-emailles.jpg",
+            "original_image_url": null,
+            "width": 1200,
+            "height": 1200,
+            "filesize": 53848,
+            "alt": "Trois bols en grès émaillés bleu céladon",
+            "caption": "Bols en grès, émail céladon maison.",
+            "description": "Image d'illustration (générée) : bols de la collection de printemps.",
+            "sizes": {
+                "medium": {
+                    "file": "2026/03/bols-gres-emailles-300x300.jpg",
+                    "width": 300,
+                    "height": 300,
+                    "url": "http://127.0.0.1:8081/wp-content/uploads/2026/03/bols-gres-emailles-300x300.jpg"
+                },
+                "large": {
+                    "file": "2026/03/bols-gres-emailles-1024x1024.jpg",
+                    "width": 1024,
+                    "height": 1024,
+                    "url": "http://127.0.0.1:8081/wp-content/uploads/2026/03/bols-gres-emailles-1024x1024.jpg"
+                },
+                "thumbnail": {
+                    "file": "2026/03/bols-gres-emailles-150x150.jpg",
+                    "width": 150,
+                    "height": 150,
+                    "url": "http://127.0.0.1:8081/wp-content/uploads/2026/03/bols-gres-emailles-150x150.jpg"
+                },
+                "medium_large": {
+                    "file": "2026/03/bols-gres-emailles-768x768.jpg",
+                    "width": 768,
+                    "height": 768,
+                    "url": "http://127.0.0.1:8081/wp-content/uploads/2026/03/bols-gres-emailles-768x768.jpg"
+                }
+            },
+            "notes": [
+                "JPEG 1200x1200 (square)",
+                "medium size is -300x300"
+            ]
+        },
+        {
+            "id": 7,
+            "key": "img_raku",
+            "title": "Cuisson raku",
+            "slug": "cuisson-raku",
+            "mime_type": "image/jpeg",
+            "author": "lucas",
+            "date": "2026-04-20 19:10:00",
+            "date_gmt": "2026-04-20 17:10:00",
+            "parent": 18,
+            "guid": "http://127.0.0.1:8081/wp-content/uploads/2026/04/cuisson-raku.jpg",
+            "attached_file": "2026/04/cuisson-raku.jpg",
+            "url": "http://127.0.0.1:8081/wp-content/uploads/2026/04/cuisson-raku.jpg",
+            "original_image_url": null,
+            "width": 800,
+            "height": 600,
+            "filesize": 24961,
+            "alt": "Pièce incandescente sortie du four raku",
+            "caption": "Sortie du four à 950 °C.",
+            "description": "Image d'illustration (générée) : cuisson raku dans la cour.",
+            "sizes": {
+                "medium": {
+                    "file": "2026/04/cuisson-raku-300x225.jpg",
+                    "width": 300,
+                    "height": 225,
+                    "url": "http://127.0.0.1:8081/wp-content/uploads/2026/04/cuisson-raku-300x225.jpg"
+                },
+                "thumbnail": {
+                    "file": "2026/04/cuisson-raku-150x150.jpg",
+                    "width": 150,
+                    "height": 150,
+                    "url": "http://127.0.0.1:8081/wp-content/uploads/2026/04/cuisson-raku-150x150.jpg"
+                },
+                "medium_large": {
+                    "file": "2026/04/cuisson-raku-768x576.jpg",
+                    "width": 768,
+                    "height": 576,
+                    "url": "http://127.0.0.1:8081/wp-content/uploads/2026/04/cuisson-raku-768x576.jpg"
+                }
+            },
+            "notes": [
+                "JPEG 800x600 (no \"large\" size: smaller than 1024)",
+                "medium size is -300x225"
+            ]
+        },
+        {
+            "id": 8,
+            "key": "img_enfants",
+            "title": "Atelier enfants",
+            "slug": "atelier-enfants",
+            "mime_type": "image/png",
+            "author": "lucas",
+            "date": "2026-06-10 15:30:00",
+            "date_gmt": "2026-06-10 13:30:00",
+            "parent": 20,
+            "guid": "http://127.0.0.1:8081/wp-content/uploads/2026/06/atelier-enfants-modelage.png",
+            "attached_file": "2026/06/atelier-enfants-modelage.png",
+            "url": "http://127.0.0.1:8081/wp-content/uploads/2026/06/atelier-enfants-modelage.png",
+            "original_image_url": null,
+            "width": 1200,
+            "height": 800,
+            "filesize": 19881,
+            "alt": "Enfants modelant de l'argile autour d'une table",
+            "caption": "Atelier du mercredi : modelage libre.",
+            "description": "Image d'illustration (générée) : l'atelier enfants du mercredi.",
+            "sizes": {
+                "medium": {
+                    "file": "2026/06/atelier-enfants-modelage-300x200.png",
+                    "width": 300,
+                    "height": 200,
+                    "url": "http://127.0.0.1:8081/wp-content/uploads/2026/06/atelier-enfants-modelage-300x200.png"
+                },
+                "large": {
+                    "file": "2026/06/atelier-enfants-modelage-1024x683.png",
+                    "width": 1024,
+                    "height": 683,
+                    "url": "http://127.0.0.1:8081/wp-content/uploads/2026/06/atelier-enfants-modelage-1024x683.png"
+                },
+                "thumbnail": {
+                    "file": "2026/06/atelier-enfants-modelage-150x150.png",
+                    "width": 150,
+                    "height": 150,
+                    "url": "http://127.0.0.1:8081/wp-content/uploads/2026/06/atelier-enfants-modelage-150x150.png"
+                },
+                "medium_large": {
+                    "file": "2026/06/atelier-enfants-modelage-768x512.png",
+                    "width": 768,
+                    "height": 512,
+                    "url": "http://127.0.0.1:8081/wp-content/uploads/2026/06/atelier-enfants-modelage-768x512.png"
+                }
+            },
+            "notes": [
+                "PNG 1200x800",
+                "medium size is -300x200"
+            ]
+        }
+    ],
+    "posts": [
+        {
+            "id": 16,
+            "key": "post_nouvel_atelier",
+            "type": "post",
+            "slug": "notre-nouvel-atelier-croix-rousse",
+            "title": "Notre nouvel atelier à la Croix-Rousse",
+            "status": "publish",
+            "author": "admin",
+            "author_id": 1,
+            "date": "2026-02-10 09:30:00",
+            "date_gmt": "2026-02-10 08:30:00",
+            "modified": "2026-02-10 09:30:00",
+            "modified_gmt": "2026-02-10 08:30:00",
+            "url": "http://127.0.0.1:8081/notre-nouvel-atelier-croix-rousse/",
+            "path": "/notre-nouvel-atelier-croix-rousse/",
+            "guid": "http://127.0.0.1:8081/notre-nouvel-atelier-croix-rousse/",
+            "parent": 0,
+            "menu_order": 0,
+            "comment_status": "open",
+            "ping_status": "open",
+            "password": "",
+            "sticky": true,
+            "format": "standard",
+            "template": null,
+            "categories": [
+                "actualites"
+            ],
+            "category_ids": [
+                7
+            ],
+            "tags": [
+                "argile",
+                "lyon"
+            ],
+            "tag_ids": [
+                8,
+                15
+            ],
+            "featured_media": 5,
+            "excerpt_raw": "",
+            "has_more_tag": true,
+            "editor": "gutenberg",
+            "blocks": {
+                "core/button": 2,
+                "core/buttons": 1,
+                "core/column": 2,
+                "core/columns": 1,
+                "core/cover": 1,
+                "core/embed": 1,
+                "core/gallery": 1,
+                "core/heading": 5,
+                "core/html": 1,
+                "core/image": 3,
+                "core/more": 1,
+                "core/paragraph": 5,
+                "core/separator": 1
+            },
+            "synced_pattern_refs": [],
+            "shortcodes": [],
+            "shortcode_tags": [],
+            "bare_urls_on_own_line": [
+                "https://www.youtube.com/watch?v=dQw4w9WgXcQ"
+            ],
+            "internal_links": [
+                {
+                    "url": "http://127.0.0.1:8081/a-propos/tarifs/",
+                    "type": "page",
+                    "id": 13
+                },
+                {
+                    "url": "http://127.0.0.1:8081/contact/",
+                    "type": "page",
+                    "id": 14
+                }
+            ],
+            "images_in_content": [
+                {
+                    "src": "http://127.0.0.1:8081/wp-content/uploads/2026/02/panorama-atelier-croix-rousse-1024x683.jpg",
+                    "attachment_id": 5,
+                    "size": "large"
+                },
+                {
+                    "src": "http://127.0.0.1:8081/wp-content/uploads/2026/01/atelier-tour-de-potier-1024x640.jpg",
+                    "attachment_id": 4,
+                    "size": "large"
+                },
+                {
+                    "src": "http://127.0.0.1:8081/wp-content/uploads/2026/03/bols-gres-emailles-1024x1024.jpg",
+                    "attachment_id": 6,
+                    "size": "large"
+                },
+                {
+                    "src": "http://127.0.0.1:8081/wp-content/uploads/2026/04/cuisson-raku.jpg",
+                    "attachment_id": 7,
+                    "size": "full"
+                }
+            ],
+            "external_urls": [
+                "https://www.youtube.com/watch?v=dQw4w9WgXcQ",
+                "https://www.openstreetmap.org/export/embed.html?bbox=4.8290%2C45.7690%2C4.8390%2C45.7740&amp;layer=mapnik&amp;marker=45.7715%2C4.8340"
+            ],
+            "content_length": 5454,
+            "content_sha256": "5c2647191c5d562a4453b4a319b61e46c6a4da35e82fd10b92e135a3e314b11d",
+            "seo": {
+                "plugin": "yoast",
+                "meta": {
+                    "_yoast_wpseo_content_score": "60",
+                    "_yoast_wpseo_estimated-reading-time-minutes": "3",
+                    "_yoast_wpseo_focuskw": "atelier céramique Lyon",
+                    "_yoast_wpseo_metadesc": "L'Atelier Lumière s'installe sur les pentes de la Croix-Rousse : 120 m², huit tours et un four raku. Visite en images et en vidéo.",
+                    "_yoast_wpseo_title": "%%title%% %%page%% %%sep%% %%sitename%%"
+                }
+            },
+            "elementor_meta": null,
+            "other_meta": {
+                "_oembed_cc2d7cb3bed61ed522814a412e9d5d36": "{{unknown}}",
+                "_thumbnail_id": "5"
+            },
+            "comments": {
+                "pingback_approved": 1
+            },
+            "notes": [
+                "STICKY post",
+                "Gutenberg: core/cover (h2 inside) with the -scaled panorama, core/more, core/columns, core/gallery (3 images, caption), core/embed YouTube (caption), core/separator, core/html (div + OpenStreetMap iframe), core/buttons (2, one is-style-outline)",
+                "Yoast meta"
+            ],
+            "rest_route": "/wp/v2/posts/16",
+            "public_in_rest": true,
+            "in_wxr": true
+        },
+        {
+            "id": 17,
+            "key": "post_emaillage",
+            "type": "post",
+            "slug": "secrets-emaillage-guide-complet",
+            "title": "Les secrets de l'émaillage : guide complet",
+            "status": "publish",
+            "author": "claire",
+            "author_id": 2,
+            "date": "2026-03-18 14:00:00",
+            "date_gmt": "2026-03-18 13:00:00",
+            "modified": "2026-04-02 09:15:00",
+            "modified_gmt": "2026-04-02 07:15:00",
+            "url": "http://127.0.0.1:8081/secrets-emaillage-guide-complet/",
+            "path": "/secrets-emaillage-guide-complet/",
+            "guid": "http://127.0.0.1:8081/secrets-emaillage-guide-complet/",
+            "parent": 0,
+            "menu_order": 0,
+            "comment_status": "open",
+            "ping_status": "open",
+            "password": "",
+            "sticky": false,
+            "format": "standard",
+            "template": null,
+            "categories": [
+                "techniques",
+                "emaillage"
+            ],
+            "category_ids": [
+                5,
+                6
+            ],
+            "tags": [
+                "cuisson",
+                "gres",
+                "email"
+            ],
+            "tag_ids": [
+                13,
+                10,
+                9
+            ],
+            "featured_media": 6,
+            "excerpt_raw": "Silice, fondants, alumine : comprendre la composition d'un émail, choisir sa température de cuisson et éviter les défauts les plus courants.",
+            "has_more_tag": false,
+            "editor": "gutenberg",
+            "blocks": {
+                "core/block": 1,
+                "core/heading": 4,
+                "core/image": 1,
+                "core/list": 3,
+                "core/list-item": 9,
+                "core/paragraph": 4,
+                "core/quote": 1,
+                "core/separator": 1,
+                "core/table": 1
+            },
+            "synced_pattern_refs": [
+                9
+            ],
+            "shortcodes": [],
+            "shortcode_tags": [],
+            "bare_urls_on_own_line": [],
+            "internal_links": [
+                {
+                    "url": "http://127.0.0.1:8081/wp-content/uploads/2026/03/bols-gres-emailles.jpg",
+                    "type": "attachment_file",
+                    "id": 6,
+                    "size": "full"
+                },
+                {
+                    "url": "http://127.0.0.1:8081/notre-nouvel-atelier-croix-rousse/",
+                    "type": "post",
+                    "id": 16
+                },
+                {
+                    "url": "http://127.0.0.1:8081/a-propos/tarifs/",
+                    "type": "page",
+                    "id": 13
+                }
+            ],
+            "images_in_content": [
+                {
+                    "src": "http://127.0.0.1:8081/wp-content/uploads/2026/03/bols-gres-emailles-1024x1024.jpg",
+                    "attachment_id": 6,
+                    "size": "large"
+                }
+            ],
+            "external_urls": [],
+            "content_length": 3876,
+            "content_sha256": "3e9fd1598b2614bac02eceacb5e96baf5186dafdb8573272603a110824956670",
+            "seo": {
+                "plugin": "yoast",
+                "meta": {
+                    "_yoast_wpseo_canonical": "https://www.atelier-lumiere.example/blog/secrets-emaillage/",
+                    "_yoast_wpseo_content_score": "90",
+                    "_yoast_wpseo_estimated-reading-time-minutes": "4",
+                    "_yoast_wpseo_focuskw": "émaillage céramique",
+                    "_yoast_wpseo_metadesc": "Composition d'un émail, températures de cuisson, grandes familles d'émaux : notre guide complet de l'émaillage céramique.",
+                    "_yoast_wpseo_opengraph-description": "Tout ce que nous enseignons sur les émaux, résumé en un article.",
+                    "_yoast_wpseo_opengraph-image": "http://127.0.0.1:8081/wp-content/uploads/2026/03/bols-gres-emailles.jpg",
+                    "_yoast_wpseo_opengraph-image-id": "6",
+                    "_yoast_wpseo_opengraph-title": "Guide de l'émaillage céramique",
+                    "_yoast_wpseo_primary_category": "6",
+                    "_yoast_wpseo_title": "%%title%% %%sep%% %%sitename%%"
+                }
+            },
+            "elementor_meta": null,
+            "other_meta": {
+                "_thumbnail_id": "6",
+                "_wp_old_slug": "guide-emaillage"
+            },
+            "comments": {
+                "approved": 4
+            },
+            "notes": [
+                "Gutenberg: h2 with anchor id, h3, ordered list, nested unordered list, core/quote with cite, core/table (thead + caption, U+202F thousands separators), core/image large + caption linked to the media file, core/separator, core/block ref (synced pattern)",
+                "Custom excerpt",
+                "_wp_old_slug = guide-emaillage (old URL should redirect)",
+                "Yoast meta incl. _yoast_wpseo_canonical (external URL) and _yoast_wpseo_primary_category",
+                "Comment thread (3 levels)",
+                "Modified after publication"
+            ],
+            "rest_route": "/wp/v2/posts/17",
+            "public_in_rest": true,
+            "in_wxr": true
+        },
+        {
+            "id": 18,
+            "key": "post_raku",
+            "type": "post",
+            "slug": "cuisson-raku-feu-et-fumee",
+            "title": "Cuisson raku : le feu et la fumée",
+            "status": "publish",
+            "author": "lucas",
+            "author_id": 3,
+            "date": "2026-04-22 18:15:00",
+            "date_gmt": "2026-04-22 16:15:00",
+            "modified": "2026-04-22 18:15:00",
+            "modified_gmt": "2026-04-22 16:15:00",
+            "url": "http://127.0.0.1:8081/cuisson-raku-feu-et-fumee/",
+            "path": "/cuisson-raku-feu-et-fumee/",
+            "guid": "http://127.0.0.1:8081/cuisson-raku-feu-et-fumee/",
+            "parent": 0,
+            "menu_order": 0,
+            "comment_status": "open",
+            "ping_status": "open",
+            "password": "",
+            "sticky": false,
+            "format": "video",
+            "template": null,
+            "categories": [
+                "techniques"
+            ],
+            "category_ids": [
+                5
+            ],
+            "tags": [
+                "cuisson",
+                "raku"
+            ],
+            "tag_ids": [
+                13,
+                11
+            ],
+            "featured_media": 7,
+            "excerpt_raw": "Sortir une pièce incandescente du four, l'enfumer dans la sciure et découvrir ses craquelures : bienvenue dans le monde du raku.",
+            "has_more_tag": false,
+            "editor": "classic",
+            "blocks": [],
+            "synced_pattern_refs": [],
+            "shortcodes": [
+                "caption",
+                "contact-form-7"
+            ],
+            "shortcode_tags": [
+                "[caption id=\"attachment_7\" align=\"aligncenter\" width=\"800\"]",
+                "[contact-form-7 id=\"12\" title=\"Contact\"]"
+            ],
+            "bare_urls_on_own_line": [
+                "https://www.youtube.com/watch?v=dQw4w9WgXcQ"
+            ],
+            "internal_links": [
+                {
+                    "url": "http://127.0.0.1:8081/secrets-emaillage-guide-complet/",
+                    "type": "post",
+                    "id": 17
+                }
+            ],
+            "images_in_content": [
+                {
+                    "src": "http://127.0.0.1:8081/wp-content/uploads/2026/04/cuisson-raku.jpg",
+                    "attachment_id": 7,
+                    "size": "full"
+                }
+            ],
+            "external_urls": [
+                "https://www.youtube.com/watch?v=dQw4w9WgXcQ"
+            ],
+            "content_length": 1415,
+            "content_sha256": "983b546f4be44495b10306b14f6fa3754211559ea8ceae65c8307a5539d6edd0",
+            "seo": {
+                "plugin": "yoast",
+                "meta": {
+                    "_yoast_wpseo_content_score": "30",
+                    "_yoast_wpseo_focuskw": "cuisson raku",
+                    "_yoast_wpseo_meta-robots-noindex": "1",
+                    "_yoast_wpseo_metadesc": "Le raku, cuisson japonaise spectaculaire : déroulement, enfumage, craquelures. Réservez votre session à Lyon.",
+                    "_yoast_wpseo_title": "%%title%% %%sep%% %%sitename%%"
+                }
+            },
+            "elementor_meta": null,
+            "other_meta": {
+                "_oembed_cc2d7cb3bed61ed522814a412e9d5d36": "{{unknown}}",
+                "_thumbnail_id": "7"
+            },
+            "comments": {
+                "approved": 2
+            },
+            "notes": [
+                "CLASSIC editor content (no block comments): blank-line separated paragraphs + single line break (wpautop -> <p>/<br />)",
+                "[caption id=\"attachment_X\" align=\"aligncenter\" width=\"800\"] shortcode around a full-size <img>",
+                "Bare YouTube URL alone on its own line (oEmbed autoembed)",
+                "Unknown shortcode [contact-form-7 id=\"12\" title=\"Contact\"] (plugin not installed, renders as-is)",
+                "Raw <h2> and <ul> HTML in classic content",
+                "Post format: video",
+                "Custom excerpt",
+                "Yoast meta with _yoast_wpseo_meta-robots-noindex = 1"
+            ],
+            "rest_route": "/wp/v2/posts/18",
+            "public_in_rest": true,
+            "in_wxr": true
+        },
+        {
+            "id": 19,
+            "key": "post_bols",
+            "type": "post",
+            "slug": "bols-gres-nouvelle-saison",
+            "title": "Nos bols en grès pour la nouvelle saison",
+            "status": "publish",
+            "author": "claire",
+            "author_id": 2,
+            "date": "2026-05-30 11:00:00",
+            "date_gmt": "2026-05-30 09:00:00",
+            "modified": "2026-05-30 11:00:00",
+            "modified_gmt": "2026-05-30 09:00:00",
+            "url": "http://127.0.0.1:8081/bols-gres-nouvelle-saison/",
+            "path": "/bols-gres-nouvelle-saison/",
+            "guid": "http://127.0.0.1:8081/bols-gres-nouvelle-saison/",
+            "parent": 0,
+            "menu_order": 0,
+            "comment_status": "open",
+            "ping_status": "open",
+            "password": "",
+            "sticky": false,
+            "format": "standard",
+            "template": null,
+            "categories": [
+                "actualites"
+            ],
+            "category_ids": [
+                7
+            ],
+            "tags": [
+                "gres",
+                "porcelaine"
+            ],
+            "tag_ids": [
+                10,
+                14
+            ],
+            "featured_media": 6,
+            "excerpt_raw": "",
+            "has_more_tag": true,
+            "editor": "classic",
+            "blocks": [],
+            "synced_pattern_refs": [],
+            "shortcodes": [
+                "gallery"
+            ],
+            "shortcode_tags": [
+                "[gallery ids=\"4,6,7\" columns=\"3\" size=\"medium\" link=\"file\"]"
+            ],
+            "bare_urls_on_own_line": [],
+            "internal_links": [
+                {
+                    "url": "http://127.0.0.1:8081/wp-content/uploads/2026/02/panorama-atelier-croix-rousse-scaled.jpg",
+                    "type": "attachment_file",
+                    "id": 5,
+                    "size": "full"
+                },
+                {
+                    "url": "http://127.0.0.1:8081/a-propos/tarifs/",
+                    "type": "page",
+                    "id": 13
+                },
+                {
+                    "url": "http://127.0.0.1:8081/?p=18",
+                    "type": "post",
+                    "id": 18
+                }
+            ],
+            "images_in_content": [
+                {
+                    "src": "http://127.0.0.1:8081/wp-content/uploads/2026/02/panorama-atelier-croix-rousse-300x200.jpg",
+                    "attachment_id": 5,
+                    "size": "medium"
+                }
+            ],
+            "external_urls": [],
+            "content_length": 1151,
+            "content_sha256": "31a85d85449c88c27adc9a4500648342eb798abe42c44422458a97c415727a95",
+            "seo": {
+                "plugin": "rankmath",
+                "meta": {
+                    "rank_math_description": "Découvrez notre collection de bols en grès tournés à la main à Lyon : céladon, tenmoku et blanc satiné.",
+                    "rank_math_focus_keyword": "bols en grès,céramique artisanale",
+                    "rank_math_internal_links_processed": "1",
+                    "rank_math_primary_category": "7",
+                    "rank_math_robots": [
+                        "index"
+                    ],
+                    "rank_math_seo_score": "81",
+                    "rank_math_title": "%title% %sep% %sitename%"
+                }
+            },
+            "elementor_meta": null,
+            "other_meta": {
+                "_thumbnail_id": "6"
+            },
+            "comments": [],
+            "notes": [
+                "CLASSIC editor content",
+                "<!--more--> teaser split",
+                "Inline <img> using the -300x200 medium URL of the -scaled panorama (class alignright size-medium wp-image-X), linked to the full image",
+                "[gallery ids=\"...\" columns=\"3\" size=\"medium\" link=\"file\"] shortcode",
+                "Internal link in ?p=ID (shortlink) form to the raku post",
+                "&nbsp; spacer paragraph",
+                "Rank Math meta (rank_math_robots = [index])"
+            ],
+            "rest_route": "/wp/v2/posts/19",
+            "public_in_rest": true,
+            "in_wxr": true
+        },
+        {
+            "id": 20,
+            "key": "post_atelier_enfants",
+            "type": "post",
+            "slug": "atelier-enfants-modeler-argile",
+            "title": "Atelier enfants : modeler l'argile dès 6 ans",
+            "status": "publish",
+            "author": "lucas",
+            "author_id": 3,
+            "date": "2026-06-12 08:45:00",
+            "date_gmt": "2026-06-12 06:45:00",
+            "modified": "2026-06-12 08:45:00",
+            "modified_gmt": "2026-06-12 06:45:00",
+            "url": "http://127.0.0.1:8081/atelier-enfants-modeler-argile/",
+            "path": "/atelier-enfants-modeler-argile/",
+            "guid": "http://127.0.0.1:8081/atelier-enfants-modeler-argile/",
+            "parent": 0,
+            "menu_order": 0,
+            "comment_status": "open",
+            "ping_status": "open",
+            "password": "",
+            "sticky": false,
+            "format": "standard",
+            "template": null,
+            "categories": [
+                "ateliers",
+                "ateliers-enfants"
+            ],
+            "category_ids": [
+                2,
+                3
+            ],
+            "tags": [
+                "argile",
+                "lyon"
+            ],
+            "tag_ids": [
+                8,
+                15
+            ],
+            "featured_media": 8,
+            "excerpt_raw": "",
+            "has_more_tag": false,
+            "editor": "gutenberg",
+            "blocks": {
+                "core/heading": 2,
+                "core/image": 1,
+                "core/list": 1,
+                "core/list-item": 4,
+                "core/paragraph": 3,
+                "yoast/faq-block": 1
+            },
+            "synced_pattern_refs": [],
+            "shortcodes": [],
+            "shortcode_tags": [],
+            "bare_urls_on_own_line": [],
+            "internal_links": [
+                {
+                    "url": "http://127.0.0.1:8081/wp-content/uploads/2026/06/atelier-enfants-modelage.png",
+                    "type": "attachment_file",
+                    "id": 8,
+                    "size": "full"
+                },
+                {
+                    "url": "http://127.0.0.1:8081/category/ateliers/ateliers-enfants/",
+                    "type": "category",
+                    "id": 3
+                },
+                {
+                    "url": "http://127.0.0.1:8081/bols-gres-nouvelle-saison/",
+                    "type": "post",
+                    "id": 19
+                },
+                {
+                    "url": "http://127.0.0.1:8081/contact/",
+                    "type": "page",
+                    "id": 14
+                }
+            ],
+            "images_in_content": [
+                {
+                    "src": "http://127.0.0.1:8081/wp-content/uploads/2026/06/atelier-enfants-modelage-300x200.png",
+                    "attachment_id": 8,
+                    "size": "medium"
+                }
+            ],
+            "external_urls": [],
+            "content_length": 5290,
+            "content_sha256": "ab5ea98c70ce6e348a173df1e1e979b9e811d2bc05b60997a35ce9195bb2a1b2",
+            "seo": {
+                "plugin": "yoast",
+                "meta": {
+                    "_yoast_wpseo_content_score": "90",
+                    "_yoast_wpseo_focuskw": "atelier poterie enfants",
+                    "_yoast_wpseo_metadesc": "Atelier poterie pour enfants de 6 à 12 ans à Lyon : modelage, engobes et cuisson. Questions fréquentes et inscriptions.",
+                    "_yoast_wpseo_primary_category": "3",
+                    "_yoast_wpseo_title": "Atelier poterie enfants à Lyon %%sep%% %%sitename%%"
+                }
+            },
+            "elementor_meta": null,
+            "other_meta": {
+                "_thumbnail_id": "8"
+            },
+            "comments": {
+                "hold": 1,
+                "approved": 1,
+                "spam": 1
+            },
+            "notes": [
+                "Yoast FAQ block <!-- wp:yoast/faq-block --> with 4 questions (answers contain <strong> and <a>; HTML in the JSON attributes is \\u003c-escaped)",
+                "core/image medium (-300x200 PNG) aligned right, linked to the media file",
+                "Link to a category archive URL",
+                "Yoast meta incl. _yoast_wpseo_primary_category",
+                "Comments: 1 approved, 1 pending, 1 spam"
+            ],
+            "rest_route": "/wp/v2/posts/20",
+            "public_in_rest": true,
+            "in_wxr": true
+        },
+        {
+            "id": 21,
+            "key": "post_stage_ete",
+            "type": "post",
+            "slug": "stage-ete-tournage-intensif",
+            "title": "Stage d'été : tournage intensif en 5 jours",
+            "status": "publish",
+            "author": "admin",
+            "author_id": 1,
+            "date": "2026-07-03 10:00:00",
+            "date_gmt": "2026-07-03 08:00:00",
+            "modified": "2026-07-03 10:00:00",
+            "modified_gmt": "2026-07-03 08:00:00",
+            "url": "http://127.0.0.1:8081/stage-ete-tournage-intensif/",
+            "path": "/stage-ete-tournage-intensif/",
+            "guid": "http://127.0.0.1:8081/stage-ete-tournage-intensif/",
+            "parent": 0,
+            "menu_order": 0,
+            "comment_status": "open",
+            "ping_status": "open",
+            "password": "",
+            "sticky": false,
+            "format": "standard",
+            "template": null,
+            "categories": [
+                "ateliers",
+                "ateliers-adultes"
+            ],
+            "category_ids": [
+                2,
+                4
+            ],
+            "tags": [
+                "lyon",
+                "tournage"
+            ],
+            "tag_ids": [
+                15,
+                12
+            ],
+            "featured_media": 4,
+            "excerpt_raw": "Du lundi au vendredi, cinq matinées pour apprendre à centrer, monter et tournasser vos premières pièces.",
+            "has_more_tag": false,
+            "editor": "gutenberg",
+            "blocks": {
+                "core/button": 1,
+                "core/buttons": 1,
+                "core/heading": 2,
+                "core/list": 1,
+                "core/list-item": 3,
+                "core/paragraph": 2,
+                "core/table": 1
+            },
+            "synced_pattern_refs": [],
+            "shortcodes": [],
+            "shortcode_tags": [],
+            "bare_urls_on_own_line": [],
+            "internal_links": [
+                {
+                    "url": "http://127.0.0.1:8081/atelier-enfants-modeler-argile/",
+                    "type": "post",
+                    "id": 20
+                },
+                {
+                    "url": "http://127.0.0.1:8081/contact/",
+                    "type": "page",
+                    "id": 14
+                }
+            ],
+            "images_in_content": [],
+            "external_urls": [],
+            "content_length": 1741,
+            "content_sha256": "497642fd093fb112336c5a63e367e69f92c56782093a6646e1cf97011bcccfbd",
+            "seo": {
+                "plugin": "rankmath",
+                "meta": {
+                    "rank_math_description": "Stage intensif de tournage à Lyon en juillet : 5 matinées, 6 participants maximum, terre et cuissons comprises.",
+                    "rank_math_focus_keyword": "stage tournage lyon,stage poterie été",
+                    "rank_math_internal_links_processed": "1",
+                    "rank_math_robots": [
+                        "noindex",
+                        "nofollow"
+                    ],
+                    "rank_math_seo_score": "74",
+                    "rank_math_title": "Stage de tournage à Lyon %sep% %sitename%"
+                }
+            },
+            "elementor_meta": null,
+            "other_meta": {
+                "_thumbnail_id": "4"
+            },
+            "comments": [],
+            "notes": [
+                "Gutenberg: core/table without caption, list, buttons",
+                "Custom excerpt",
+                "Rank Math meta with rank_math_robots = [noindex, nofollow]"
+            ],
+            "rest_route": "/wp/v2/posts/21",
+            "public_in_rest": true,
+            "in_wxr": true
+        },
+        {
+            "id": 22,
+            "key": "post_fermeture",
+            "type": "post",
+            "slug": "fermeture-estivale",
+            "title": "Fermeture estivale de l'atelier",
+            "status": "publish",
+            "author": "lucas",
+            "author_id": 3,
+            "date": "2026-08-01 12:00:00",
+            "date_gmt": "2026-08-01 10:00:00",
+            "modified": "2026-08-01 12:00:00",
+            "modified_gmt": "2026-08-01 10:00:00",
+            "url": "http://127.0.0.1:8081/fermeture-estivale/",
+            "path": "/fermeture-estivale/",
+            "guid": "http://127.0.0.1:8081/fermeture-estivale/",
+            "parent": 0,
+            "menu_order": 0,
+            "comment_status": "open",
+            "ping_status": "open",
+            "password": "",
+            "sticky": false,
+            "format": "standard",
+            "template": null,
+            "categories": [
+                "uncategorized"
+            ],
+            "category_ids": [
+                1
+            ],
+            "tags": [],
+            "tag_ids": [],
+            "featured_media": null,
+            "excerpt_raw": "",
+            "has_more_tag": false,
+            "editor": "classic",
+            "blocks": [],
+            "synced_pattern_refs": [],
+            "shortcodes": [],
+            "shortcode_tags": [],
+            "bare_urls_on_own_line": [],
+            "internal_links": [],
+            "images_in_content": [],
+            "external_urls": [],
+            "content_length": 336,
+            "content_sha256": "de102901c79f0466440fe9d6dc983a64576e8281acc8e5936b2490454acb5f66",
+            "seo": null,
+            "elementor_meta": null,
+            "other_meta": [],
+            "comments": [],
+            "notes": [
+                "CLASSIC editor content with emoji (4-byte UTF-8)",
+                "No category given -> default category \"Uncategorized\"",
+                "No tags, no featured image"
+            ],
+            "rest_route": "/wp/v2/posts/22",
+            "public_in_rest": true,
+            "in_wxr": true
+        },
+        {
+            "id": 23,
+            "key": "post_recette_celadon",
+            "type": "post",
+            "slug": "recette-email-celadon",
+            "title": "Recette d'émail céladon (réservé aux élèves)",
+            "status": "publish",
+            "author": "claire",
+            "author_id": 2,
+            "date": "2026-09-09 17:30:00",
+            "date_gmt": "2026-09-09 15:30:00",
+            "modified": "2026-09-09 17:30:00",
+            "modified_gmt": "2026-09-09 15:30:00",
+            "url": "http://127.0.0.1:8081/recette-email-celadon/",
+            "path": "/recette-email-celadon/",
+            "guid": "http://127.0.0.1:8081/recette-email-celadon/",
+            "parent": 0,
+            "menu_order": 0,
+            "comment_status": "open",
+            "ping_status": "open",
+            "password": "celadon2026",
+            "sticky": false,
+            "format": "standard",
+            "template": null,
+            "categories": [
+                "techniques",
+                "emaillage"
+            ],
+            "category_ids": [
+                5,
+                6
+            ],
+            "tags": [
+                "email"
+            ],
+            "tag_ids": [
+                9
+            ],
+            "featured_media": null,
+            "excerpt_raw": "",
+            "has_more_tag": false,
+            "editor": "gutenberg",
+            "blocks": {
+                "core/paragraph": 2,
+                "core/table": 1
+            },
+            "synced_pattern_refs": [],
+            "shortcodes": [],
+            "shortcode_tags": [],
+            "bare_urls_on_own_line": [],
+            "internal_links": [],
+            "images_in_content": [],
+            "external_urls": [],
+            "content_length": 761,
+            "content_sha256": "8f7059e8de90612964c9221d61fd97ab6f3d01d6fe4a8f43db55cee8fb616d95",
+            "seo": null,
+            "elementor_meta": null,
+            "other_meta": [],
+            "comments": [],
+            "notes": [
+                "PASSWORD-PROTECTED (post_password = celadon2026): REST returns content.protected=true and empty rendered content unless ?password= is given"
+            ],
+            "rest_route": "/wp/v2/posts/23",
+            "public_in_rest": true,
+            "in_wxr": true
+        },
+        {
+            "id": 24,
+            "key": "post_notes_internes",
+            "type": "post",
+            "slug": "notes-internes-inventaire-emaux",
+            "title": "Notes internes : inventaire des émaux",
+            "status": "private",
+            "author": "admin",
+            "author_id": 1,
+            "date": "2026-09-21 19:05:00",
+            "date_gmt": "2026-09-21 17:05:00",
+            "modified": "2026-09-21 19:05:00",
+            "modified_gmt": "2026-09-21 17:05:00",
+            "url": "http://127.0.0.1:8081/notes-internes-inventaire-emaux/",
+            "path": "/notes-internes-inventaire-emaux/",
+            "guid": "http://127.0.0.1:8081/notes-internes-inventaire-emaux/",
+            "parent": 0,
+            "menu_order": 0,
+            "comment_status": "open",
+            "ping_status": "open",
+            "password": "",
+            "sticky": false,
+            "format": "standard",
+            "template": null,
+            "categories": [
+                "emaillage"
+            ],
+            "category_ids": [
+                6
+            ],
+            "tags": [],
+            "tag_ids": [],
+            "featured_media": null,
+            "excerpt_raw": "",
+            "has_more_tag": false,
+            "editor": "gutenberg",
+            "blocks": {
+                "core/list": 1,
+                "core/list-item": 3,
+                "core/paragraph": 2
+            },
+            "synced_pattern_refs": [],
+            "shortcodes": [],
+            "shortcode_tags": [],
+            "bare_urls_on_own_line": [],
+            "internal_links": [],
+            "images_in_content": [],
+            "external_urls": [],
+            "content_length": 536,
+            "content_sha256": "49db1c4ecdd3a476f030c118cb3474d81a2534b6a1fb6c5db8ed0984842ecfe7",
+            "seo": null,
+            "elementor_meta": null,
+            "other_meta": [],
+            "comments": [],
+            "notes": [
+                "PRIVATE post (only visible with authentication)"
+            ],
+            "rest_route": "/wp/v2/posts/24",
+            "public_in_rest": false,
+            "in_wxr": true
+        },
+        {
+            "id": 25,
+            "key": "post_brouillon_horaires",
+            "type": "post",
+            "slug": "",
+            "title": "Nouveaux horaires d'hiver",
+            "status": "draft",
+            "author": "claire",
+            "author_id": 2,
+            "date": "2026-10-30 16:20:00",
+            "date_gmt": "0000-00-00 00:00:00",
+            "modified": "2026-10-30 16:45:00",
+            "modified_gmt": "2026-10-30 15:45:00",
+            "url": "http://127.0.0.1:8081/?p=25",
+            "path": "/?p=25",
+            "guid": "http://127.0.0.1:8081/?p=25",
+            "parent": 0,
+            "menu_order": 0,
+            "comment_status": "open",
+            "ping_status": "open",
+            "password": "",
+            "sticky": false,
+            "format": "standard",
+            "template": null,
+            "categories": [
+                "actualites"
+            ],
+            "category_ids": [
+                7
+            ],
+            "tags": [],
+            "tag_ids": [],
+            "featured_media": null,
+            "excerpt_raw": "",
+            "has_more_tag": false,
+            "editor": "gutenberg",
+            "blocks": {
+                "core/list": 1,
+                "core/list-item": 3,
+                "core/paragraph": 2
+            },
+            "synced_pattern_refs": [],
+            "shortcodes": [],
+            "shortcode_tags": [],
+            "bare_urls_on_own_line": [],
+            "internal_links": [],
+            "images_in_content": [],
+            "external_urls": [],
+            "content_length": 569,
+            "content_sha256": "02e1090990e21f166fb9e168449b23530c6f2eb1644e573126511e460fca7f82",
+            "seo": null,
+            "elementor_meta": null,
+            "other_meta": [],
+            "comments": [],
+            "notes": [
+                "DRAFT: empty post_name (WordPress does not assign slugs to drafts) and post_date_gmt 0000-00-00 00:00:00 (floating date)"
+            ],
+            "rest_route": "/wp/v2/posts/25",
+            "public_in_rest": false,
+            "in_wxr": true
+        },
+        {
+            "id": 26,
+            "key": "post_portes_ouvertes",
+            "type": "post",
+            "slug": "portes-ouvertes-premier-bol",
+            "title": "Portes ouvertes : venez tourner votre premier bol",
+            "status": "future",
+            "author": "admin",
+            "author_id": 1,
+            "date": "2030-04-06 10:00:00",
+            "date_gmt": "2030-04-06 08:00:00",
+            "modified": "2026-10-28 11:00:00",
+            "modified_gmt": "2026-10-28 10:00:00",
+            "url": "http://127.0.0.1:8081/?p=26",
+            "path": "/?p=26",
+            "guid": "http://127.0.0.1:8081/?p=26",
+            "parent": 0,
+            "menu_order": 0,
+            "comment_status": "open",
+            "ping_status": "open",
+            "password": "",
+            "sticky": false,
+            "format": "standard",
+            "template": null,
+            "categories": [
+                "actualites",
+                "ateliers"
+            ],
+            "category_ids": [
+                7,
+                2
+            ],
+            "tags": [
+                "lyon",
+                "tournage"
+            ],
+            "tag_ids": [
+                15,
+                12
+            ],
+            "featured_media": 4,
+            "excerpt_raw": "",
+            "has_more_tag": false,
+            "editor": "gutenberg",
+            "blocks": {
+                "core/button": 1,
+                "core/buttons": 1,
+                "core/image": 1,
+                "core/paragraph": 1
+            },
+            "synced_pattern_refs": [],
+            "shortcodes": [],
+            "shortcode_tags": [],
+            "bare_urls_on_own_line": [],
+            "internal_links": [
+                {
+                    "url": "http://127.0.0.1:8081/contact/",
+                    "type": "page",
+                    "id": 14
+                }
+            ],
+            "images_in_content": [
+                {
+                    "src": "http://127.0.0.1:8081/wp-content/uploads/2026/01/atelier-tour-de-potier-300x188.jpg",
+                    "attachment_id": 4,
+                    "size": "medium"
+                }
+            ],
+            "external_urls": [],
+            "content_length": 864,
+            "content_sha256": "ff22e4b83b175568355780db60f82ebb230235308126d505f1bf2b85595e3aa4",
+            "seo": null,
+            "elementor_meta": null,
+            "other_meta": {
+                "_thumbnail_id": "4"
+            },
+            "comments": [],
+            "notes": [
+                "SCHEDULED post (status future, 2030-04-06 10:00 Europe/Paris). WP-Cron is disabled so it never auto-publishes"
+            ],
+            "rest_route": "/wp/v2/posts/26",
+            "public_in_rest": false,
+            "in_wxr": true
+        }
+    ],
+    "pages": [
+        {
+            "id": 3,
+            "key": "page_confidentialite",
+            "type": "page",
+            "slug": "politique-de-confidentialite",
+            "title": "Politique de confidentialité",
+            "status": "publish",
+            "author": "admin",
+            "author_id": 1,
+            "date": "2026-01-15 10:30:00",
+            "date_gmt": "2026-01-15 09:30:00",
+            "modified": "2026-01-15 10:30:00",
+            "modified_gmt": "2026-01-15 09:30:00",
+            "url": "http://127.0.0.1:8081/politique-de-confidentialite/",
+            "path": "/politique-de-confidentialite/",
+            "guid": "http://127.0.0.1:8081/?page_id=3",
+            "parent": 0,
+            "menu_order": 90,
+            "comment_status": "closed",
+            "ping_status": "open",
+            "password": "",
+            "sticky": false,
+            "format": null,
+            "template": null,
+            "categories": [],
+            "category_ids": [],
+            "tags": [],
+            "tag_ids": [],
+            "featured_media": null,
+            "excerpt_raw": "",
+            "has_more_tag": false,
+            "editor": "gutenberg",
+            "blocks": {
+                "core/heading": 3,
+                "core/paragraph": 3
+            },
+            "synced_pattern_refs": [],
+            "shortcodes": [],
+            "shortcode_tags": [],
+            "bare_urls_on_own_line": [],
+            "internal_links": [],
+            "images_in_content": [],
+            "external_urls": [],
+            "content_length": 861,
+            "content_sha256": "e2777b829050a02ff3853cc74f29fef84a2a91d98de37968c6c126d36c8ab6c0",
+            "seo": null,
+            "elementor_meta": null,
+            "other_meta": {
+                "_wp_page_template": "default"
+            },
+            "comments": [],
+            "notes": [
+                "Default WordPress privacy page (#3) translated and published; still wp_page_for_privacy_policy"
+            ],
+            "is_front_page": false,
+            "is_posts_page": false,
+            "is_privacy_page": true,
+            "rest_route": "/wp/v2/pages/3",
+            "public_in_rest": true,
+            "in_wxr": true
+        },
+        {
+            "id": 10,
+            "key": "page_accueil",
+            "type": "page",
+            "slug": "accueil",
+            "title": "Accueil",
+            "status": "publish",
+            "author": "admin",
+            "author_id": 1,
+            "date": "2026-01-15 10:00:00",
+            "date_gmt": "2026-01-15 09:00:00",
+            "modified": "2026-01-15 10:00:00",
+            "modified_gmt": "2026-01-15 09:00:00",
+            "url": "http://127.0.0.1:8081/",
+            "path": "/",
+            "guid": "http://127.0.0.1:8081/accueil/",
+            "parent": 0,
+            "menu_order": 0,
+            "comment_status": "closed",
+            "ping_status": "closed",
+            "password": "",
+            "sticky": false,
+            "format": null,
+            "template": null,
+            "categories": [],
+            "category_ids": [],
+            "tags": [],
+            "tag_ids": [],
+            "featured_media": null,
+            "excerpt_raw": "",
+            "has_more_tag": false,
+            "editor": "gutenberg",
+            "blocks": {
+                "core/block": 1,
+                "core/button": 2,
+                "core/buttons": 1,
+                "core/column": 3,
+                "core/columns": 1,
+                "core/cover": 1,
+                "core/heading": 5,
+                "core/latest-posts": 1,
+                "core/paragraph": 5
+            },
+            "synced_pattern_refs": [
+                9
+            ],
+            "shortcodes": [],
+            "shortcode_tags": [],
+            "bare_urls_on_own_line": [],
+            "internal_links": [
+                {
+                    "url": "http://127.0.0.1:8081/nos-ateliers/",
+                    "type": "page",
+                    "id": 15
+                },
+                {
+                    "url": "http://127.0.0.1:8081/contact/",
+                    "type": "page",
+                    "id": 14
+                }
+            ],
+            "images_in_content": [
+                {
+                    "src": "http://127.0.0.1:8081/wp-content/uploads/2026/01/atelier-tour-de-potier-1024x640.jpg",
+                    "attachment_id": 4,
+                    "size": "large"
+                }
+            ],
+            "external_urls": [],
+            "content_length": 2914,
+            "content_sha256": "1979141bd71afa0edb24339bc437371f6fb7c6ec7aad154af0e337a311551024",
+            "seo": {
+                "plugin": "yoast",
+                "meta": {
+                    "_yoast_wpseo_focuskw": "atelier poterie Lyon",
+                    "_yoast_wpseo_metadesc": "Cours de poterie, stages de tournage et ateliers enfants à Lyon Croix-Rousse : céramique artisanale en grès.",
+                    "_yoast_wpseo_title": "%%sitename%% %%sep%% %%sitedesc%%"
+                }
+            },
+            "elementor_meta": null,
+            "other_meta": [],
+            "comments": [],
+            "notes": [
+                "Static front page (show_on_front=page, page_on_front)",
+                "core/cover (h1 inside), core/columns x3, core/buttons, dynamic core/latest-posts, core/block ref to the synced pattern",
+                "Yoast meta (title uses %%sitedesc%%)"
+            ],
+            "is_front_page": true,
+            "is_posts_page": false,
+            "is_privacy_page": false,
+            "rest_route": "/wp/v2/pages/10",
+            "public_in_rest": true,
+            "in_wxr": true
+        },
+        {
+            "id": 11,
+            "key": "page_blog",
+            "type": "page",
+            "slug": "blog",
+            "title": "Blog",
+            "status": "publish",
+            "author": "admin",
+            "author_id": 1,
+            "date": "2026-01-15 10:05:00",
+            "date_gmt": "2026-01-15 09:05:00",
+            "modified": "2026-01-15 10:05:00",
+            "modified_gmt": "2026-01-15 09:05:00",
+            "url": "http://127.0.0.1:8081/blog/",
+            "path": "/blog/",
+            "guid": "http://127.0.0.1:8081/blog/",
+            "parent": 0,
+            "menu_order": 40,
+            "comment_status": "closed",
+            "ping_status": "closed",
+            "password": "",
+            "sticky": false,
+            "format": null,
+            "template": null,
+            "categories": [],
+            "category_ids": [],
+            "tags": [],
+            "tag_ids": [],
+            "featured_media": null,
+            "excerpt_raw": "",
+            "has_more_tag": false,
+            "editor": "empty",
+            "blocks": [],
+            "synced_pattern_refs": [],
+            "shortcodes": [],
+            "shortcode_tags": [],
+            "bare_urls_on_own_line": [],
+            "internal_links": [],
+            "images_in_content": [],
+            "external_urls": [],
+            "content_length": 0,
+            "content_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+            "seo": null,
+            "elementor_meta": null,
+            "other_meta": [],
+            "comments": [],
+            "notes": [
+                "Posts page (page_for_posts) - empty content, WordPress lists the posts at /blog/"
+            ],
+            "is_front_page": false,
+            "is_posts_page": true,
+            "is_privacy_page": false,
+            "rest_route": "/wp/v2/pages/11",
+            "public_in_rest": true,
+            "in_wxr": true
+        },
+        {
+            "id": 12,
+            "key": "page_a_propos",
+            "type": "page",
+            "slug": "a-propos",
+            "title": "À propos",
+            "status": "publish",
+            "author": "admin",
+            "author_id": 1,
+            "date": "2026-01-15 10:10:00",
+            "date_gmt": "2026-01-15 09:10:00",
+            "modified": "2026-01-15 10:10:00",
+            "modified_gmt": "2026-01-15 09:10:00",
+            "url": "http://127.0.0.1:8081/a-propos/",
+            "path": "/a-propos/",
+            "guid": "http://127.0.0.1:8081/a-propos/",
+            "parent": 0,
+            "menu_order": 20,
+            "comment_status": "closed",
+            "ping_status": "closed",
+            "password": "",
+            "sticky": false,
+            "format": null,
+            "template": null,
+            "categories": [],
+            "category_ids": [],
+            "tags": [],
+            "tag_ids": [],
+            "featured_media": null,
+            "excerpt_raw": "",
+            "has_more_tag": false,
+            "editor": "gutenberg",
+            "blocks": {
+                "core/heading": 2,
+                "core/list": 1,
+                "core/list-item": 3,
+                "core/media-text": 1,
+                "core/paragraph": 4,
+                "core/quote": 1
+            },
+            "synced_pattern_refs": [],
+            "shortcodes": [],
+            "shortcode_tags": [],
+            "bare_urls_on_own_line": [],
+            "internal_links": [
+                {
+                    "url": "http://127.0.0.1:8081/a-propos/tarifs/",
+                    "type": "page",
+                    "id": 13
+                }
+            ],
+            "images_in_content": [
+                {
+                    "src": "http://127.0.0.1:8081/wp-content/uploads/2026/01/atelier-tour-de-potier-1024x640.jpg",
+                    "attachment_id": 4,
+                    "size": "large"
+                }
+            ],
+            "external_urls": [],
+            "content_length": 1976,
+            "content_sha256": "9429983a11756297f20a07dbbb24cbe4b662016b9d8442f3eac563d5a6a2fa9e",
+            "seo": {
+                "plugin": "rankmath",
+                "meta": {
+                    "rank_math_description": "L'histoire de l'Atelier Lumière et de son équipe : Émilie, Claire et Lucas, céramistes à Lyon.",
+                    "rank_math_focus_keyword": "atelier céramique lyon,céramiste lyon",
+                    "rank_math_seo_score": "68",
+                    "rank_math_title": "%title% %sep% %sitename%"
+                }
+            },
+            "elementor_meta": null,
+            "other_meta": [],
+            "comments": [],
+            "notes": [
+                "Parent page of \"Tarifs\"",
+                "core/media-text, core/list, core/quote",
+                "Rank Math meta"
+            ],
+            "is_front_page": false,
+            "is_posts_page": false,
+            "is_privacy_page": false,
+            "rest_route": "/wp/v2/pages/12",
+            "public_in_rest": true,
+            "in_wxr": true
+        },
+        {
+            "id": 13,
+            "key": "page_tarifs",
+            "type": "page",
+            "slug": "tarifs",
+            "title": "Tarifs",
+            "status": "publish",
+            "author": "claire",
+            "author_id": 2,
+            "date": "2026-01-16 09:00:00",
+            "date_gmt": "2026-01-16 08:00:00",
+            "modified": "2026-09-01 08:30:00",
+            "modified_gmt": "2026-09-01 06:30:00",
+            "url": "http://127.0.0.1:8081/a-propos/tarifs/",
+            "path": "/a-propos/tarifs/",
+            "guid": "http://127.0.0.1:8081/a-propos/tarifs/",
+            "parent": 12,
+            "menu_order": 1,
+            "comment_status": "closed",
+            "ping_status": "closed",
+            "password": "",
+            "sticky": false,
+            "format": null,
+            "template": null,
+            "categories": [],
+            "category_ids": [],
+            "tags": [],
+            "tag_ids": [],
+            "featured_media": null,
+            "excerpt_raw": "",
+            "has_more_tag": false,
+            "editor": "gutenberg",
+            "blocks": {
+                "core/button": 1,
+                "core/buttons": 1,
+                "core/heading": 1,
+                "core/paragraph": 2,
+                "core/table": 1
+            },
+            "synced_pattern_refs": [],
+            "shortcodes": [],
+            "shortcode_tags": [],
+            "bare_urls_on_own_line": [],
+            "internal_links": [
+                {
+                    "url": "http://127.0.0.1:8081/contact/",
+                    "type": "page",
+                    "id": 14
+                }
+            ],
+            "images_in_content": [],
+            "external_urls": [],
+            "content_length": 1308,
+            "content_sha256": "a7c5c4e8cb288a53fc95be143b08885091c1d7a2bc0db795db3a199d41b72ded",
+            "seo": {
+                "plugin": "yoast",
+                "meta": {
+                    "_yoast_wpseo_focuskw": "tarif cours poterie lyon",
+                    "_yoast_wpseo_metadesc": "Atelier découverte 45 €, cours hebdomadaire 420 € le trimestre, stage intensif 390 € : tous nos tarifs.",
+                    "_yoast_wpseo_title": "Tarifs des cours de poterie %%sep%% %%sitename%%"
+                }
+            },
+            "elementor_meta": null,
+            "other_meta": [],
+            "comments": [],
+            "notes": [
+                "Child page of \"À propos\" (URL /a-propos/tarifs/)",
+                "core/table",
+                "Yoast meta"
+            ],
+            "is_front_page": false,
+            "is_posts_page": false,
+            "is_privacy_page": false,
+            "rest_route": "/wp/v2/pages/13",
+            "public_in_rest": true,
+            "in_wxr": true
+        },
+        {
+            "id": 14,
+            "key": "page_contact",
+            "type": "page",
+            "slug": "contact",
+            "title": "Contact",
+            "status": "publish",
+            "author": "admin",
+            "author_id": 1,
+            "date": "2026-01-15 10:20:00",
+            "date_gmt": "2026-01-15 09:20:00",
+            "modified": "2026-01-15 10:20:00",
+            "modified_gmt": "2026-01-15 09:20:00",
+            "url": "http://127.0.0.1:8081/contact/",
+            "path": "/contact/",
+            "guid": "http://127.0.0.1:8081/contact/",
+            "parent": 0,
+            "menu_order": 50,
+            "comment_status": "closed",
+            "ping_status": "closed",
+            "password": "",
+            "sticky": false,
+            "format": null,
+            "template": null,
+            "categories": [],
+            "category_ids": [],
+            "tags": [],
+            "tag_ids": [],
+            "featured_media": null,
+            "excerpt_raw": "",
+            "has_more_tag": false,
+            "editor": "gutenberg",
+            "blocks": {
+                "core/heading": 3,
+                "core/html": 1,
+                "core/list": 1,
+                "core/list-item": 3,
+                "core/paragraph": 2,
+                "core/shortcode": 1
+            },
+            "synced_pattern_refs": [],
+            "shortcodes": [
+                "contact-form-7"
+            ],
+            "shortcode_tags": [
+                "[contact-form-7 id=\"12\" title=\"Contact\"]"
+            ],
+            "bare_urls_on_own_line": [],
+            "internal_links": [],
+            "images_in_content": [],
+            "external_urls": [
+                "https://www.openstreetmap.org/export/embed.html?bbox=4.8290%2C45.7690%2C4.8390%2C45.7740&amp;layer=mapnik&amp;marker=45.7715%2C4.8340"
+            ],
+            "content_length": 1314,
+            "content_sha256": "ce46092dd0b59e7d151853d15dc35d7e5864d02e624f37d19816f5330c1d5a25",
+            "seo": {
+                "plugin": "yoast",
+                "meta": {
+                    "_yoast_wpseo_metadesc": "Contactez l'Atelier Lumière : 27 bis montée de la Grande-Côte, Lyon 1er. Téléphone, e-mail, horaires et plan d'accès."
+                }
+            },
+            "elementor_meta": null,
+            "other_meta": [],
+            "comments": [],
+            "notes": [
+                "core/shortcode block with the unknown shortcode [contact-form-7 id=\"12\" title=\"Contact\"]",
+                "core/html with an OpenStreetMap <iframe>",
+                "tel: and mailto: links",
+                "Yoast meta description only"
+            ],
+            "is_front_page": false,
+            "is_posts_page": false,
+            "is_privacy_page": false,
+            "rest_route": "/wp/v2/pages/14",
+            "public_in_rest": true,
+            "in_wxr": true
+        },
+        {
+            "id": 15,
+            "key": "page_nos_ateliers",
+            "type": "page",
+            "slug": "nos-ateliers",
+            "title": "Nos ateliers",
+            "status": "publish",
+            "author": "admin",
+            "author_id": 1,
+            "date": "2026-01-20 11:00:00",
+            "date_gmt": "2026-01-20 10:00:00",
+            "modified": "2026-01-20 11:00:00",
+            "modified_gmt": "2026-01-20 10:00:00",
+            "url": "http://127.0.0.1:8081/nos-ateliers/",
+            "path": "/nos-ateliers/",
+            "guid": "http://127.0.0.1:8081/nos-ateliers/",
+            "parent": 0,
+            "menu_order": 10,
+            "comment_status": "closed",
+            "ping_status": "closed",
+            "password": "",
+            "sticky": false,
+            "format": null,
+            "template": "elementor_header_footer",
+            "categories": [],
+            "category_ids": [],
+            "tags": [],
+            "tag_ids": [],
+            "featured_media": null,
+            "excerpt_raw": "",
+            "has_more_tag": false,
+            "editor": "elementor",
+            "blocks": [],
+            "synced_pattern_refs": [],
+            "shortcodes": [],
+            "shortcode_tags": [],
+            "bare_urls_on_own_line": [
+                "https://www.youtube.com/watch?v=dQw4w9WgXcQ"
+            ],
+            "internal_links": [
+                {
+                    "url": "http://127.0.0.1:8081/contact/",
+                    "type": "page",
+                    "id": 14
+                },
+                {
+                    "url": "http://127.0.0.1:8081/wp-content/uploads/2026/06/atelier-enfants-modelage.png",
+                    "type": "attachment_file",
+                    "id": 8,
+                    "size": "full"
+                },
+                {
+                    "url": "http://127.0.0.1:8081/atelier-enfants-modeler-argile/",
+                    "type": "post",
+                    "id": 20
+                },
+                {
+                    "url": "http://127.0.0.1:8081/a-propos/tarifs/",
+                    "type": "page",
+                    "id": 13
+                }
+            ],
+            "images_in_content": [
+                {
+                    "src": "http://127.0.0.1:8081/wp-content/uploads/2026/06/atelier-enfants-modelage-1024x683.png",
+                    "attachment_id": 8,
+                    "size": "large"
+                }
+            ],
+            "external_urls": [
+                "https://www.youtube.com/watch?v=dQw4w9WgXcQ"
+            ],
+            "content_length": 2351,
+            "content_sha256": "6897c621eb8aed5f5edcc1635e3523d229a63d0c64932eb9f482a9877bc6c05b",
+            "seo": null,
+            "elementor_meta": {
+                "_elementor_edit_mode": "builder",
+                "_elementor_template_type": "wp-page",
+                "_elementor_version": "3.25.0",
+                "_elementor_page_settings": {
+                    "hide_title": "yes"
+                },
+                "_elementor_page_assets": {
+                    "styles": [
+                        "widget-heading",
+                        "widget-text-editor",
+                        "widget-image",
+                        "widget-icon-list",
+                        "widget-spacer",
+                        "widget-divider",
+                        "widget-video",
+                        "widget-accordion",
+                        "widget-toggle",
+                        "widget-testimonial"
+                    ]
+                },
+                "_elementor_data": "JSON, 8035 bytes (see elementor.data_summary)"
+            },
+            "other_meta": {
+                "_oembed_cc2d7cb3bed61ed522814a412e9d5d36": "{{unknown}}",
+                "_wp_page_template": "elementor_header_footer"
+            },
+            "comments": [],
+            "notes": [
+                "Elementor page: real content only in postmeta _elementor_data (JSON); post_content is Elementor's plain-HTML fallback",
+                "Widgets: heading, text-editor, button, image, icon-list, spacer, divider, video (youtube_url), accordion, toggle, testimonial; containers (incl. nested isInner containers) + one legacy section/column structure"
+            ],
+            "is_front_page": false,
+            "is_posts_page": false,
+            "is_privacy_page": false,
+            "elementor": {
+                "top_level_elements": 5,
+                "element_types": {
+                    "container": 6,
+                    "widget": 17,
+                    "section": 1,
+                    "column": 2
+                },
+                "widget_types": {
+                    "accordion": 1,
+                    "button": 1,
+                    "divider": 1,
+                    "heading": 5,
+                    "icon-list": 1,
+                    "image": 1,
+                    "spacer": 2,
+                    "testimonial": 1,
+                    "text-editor": 2,
+                    "toggle": 1,
+                    "video": 1
+                },
+                "images": [
+                    8,
+                    6,
+                    5
+                ],
+                "youtube_url": "https://www.youtube.com/watch?v=dQw4w9WgXcQ",
+                "raw_storage_note": "Stored like Elementor does: wp_slash( wp_json_encode( $data ) ) -> slashes escaped as \\/ and accents as \\u00e9 in the database and in the WXR."
+            },
+            "rest_route": "/wp/v2/pages/15",
+            "public_in_rest": true,
+            "in_wxr": true
+        }
+    ],
+    "synced_patterns": [
+        {
+            "id": 9,
+            "key": "block_newsletter",
+            "type": "wp_block",
+            "slug": "bandeau-newsletter",
+            "title": "Bandeau newsletter",
+            "status": "publish",
+            "date": "2026-01-14 18:00:00",
+            "blocks": {
+                "core/heading": 1,
+                "core/paragraph": 1
+            },
+            "referenced_by": [
+                10,
+                17
+            ],
+            "rest_route": "/wp/v2/blocks/9",
+            "content": "<!-- wp:heading {\"level\":3} -->\n<h3 class=\"wp-block-heading\">Recevez notre lettre d'information</h3>\n<!-- /wp:heading -->\n\n<!-- wp:paragraph -->\n<p>Un e-mail par mois : nouveaux ateliers, cuissons raku et ventes d'atelier. <a href=\"http://127.0.0.1:8081/contact/\">Inscrivez-vous ici</a>.</p>\n<!-- /wp:paragraph -->",
+            "notes": [
+                "Synced pattern (post_type wp_block) referenced with <!-- wp:block {\"ref\":ID} /--> from the home page and from the émaillage post"
+            ]
+        }
+    ],
+    "navigation_posts": [
+        {
+            "id": 39,
+            "key": "navigation_menu_principal",
+            "type": "wp_navigation",
+            "slug": "menu-principal",
+            "title": "Menu principal",
+            "status": "publish",
+            "date": "2026-01-21 09:05:00",
+            "blocks": {
+                "core/navigation-link": 6,
+                "core/navigation-submenu": 2
+            },
+            "referenced_by": null,
+            "rest_route": "/wp/v2/navigation/39",
+            "content": "<!-- wp:navigation-link {\"className\":\" menu-item menu-item-type-post_type menu-item-object-page menu-item-home\",\"description\":\"\",\"id\":\"10\",\"kind\":\"post-type\",\"label\":\"Accueil\",\"opensInNewTab\":false,\"rel\":null,\"title\":\"\",\"type\":\"page\",\"url\":\"http://127.0.0.1:8081/\"} /--><!-- wp:navigation-submenu {\"className\":\" menu-item menu-item-type-post_type menu-item-object-page\",\"description\":\"\",\"id\":\"15\",\"kind\":\"post-type\",\"label\":\"Nos ateliers\",\"opensInNewTab\":false,\"rel\":null,\"title\":\"\",\"type\":\"page\",\"url\":\"http://127.0.0.1:8081/nos-ateliers/\"} --><!-- wp:navigation-link {\"className\":\" menu-item menu-item-type-taxonomy menu-item-object-category\",\"description\":\"\",\"id\":\"3\",\"kind\":\"taxonomy\",\"label\":\"Ateliers enfants\",\"opensInNewTab\":false,\"rel\":null,\"title\":\"\",\"type\":\"category\",\"url\":\"http://127.0.0.1:8081/category/ateliers/ateliers-enfants/\"} /--><!-- /wp:navigation-submenu --><!-- wp:navigation-submenu {\"className\":\" menu-item menu-item-type-post_type menu-item-object-page\",\"description\":\"\",\"id\":\"12\",\"kind\":\"post-type\",\"label\":\"À propos\",\"opensInNewTab\":false,\"rel\":null,\"title\":\"\",\"type\":\"page\",\"url\":\"http://127.0.0.1:8081/a-propos/\"} --><!-- wp:navigation-link {\"className\":\" menu-item menu-item-type-post_type menu-item-object-page\",\"description\":\"\",\"id\":\"13\",\"kind\":\"post-type\",\"label\":\"Tarifs\",\"opensInNewTab\":false,\"rel\":null,\"title\":\"\",\"type\":\"page\",\"url\":\"http://127.0.0.1:8081/a-propos/tarifs/\"} /--><!-- /wp:navigation-submenu --><!-- wp:navigation-link {\"className\":\" menu-item menu-item-type-post_type menu-item-object-page current_page_parent\",\"description\":\"\",\"id\":\"11\",\"kind\":\"post-type\",\"label\":\"Le blog\",\"opensInNewTab\":false,\"rel\":null,\"title\":\"\",\"type\":\"page\",\"url\":\"http://127.0.0.1:8081/blog/\"} /--><!-- wp:navigation-link {\"className\":\" menu-item menu-item-type-post_type menu-item-object-page\",\"description\":\"\",\"id\":\"14\",\"kind\":\"post-type\",\"label\":\"Contact\",\"opensInNewTab\":false,\"rel\":null,\"title\":\"\",\"type\":\"page\",\"url\":\"http://127.0.0.1:8081/contact/\"} /--><!-- wp:navigation-link {\"className\":\"menu-externe menu-cta menu-item menu-item-type-custom menu-item-object-custom\",\"description\":\"Bols, tasses et bons cadeaux\",\"id\":null,\"kind\":\"custom\",\"label\":\"Boutique en ligne\",\"opensInNewTab\":true,\"rel\":\"noopener\",\"title\":\"Notre boutique en ligne (nouvel onglet)\",\"type\":\"custom\",\"url\":\"https://boutique.atelier-lumiere.example/\"} /-->",
+            "notes": [
+                "wp_navigation post generated by WordPress (WP_Classic_To_Block_Menu_Converter) from the classic menu \"Menu principal\"; used by the Twenty Twenty-Five header Navigation block"
+            ]
+        }
+    ],
+    "comments": [
+        {
+            "id": 2,
+            "post_id": 17,
+            "post_slug": "secrets-emaillage-guide-complet",
+            "parent": 0,
+            "depth": 1,
+            "type": "comment",
+            "status": "approved",
+            "comment_approved_raw": "1",
+            "author": "Sophie Bernard",
+            "author_email": "sophie.bernard@example.org",
+            "author_url": "",
+            "author_ip": "203.0.113.21",
+            "user_id": 0,
+            "user_login": null,
+            "date": "2026-03-19 08:12:00",
+            "date_gmt": "2026-03-19 07:12:00",
+            "content": "Merci pour ce guide très clair ! Est-ce que vous proposez des recettes d'émaux sans plomb pour la vaisselle ?",
+            "in_wxr": true,
+            "public_in_rest": true,
+            "rest_note": null
+        },
+        {
+            "id": 3,
+            "post_id": 17,
+            "post_slug": "secrets-emaillage-guide-complet",
+            "parent": 2,
+            "depth": 2,
+            "type": "comment",
+            "status": "approved",
+            "comment_approved_raw": "1",
+            "author": "Claire Martin",
+            "author_email": "claire@example.com",
+            "author_url": "",
+            "author_ip": "127.0.0.1",
+            "user_id": 2,
+            "user_login": "claire",
+            "date": "2026-03-19 10:40:00",
+            "date_gmt": "2026-03-19 09:40:00",
+            "content": "Bonjour Sophie, tous nos émaux sont sans plomb et testés pour un usage alimentaire. Nous en parlons en détail pendant le cours du jeudi !",
+            "in_wxr": true,
+            "public_in_rest": true,
+            "rest_note": null
+        },
+        {
+            "id": 4,
+            "post_id": 17,
+            "post_slug": "secrets-emaillage-guide-complet",
+            "parent": 3,
+            "depth": 3,
+            "type": "comment",
+            "status": "approved",
+            "comment_approved_raw": "1",
+            "author": "Sophie Bernard",
+            "author_email": "sophie.bernard@example.org",
+            "author_url": "",
+            "author_ip": "203.0.113.21",
+            "user_id": 0,
+            "user_login": null,
+            "date": "2026-03-19 12:05:00",
+            "date_gmt": "2026-03-19 11:05:00",
+            "content": "Super, je viens m'inscrire alors 😊",
+            "in_wxr": true,
+            "public_in_rest": true,
+            "rest_note": null
+        },
+        {
+            "id": 5,
+            "post_id": 17,
+            "post_slug": "secrets-emaillage-guide-complet",
+            "parent": 0,
+            "depth": 1,
+            "type": "comment",
+            "status": "approved",
+            "comment_approved_raw": "1",
+            "author": "Marc Dubois",
+            "author_email": "marc.dubois@example.net",
+            "author_url": "https://marc-poterie.example.net/",
+            "author_ip": "198.51.100.7",
+            "user_id": 0,
+            "user_login": null,
+            "date": "2026-03-21 18:30:00",
+            "date_gmt": "2026-03-21 17:30:00",
+            "content": "Le tableau des températures est très utile.\n\nPour le grès, vous cuisez en réduction ou en oxydation ?",
+            "in_wxr": true,
+            "public_in_rest": true,
+            "rest_note": null
+        },
+        {
+            "id": 6,
+            "post_id": 16,
+            "post_slug": "notre-nouvel-atelier-croix-rousse",
+            "parent": 0,
+            "depth": 1,
+            "type": "pingback",
+            "status": "approved",
+            "comment_approved_raw": "1",
+            "author": "Les secrets de l'émaillage : guide complet – Atelier Lumière",
+            "author_email": "",
+            "author_url": "http://127.0.0.1:8081/secrets-emaillage-guide-complet/",
+            "author_ip": "127.0.0.1",
+            "user_id": 0,
+            "user_login": null,
+            "date": "2026-03-18 14:00:07",
+            "date_gmt": "2026-03-18 13:00:07",
+            "content": "[…] En attendant, découvrez notre nouvel atelier et nos tarifs. […]",
+            "in_wxr": true,
+            "public_in_rest": true,
+            "rest_note": "Only listed by /wp/v2/comments when ?type=pingback is passed"
+        },
+        {
+            "id": 7,
+            "post_id": 18,
+            "post_slug": "cuisson-raku-feu-et-fumee",
+            "parent": 0,
+            "depth": 1,
+            "type": "comment",
+            "status": "approved",
+            "comment_approved_raw": "1",
+            "author": "Pierre Garnier",
+            "author_email": "pierre.garnier@example.org",
+            "author_url": "",
+            "author_ip": "203.0.113.54",
+            "user_id": 0,
+            "user_login": null,
+            "date": "2026-04-23 09:00:00",
+            "date_gmt": "2026-04-23 07:00:00",
+            "content": "Superbe vidéo ! La prochaine session raku est prévue quand ?",
+            "in_wxr": true,
+            "public_in_rest": true,
+            "rest_note": null
+        },
+        {
+            "id": 8,
+            "post_id": 18,
+            "post_slug": "cuisson-raku-feu-et-fumee",
+            "parent": 7,
+            "depth": 2,
+            "type": "comment",
+            "status": "approved",
+            "comment_approved_raw": "1",
+            "author": "Lucas Petit",
+            "author_email": "lucas@example.com",
+            "author_url": "https://lucas-raku.example/",
+            "author_ip": "127.0.0.1",
+            "user_id": 3,
+            "user_login": "lucas",
+            "date": "2026-04-23 11:30:00",
+            "date_gmt": "2026-04-23 09:30:00",
+            "content": "Merci Pierre ! La prochaine cuisson a lieu le samedi 16 mai, il reste trois places.",
+            "in_wxr": true,
+            "public_in_rest": true,
+            "rest_note": null
+        },
+        {
+            "id": 9,
+            "post_id": 20,
+            "post_slug": "atelier-enfants-modeler-argile",
+            "parent": 0,
+            "depth": 1,
+            "type": "comment",
+            "status": "approved",
+            "comment_approved_raw": "1",
+            "author": "Julie Moreau",
+            "author_email": "julie.moreau@example.com",
+            "author_url": "",
+            "author_ip": "203.0.113.88",
+            "user_id": 0,
+            "user_login": null,
+            "date": "2026-06-13 20:15:00",
+            "date_gmt": "2026-06-13 18:15:00",
+            "content": "Ma fille de 7 ans a adoré la séance de mercredi, elle ne parle que de son hérisson en argile !",
+            "in_wxr": true,
+            "public_in_rest": true,
+            "rest_note": null
+        },
+        {
+            "id": 10,
+            "post_id": 20,
+            "post_slug": "atelier-enfants-modeler-argile",
+            "parent": 0,
+            "depth": 1,
+            "type": "comment",
+            "status": "hold",
+            "comment_approved_raw": "0",
+            "author": "Antoine Lefèvre",
+            "author_email": "antoine.lefevre@example.com",
+            "author_url": "",
+            "author_ip": "198.51.100.23",
+            "user_id": 0,
+            "user_login": null,
+            "date": "2026-06-14 07:50:00",
+            "date_gmt": "2026-06-14 05:50:00",
+            "content": "Bonjour, reste-t-il de la place pour les vacances de la Toussaint ?",
+            "in_wxr": true,
+            "public_in_rest": false,
+            "rest_note": null
+        },
+        {
+            "id": 11,
+            "post_id": 20,
+            "post_slug": "atelier-enfants-modeler-argile",
+            "parent": 0,
+            "depth": 1,
+            "type": "comment",
+            "status": "spam",
+            "comment_approved_raw": "spam",
+            "author": "Montres de luxe pas chères",
+            "author_email": "promo@cheap-watches.example.com",
+            "author_url": "https://cheap-watches.example.com/",
+            "author_ip": "192.0.2.66",
+            "user_id": 0,
+            "user_login": null,
+            "date": "2026-06-15 03:22:00",
+            "date_gmt": "2026-06-15 01:22:00",
+            "content": "Best replica watches, free shipping!!! Visit https://cheap-watches.example.com",
+            "in_wxr": false,
+            "public_in_rest": false,
+            "rest_note": null
+        }
+    ],
+    "menus": [
+        {
+            "id": 17,
+            "name": "Menu principal",
+            "slug": "menu-principal",
+            "count": 8,
+            "locations": [],
+            "items": [
+                {
+                    "id": 27,
+                    "key": "menu_item_main_accueil",
+                    "title": "Accueil",
+                    "stored_title": "",
+                    "type": "post_type",
+                    "object": "page",
+                    "object_id": 10,
+                    "url": "http://127.0.0.1:8081/",
+                    "parent_item": 0,
+                    "position": 1,
+                    "target": "",
+                    "attr_title": "",
+                    "description": "",
+                    "classes": [],
+                    "xfn": "",
+                    "post_parent_column": 0
+                },
+                {
+                    "id": 28,
+                    "key": "menu_item_main_nos_ateliers",
+                    "title": "Nos ateliers",
+                    "stored_title": "",
+                    "type": "post_type",
+                    "object": "page",
+                    "object_id": 15,
+                    "url": "http://127.0.0.1:8081/nos-ateliers/",
+                    "parent_item": 0,
+                    "position": 2,
+                    "target": "",
+                    "attr_title": "",
+                    "description": "",
+                    "classes": [],
+                    "xfn": "",
+                    "post_parent_column": 0
+                },
+                {
+                    "id": 29,
+                    "key": "menu_item_main_cat_enfants",
+                    "title": "Ateliers enfants",
+                    "stored_title": "",
+                    "type": "taxonomy",
+                    "object": "category",
+                    "object_id": 3,
+                    "url": "http://127.0.0.1:8081/category/ateliers/ateliers-enfants/",
+                    "parent_item": 28,
+                    "position": 3,
+                    "target": "",
+                    "attr_title": "",
+                    "description": "",
+                    "classes": [],
+                    "xfn": "",
+                    "post_parent_column": 2
+                },
+                {
+                    "id": 30,
+                    "key": "menu_item_main_a_propos",
+                    "title": "À propos",
+                    "stored_title": "",
+                    "type": "post_type",
+                    "object": "page",
+                    "object_id": 12,
+                    "url": "http://127.0.0.1:8081/a-propos/",
+                    "parent_item": 0,
+                    "position": 4,
+                    "target": "",
+                    "attr_title": "",
+                    "description": "",
+                    "classes": [],
+                    "xfn": "",
+                    "post_parent_column": 0
+                },
+                {
+                    "id": 31,
+                    "key": "menu_item_main_tarifs",
+                    "title": "Tarifs",
+                    "stored_title": "",
+                    "type": "post_type",
+                    "object": "page",
+                    "object_id": 13,
+                    "url": "http://127.0.0.1:8081/a-propos/tarifs/",
+                    "parent_item": 30,
+                    "position": 5,
+                    "target": "",
+                    "attr_title": "",
+                    "description": "",
+                    "classes": [],
+                    "xfn": "",
+                    "post_parent_column": 12
+                },
+                {
+                    "id": 32,
+                    "key": "menu_item_main_blog",
+                    "title": "Le blog",
+                    "stored_title": "Le blog",
+                    "type": "post_type",
+                    "object": "page",
+                    "object_id": 11,
+                    "url": "http://127.0.0.1:8081/blog/",
+                    "parent_item": 0,
+                    "position": 6,
+                    "target": "",
+                    "attr_title": "",
+                    "description": "",
+                    "classes": [],
+                    "xfn": "",
+                    "post_parent_column": 0
+                },
+                {
+                    "id": 33,
+                    "key": "menu_item_main_contact",
+                    "title": "Contact",
+                    "stored_title": "",
+                    "type": "post_type",
+                    "object": "page",
+                    "object_id": 14,
+                    "url": "http://127.0.0.1:8081/contact/",
+                    "parent_item": 0,
+                    "position": 7,
+                    "target": "",
+                    "attr_title": "",
+                    "description": "",
+                    "classes": [],
+                    "xfn": "",
+                    "post_parent_column": 0
+                },
+                {
+                    "id": 34,
+                    "key": "menu_item_main_boutique",
+                    "title": "Boutique en ligne",
+                    "stored_title": "Boutique en ligne",
+                    "type": "custom",
+                    "object": "custom",
+                    "object_id": 34,
+                    "url": "https://boutique.atelier-lumiere.example/",
+                    "parent_item": 0,
+                    "position": 8,
+                    "target": "_blank",
+                    "attr_title": "Notre boutique en ligne (nouvel onglet)",
+                    "description": "Bols, tasses et bons cadeaux",
+                    "classes": [
+                        "menu-externe",
+                        "menu-cta"
+                    ],
+                    "xfn": "noopener",
+                    "post_parent_column": 0
+                }
+            ]
+        },
+        {
+            "id": 18,
+            "name": "Pied de page",
+            "slug": "pied-de-page",
+            "count": 4,
+            "locations": [],
+            "items": [
+                {
+                    "id": 35,
+                    "key": "menu_item_footer_confidentialite",
+                    "title": "Politique de confidentialité",
+                    "stored_title": "",
+                    "type": "post_type",
+                    "object": "page",
+                    "object_id": 3,
+                    "url": "http://127.0.0.1:8081/politique-de-confidentialite/",
+                    "parent_item": 0,
+                    "position": 1,
+                    "target": "",
+                    "attr_title": "",
+                    "description": "",
+                    "classes": [],
+                    "xfn": "",
+                    "post_parent_column": 0
+                },
+                {
+                    "id": 36,
+                    "key": "menu_item_footer_contact",
+                    "title": "Contact",
+                    "stored_title": "",
+                    "type": "post_type",
+                    "object": "page",
+                    "object_id": 14,
+                    "url": "http://127.0.0.1:8081/contact/",
+                    "parent_item": 0,
+                    "position": 2,
+                    "target": "",
+                    "attr_title": "",
+                    "description": "",
+                    "classes": [],
+                    "xfn": "",
+                    "post_parent_column": 0
+                },
+                {
+                    "id": 37,
+                    "key": "menu_item_footer_guide",
+                    "title": "Guide de l'émaillage",
+                    "stored_title": "Guide de l'émaillage",
+                    "type": "post_type",
+                    "object": "post",
+                    "object_id": 17,
+                    "url": "http://127.0.0.1:8081/secrets-emaillage-guide-complet/",
+                    "parent_item": 0,
+                    "position": 3,
+                    "target": "",
+                    "attr_title": "",
+                    "description": "",
+                    "classes": [],
+                    "xfn": "",
+                    "post_parent_column": 0
+                },
+                {
+                    "id": 38,
+                    "key": "menu_item_footer_instagram",
+                    "title": "Instagram",
+                    "stored_title": "Instagram",
+                    "type": "custom",
+                    "object": "custom",
+                    "object_id": 38,
+                    "url": "https://www.instagram.com/atelier.lumiere.lyon/",
+                    "parent_item": 0,
+                    "position": 4,
+                    "target": "_blank",
+                    "attr_title": "",
+                    "description": "",
+                    "classes": [],
+                    "xfn": "me noopener",
+                    "post_parent_column": 0
+                }
+            ]
+        }
+    ],
+    "menu_locations": {
+        "registered_by_theme": [],
+        "assigned": [],
+        "note": "Twenty Twenty-Five (block theme) registers no classic menu locations, so no menu is assigned to a location. Its header Navigation block uses the wp_navigation post derived from \"Menu principal\"."
+    },
+    "counts": {
+        "users": 3,
+        "posts": {
+            "draft": 1,
+            "future": 1,
+            "private": 1,
+            "publish": 8,
+            "total": 11
+        },
+        "pages": {
+            "publish": 7,
+            "total": 7
+        },
+        "attachments": 5,
+        "attachment_files_on_disk": 28,
+        "synced_patterns": 1,
+        "navigation_posts": 1,
+        "categories": 7,
+        "tags": 8,
+        "menus": 2,
+        "menu_items": 12,
+        "comments": {
+            "approved": 8,
+            "hold": 1,
+            "spam": 1,
+            "by_type": {
+                "comment": 9,
+                "pingback": 1
+            },
+            "total": 10
+        },
+        "application_passwords": 1
+    },
+    "wxr": {
+        "file": "/tmp/wp-test/export.xml",
+        "bytes": 150940,
+        "generator": "WordPress 7.1.4 export_wp( array( \"content\" => \"all\" ) )",
+        "wxr_version": "1.2",
+        "base_site_url": "http://127.0.0.1:8081",
+        "base_blog_url": "http://127.0.0.1:8081",
+        "authors": 3,
+        "category_elements": 7,
+        "tag_elements": 8,
+        "term_elements_by_taxonomy": {
+            "category": 7,
+            "nav_menu": 4,
+            "post_format": 1,
+            "post_tag": 8
+        },
+        "items_total": 37,
+        "items_by_type_and_status": {
+            "attachment": {
+                "inherit": 5
+            },
+            "nav_menu_item": {
+                "publish": 12
+            },
+            "page": {
+                "publish": 7
+            },
+            "post": {
+                "publish": 8,
+                "private": 1,
+                "draft": 1,
+                "future": 1
+            },
+            "wp_block": {
+                "publish": 1
+            },
+            "wp_navigation": {
+                "publish": 1
+            }
+        },
+        "comments_total": 9,
+        "comment_ids": [
+            2,
+            3,
+            4,
+            5,
+            6,
+            7,
+            8,
+            9,
+            10
+        ],
+        "excluded": {
+            "spam_comment_ids": [
+                11
+            ],
+            "note": "export_wp() skips spam comments (comment_approved <> \"spam\") and auto-drafts. Drafts, scheduled, private and password-protected posts ARE exported. Revisions are not exported (none exist anyway). Options/settings, theme mods, users without posts and application passwords are never part of WXR."
+        },
+        "postmeta_key_occurrences": {
+            "_elementor_data": 1,
+            "_elementor_edit_mode": 1,
+            "_elementor_page_assets": 1,
+            "_elementor_page_settings": 1,
+            "_elementor_template_type": 1,
+            "_elementor_version": 1,
+            "_menu_item_classes": 12,
+            "_menu_item_menu_item_parent": 12,
+            "_menu_item_object": 12,
+            "_menu_item_object_id": 12,
+            "_menu_item_target": 12,
+            "_menu_item_type": 12,
+            "_menu_item_url": 12,
+            "_menu_item_xfn": 12,
+            "_oembed_cc2d7cb3bed61ed522814a412e9d5d36": 3,
+            "_thumbnail_id": 7,
+            "_wp_attached_file": 5,
+            "_wp_attachment_image_alt": 5,
+            "_wp_attachment_metadata": 5,
+            "_wp_old_slug": 1,
+            "_wp_page_template": 2,
+            "_yoast_wpseo_canonical": 1,
+            "_yoast_wpseo_content_score": 4,
+            "_yoast_wpseo_estimated-reading-time-minutes": 2,
+            "_yoast_wpseo_focuskw": 6,
+            "_yoast_wpseo_meta-robots-noindex": 1,
+            "_yoast_wpseo_metadesc": 7,
+            "_yoast_wpseo_opengraph-description": 1,
+            "_yoast_wpseo_opengraph-image": 1,
+            "_yoast_wpseo_opengraph-image-id": 1,
+            "_yoast_wpseo_opengraph-title": 1,
+            "_yoast_wpseo_primary_category": 2,
+            "_yoast_wpseo_title": 6,
+            "rank_math_description": 3,
+            "rank_math_focus_keyword": 3,
+            "rank_math_internal_links_processed": 2,
+            "rank_math_primary_category": 1,
+            "rank_math_robots": 2,
+            "rank_math_seo_score": 3,
+            "rank_math_title": 3
+        },
+        "quirks": [
+            "WordPress 7.1 also emits every category, tag, nav_menu and post_format term as a generic <wp:term> (get_terms() is called with an empty custom-taxonomy list), so categories/tags appear twice (as <wp:category>/<wp:tag> and as <wp:term>) - dedupe on term_id + taxonomy.",
+            "nav_menu terms are emitted twice as <wp:term> (generic loop + wxr_nav_menu_terms()).",
+            "Attachments: <wp:attachment_url> is wp_get_attachment_url(), i.e. the \"-scaled\" file for the 3000x2000 panorama; <guid> keeps the original upload URL; _wp_attachment_metadata (serialized) lists original_image and all sub-sizes.",
+            "_oembed_<md5> postmeta ({{unknown}}) and _wp_old_slug, _thumbnail_id, _wp_page_template, _menu_item_* are exported as plain postmeta.",
+            "The <pubDate> and the \"created\" generator comment change on every export; everything else is deterministic."
+        ]
+    },
+    "rest": {
+        "root": "http://127.0.0.1:8081/wp-json/",
+        "auth": "HTTP Basic with the application password: curl -u \"admin:Fixt Atel Lumi 2026 Rest ApiK\" ...",
+        "expected": {
+            "anonymous": {
+                "posts": {
+                    "status": 200,
+                    "total": 8,
+                    "ids": [
+                        23,
+                        22,
+                        21,
+                        20,
+                        19,
+                        18,
+                        17,
+                        16
+                    ]
+                },
+                "pages": {
+                    "status": 200,
+                    "total": 7,
+                    "ids": [
+                        15,
+                        13,
+                        3,
+                        14,
+                        12,
+                        11,
+                        10
+                    ]
+                },
+                "media": {
+                    "status": 200,
+                    "total": 5,
+                    "ids": [
+                        8,
+                        7,
+                        6,
+                        5,
+                        4
+                    ]
+                },
+                "categories": {
+                    "status": 200,
+                    "total": 7,
+                    "ids": [
+                        7,
+                        2,
+                        4,
+                        3,
+                        5,
+                        1,
+                        6
+                    ]
+                },
+                "tags": {
+                    "status": 200,
+                    "total": 8,
+                    "ids": [
+                        8,
+                        13,
+                        10,
+                        15,
+                        14,
+                        11,
+                        12,
+                        9
+                    ]
+                },
+                "users": {
+                    "status": 200,
+                    "total": 3,
+                    "ids": [
+                        2,
+                        3,
+                        1
+                    ]
+                },
+                "comments": {
+                    "status": 200,
+                    "total": 7,
+                    "ids": [
+                        9,
+                        8,
+                        7,
+                        5,
+                        4,
+                        3,
+                        2
+                    ]
+                },
+                "menus": {
+                    "status": 401,
+                    "total": null
+                },
+                "blocks": {
+                    "status": 200,
+                    "total": 1
+                },
+                "navigation": {
+                    "status": 200,
+                    "total": 1,
+                    "ids": [
+                        39
+                    ]
+                }
+            },
+            "admin": {
+                "posts_any": {
+                    "status": 200,
+                    "total": 11,
+                    "ids": [
+                        26,
+                        25,
+                        24,
+                        23,
+                        22,
+                        21,
+                        20,
+                        19,
+                        18,
+                        17,
+                        16
+                    ]
+                },
+                "pages_any": {
+                    "status": 200,
+                    "total": 7,
+                    "ids": [
+                        15,
+                        13,
+                        3,
+                        14,
+                        12,
+                        11,
+                        10
+                    ]
+                },
+                "users": {
+                    "status": 200,
+                    "total": 3,
+                    "ids": [
+                        2,
+                        3,
+                        1
+                    ]
+                },
+                "comments_all": {
+                    "status": 200,
+                    "total": 8,
+                    "ids": [
+                        10,
+                        9,
+                        8,
+                        7,
+                        5,
+                        4,
+                        3,
+                        2
+                    ]
+                },
+                "comments_hold": {
+                    "status": 200,
+                    "total": 1,
+                    "ids": [
+                        10
+                    ]
+                },
+                "comments_spam": {
+                    "status": 200,
+                    "total": 1,
+                    "ids": [
+                        11
+                    ]
+                },
+                "pingbacks": {
+                    "status": 200,
+                    "total": 1,
+                    "ids": [
+                        6
+                    ]
+                },
+                "menus": {
+                    "status": 200,
+                    "total": 2,
+                    "ids": [
+                        17,
+                        18
+                    ]
+                },
+                "menu_items": {
+                    "status": 200,
+                    "total": 12,
+                    "ids": [
+                        27,
+                        35,
+                        28,
+                        36,
+                        29,
+                        37,
+                        30,
+                        38,
+                        31,
+                        32,
+                        33,
+                        34
+                    ]
+                },
+                "menu_locations": {
+                    "status": 200,
+                    "total": 0,
+                    "data": []
+                },
+                "blocks": {
+                    "status": 200,
+                    "total": 1,
+                    "ids": [
+                        9
+                    ]
+                },
+                "navigation": {
+                    "status": 200,
+                    "total": 1,
+                    "ids": [
+                        39
+                    ]
+                },
+                "settings": {
+                    "status": 200,
+                    "total": null
+                }
+            }
+        },
+        "post_meta_field": {
+            "footnotes": ""
+        },
+        "post_fields_edit_context": [
+            "id",
+            "date",
+            "date_gmt",
+            "guid",
+            "modified",
+            "modified_gmt",
+            "password",
+            "slug",
+            "status",
+            "type",
+            "link",
+            "title",
+            "content",
+            "excerpt",
+            "author",
+            "featured_media",
+            "comment_status",
+            "ping_status",
+            "sticky",
+            "template",
+            "format",
+            "meta",
+            "categories",
+            "tags",
+            "permalink_template",
+            "generated_slug",
+            "class_list",
+            "_links"
+        ],
+        "password_protected_public_view": {
+            "content.protected": true,
+            "content.rendered": "",
+            "note": "Pass ?password=celadon2026 to get the rendered content."
+        },
+        "settings_subset": {
+            "title": "Atelier Lumière",
+            "description": "Céramique artisanale à Lyon",
+            "url": "http://127.0.0.1:8081",
+            "timezone": "Europe/Paris",
+            "date_format": "j F Y",
+            "time_format": "H:i",
+            "start_of_week": 1,
+            "language": "en_US",
+            "default_category": 1,
+            "posts_per_page": 10,
+            "show_on_front": "page",
+            "page_on_front": 10,
+            "page_for_posts": 11
+        },
+        "notes": [
+            "SEO (Yoast/Rank Math) and Elementor postmeta are NOT exposed by the REST API (protected \"_\" keys / unregistered meta, plugins not installed: no yoast_head / yoast_head_json either). Get them from the WXR, or register them yourself.",
+            "The only registered post meta is \"footnotes\" (core), so meta = {\"footnotes\": \"\"}.",
+            "Embeds render as plain links in content.rendered (oEmbed lookups are blocked); use content.raw (context=edit) for block markup.",
+            "/wp/v2/comments lists only type=comment by default; pingbacks need ?type=pingback.",
+            "Public /wp/v2/users only lists users with published posts.",
+            "Anonymous GET /wp/v2/blocks answers [] while X-WP-Total says 1 (core: the published wp_block is counted, then filtered out by the per-item read permission check). Authenticated, it returns the pattern.",
+            "Published wp_navigation posts are readable anonymously (/wp/v2/navigation).",
+            "Private posts: anonymous visitors get plain ?p=ID permalinks; authenticated users get the pretty URL (core wp_force_plain_post_permalink()). Drafts and scheduled posts always have ?p=ID links."
+        ]
+    },
+    "features": {
+        "bare_url_on_own_line": [
+            15,
+            16,
+            18
+        ],
+        "block:core/block": [
+            10,
+            17
+        ],
+        "block:core/button": [
+            10,
+            13,
+            16,
+            21,
+            26
+        ],
+        "block:core/buttons": [
+            10,
+            13,
+            16,
+            21,
+            26
+        ],
+        "block:core/column": [
+            10,
+            16
+        ],
+        "block:core/columns": [
+            10,
+            16
+        ],
+        "block:core/cover": [
+            10,
+            16
+        ],
+        "block:core/embed": [
+            16
+        ],
+        "block:core/gallery": [
+            16
+        ],
+        "block:core/heading": [
+            3,
+            10,
+            12,
+            13,
+            14,
+            16,
+            17,
+            20,
+            21
+        ],
+        "block:core/html": [
+            14,
+            16
+        ],
+        "block:core/image": [
+            16,
+            17,
+            20,
+            26
+        ],
+        "block:core/latest-posts": [
+            10
+        ],
+        "block:core/list": [
+            12,
+            14,
+            17,
+            20,
+            21,
+            24,
+            25
+        ],
+        "block:core/list-item": [
+            12,
+            14,
+            17,
+            20,
+            21,
+            24,
+            25
+        ],
+        "block:core/media-text": [
+            12
+        ],
+        "block:core/more": [
+            16
+        ],
+        "block:core/paragraph": [
+            3,
+            10,
+            12,
+            13,
+            14,
+            16,
+            17,
+            20,
+            21,
+            23,
+            24,
+            25,
+            26
+        ],
+        "block:core/quote": [
+            12,
+            17
+        ],
+        "block:core/separator": [
+            16,
+            17
+        ],
+        "block:core/shortcode": [
+            14
+        ],
+        "block:core/table": [
+            13,
+            17,
+            21,
+            23
+        ],
+        "block:yoast/faq-block": [
+            20
+        ],
+        "child_page": [
+            13
+        ],
+        "content_image_subsize_url": [
+            10,
+            12,
+            15,
+            16,
+            17,
+            19,
+            20,
+            26
+        ],
+        "custom_excerpt": [
+            17,
+            18,
+            21
+        ],
+        "editor_classic": [
+            18,
+            19,
+            22
+        ],
+        "editor_elementor": [
+            15
+        ],
+        "editor_empty": [
+            11
+        ],
+        "editor_gutenberg": [
+            3,
+            10,
+            12,
+            13,
+            14,
+            16,
+            17,
+            20,
+            21,
+            23,
+            24,
+            25,
+            26
+        ],
+        "elementor": [
+            15
+        ],
+        "emoji_4byte_utf8": [
+            22
+        ],
+        "empty_slug": [
+            25
+        ],
+        "featured_image": [
+            16,
+            17,
+            18,
+            19,
+            20,
+            21,
+            26
+        ],
+        "internal_link_category": [
+            20
+        ],
+        "internal_link_shortlink": [
+            19
+        ],
+        "more_tag": [
+            16,
+            19
+        ],
+        "oembed_cache_meta": [
+            15,
+            16,
+            18
+        ],
+        "old_slug_redirect": [
+            17
+        ],
+        "password_protected": [
+            23
+        ],
+        "post_format_video": [
+            18
+        ],
+        "seo_rankmath": [
+            12,
+            19,
+            21
+        ],
+        "seo_rankmath_noindex": [
+            21
+        ],
+        "seo_yoast": [
+            10,
+            13,
+            14,
+            16,
+            17,
+            18,
+            20
+        ],
+        "seo_yoast_canonical": [
+            17
+        ],
+        "seo_yoast_noindex": [
+            18
+        ],
+        "seo_yoast_primary_category": [
+            17,
+            20
+        ],
+        "shortcode:caption": [
+            18
+        ],
+        "shortcode:contact-form-7": [
+            14,
+            18
+        ],
+        "shortcode:gallery": [
+            19
+        ],
+        "status_draft": [
+            25
+        ],
+        "status_future": [
+            26
+        ],
+        "status_private": [
+            24
+        ],
+        "status_publish": [
+            3,
+            10,
+            11,
+            12,
+            13,
+            14,
+            15,
+            16,
+            17,
+            18,
+            19,
+            20,
+            21,
+            22,
+            23
+        ],
+        "sticky": [
+            16
+        ],
+        "synced_pattern_ref": [
+            10,
+            17
+        ]
+    },
+    "content_fingerprint": {
+        "sha256": "4323f5a7618d4a52a8d551c0eecfe43542d8860b824eaa2f55ac2a1daf433f9e",
+        "how": "php /tmp/wp-test/inventory.php --fingerprint  (verify.sh checks it is unchanged after crawling the site)"
+    },
+    "ids": {
+        "users": {
+            "admin": 1,
+            "claire": 2,
+            "lucas": 3
+        },
+        "categories": {
+            "uncategorized": 1,
+            "ateliers": 2,
+            "ateliers_enfants": 3,
+            "ateliers_adultes": 4,
+            "techniques": 5,
+            "emaillage": 6,
+            "actualites": 7
+        },
+        "tags": {
+            "argile": 8,
+            "email": 9,
+            "gres": 10,
+            "raku": 11,
+            "tournage": 12,
+            "cuisson": 13,
+            "porcelaine": 14,
+            "lyon": 15
+        },
+        "media": {
+            "tour": 4,
+            "panorama": 5,
+            "bols": 6,
+            "raku": 7,
+            "enfants": 8
+        },
+        "pages": {
+            "accueil": 10,
+            "blog": 11,
+            "a_propos": 12,
+            "tarifs": 13,
+            "contact": 14,
+            "confidentialite": 3,
+            "nos_ateliers": 15
+        },
+        "posts": {
+            "nouvel_atelier": 16,
+            "emaillage": 17,
+            "raku": 18,
+            "bols": 19,
+            "atelier_enfants": 20,
+            "stage_ete": 21,
+            "fermeture": 22,
+            "recette_celadon": 23,
+            "notes_internes": 24,
+            "brouillon_horaires": 25,
+            "portes_ouvertes": 26
+        },
+        "synced_patterns": {
+            "newsletter": 9
+        },
+        "navigation_posts": {
+            "menu_principal": 39
+        },
+        "comments": {
+            "sophie_1": 2,
+            "claire_reply": 3,
+            "sophie_2": 4,
+            "marc": 5,
+            "pingback": 6,
+            "pierre": 7,
+            "lucas_reply": 8,
+            "julie": 9,
+            "antoine_pending": 10,
+            "spam": 11
+        },
+        "menus": {
+            "menu_principal": 17,
+            "menu_pied_de_page": 18
+        },
+        "menu_items": {
+            "main_accueil": 27,
+            "main_nos_ateliers": 28,
+            "main_cat_enfants": 29,
+            "main_a_propos": 30,
+            "main_tarifs": 31,
+            "main_blog": 32,
+            "main_contact": 33,
+            "main_boutique": 34,
+            "footer_confidentialite": 35,
+            "footer_contact": 36,
+            "footer_guide": 37,
+            "footer_instagram": 38
+        }
+    }
+}

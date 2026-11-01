@@ -127,6 +127,9 @@ $aiCrawls = array_sum(array_column($botRows, 'views'));
   </div></section>
   <section class="panel"><div class="panel-head"><div><h2><?= e(__('Robots IA qui lisent votre site')) ?></h2><p class="muted small"><?= e(__('Pages lues par GPTBot, ClaudeBot, PerplexityBot…')) ?></p></div></div><div class="panel-body">
     <?= Charts::bars(array_map(static fn ($s) => [$s['source'], (int) $s['views']], $botRows), __('Aucun passage enregistré sur la période.')) ?>
+    <?php $aiFiles = (array) ($stats['ai_files'] ?? []); if ($aiFiles): ?>
+    <p class="muted small" style="margin-top:.85rem"><?= e(__('Fichiers pour les IA lus : llms.txt {a} · llms-full.txt {b} · pages Markdown {c}', ['a' => I18n::number((int) ($aiFiles['llms.txt'] ?? 0)), 'b' => I18n::number((int) ($aiFiles['llms-full.txt'] ?? 0)), 'c' => I18n::number((int) ($aiFiles['md'] ?? 0))])) ?></p>
+    <?php endif ?>
   </div></section>
 </div>
 

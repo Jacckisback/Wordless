@@ -10,6 +10,7 @@
 .wl-faq details>summary h3{pointer-events:auto}
 #wl-title-area[hidden]{display:none}
 #wl-title:empty::before{content:attr(data-placeholder);color:rgb(120 120 130/.8)}
+.wl-blockbar[hidden],.wl-rtb[hidden]{display:none!important}
 .wl-blockbar{position:absolute;z-index:40;display:flex;gap:2px;padding:3px;background:#1d2433;border-radius:7px;box-shadow:0 6px 18px rgb(0 0 0/.25);transform:translateY(-110%)}
 .wl-blockbar button{border:0;background:none;color:#fff;font:600 12px/1 system-ui,sans-serif;padding:6px 8px;border-radius:5px;cursor:pointer}
 .wl-blockbar button:hover{background:rgb(255 255 255/.14)}

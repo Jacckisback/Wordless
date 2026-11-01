@@ -164,7 +164,14 @@
     if (f) showRtb(f); else rtb.hidden = true;
   });
   document.addEventListener('keydown', function (e) {
-    if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === 's') { e.preventDefault(); send({ type: 'save' }); }
+    if (!(e.ctrlKey || e.metaKey) || e.altKey) return;
+    var k = e.key.toLowerCase(), t = e.target;
+    if (k === 's') { e.preventDefault(); send({ type: 'save' }); return; }
+    // Annuler / rétablir : hors d'un texte en cours d'édition, c'est l'historique de l'éditeur qui agit.
+    if ((k === 'z' || k === 'y') && !(t && (t.isContentEditable || /^(INPUT|TEXTAREA|SELECT)$/.test(t.tagName)))) {
+      e.preventDefault();
+      send({ type: k === 'y' || e.shiftKey ? 'redo' : 'undo' });
+    }
   });
 
   // Titre (éditable directement dans l'aperçu)

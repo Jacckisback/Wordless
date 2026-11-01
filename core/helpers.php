@@ -296,20 +296,20 @@ function human_time(?int $ts): string
     if ($abs < 60) {
         return __('à l’instant');
     }
-    $units = [[86400 * 365, '{n} an', '{n} ans'], [86400 * 30, '{n} mois', '{n} mois'], [86400, '{n} jour', '{n} jours'], [3600, '{n} h', '{n} h'], [60, '{n} min', '{n} min']];
-    foreach ($units as [$sec, $one, $many]) {
-        if ($abs >= $sec) {
-            $n = (int) floor($abs / $sec);
-            $label = _n($one, $many, $n);
-            return $diff >= 0 ? __('il y a {t}', ['t' => $label]) : __('dans {t}', ['t' => $label]);
-        }
-    }
-    return '';
+    // Chaînes écrites en toutes lettres pour que l'outil d'extraction des traductions les trouve.
+    $label = trim(match (true) {
+        $abs >= 86400 * 365 => _n('{n} an', '{n} ans', $n = (int) floor($abs / (86400 * 365))),
+        $abs >= 86400 * 30 => _n('{n} mois', '{n} mois ', $n = (int) floor($abs / (86400 * 30))),
+        $abs >= 86400 => _n('{n} jour', '{n} jours', $n = (int) floor($abs / 86400)),
+        $abs >= 3600 => _n('{n} h', '{n} h ', $n = (int) floor($abs / 3600)),
+        default => _n('{n} min', '{n} min ', $n = (int) floor($abs / 60)),
+    }); // pluriels identiques en français : l'espace finale distingue la clé à traduire
+    return $diff >= 0 ? __('il y a {t}', ['t' => $label]) : __('dans {t}', ['t' => $label]);
 }
 
 function fmt_bytes(int $bytes): string
 {
-    $units = ['o', 'Ko', 'Mo', 'Go'];
+    $units = [__('o'), __('Ko'), __('Mo'), __('Go')];
     $i = 0;
     $v = (float) $bytes;
     while ($v >= 1024 && $i < 3) {

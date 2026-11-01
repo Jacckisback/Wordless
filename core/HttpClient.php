@@ -29,13 +29,25 @@ final class HttpClient
                 ? self::curl($method, $url, $headers, $body, $timeout, $maxBytes, $opts['sink'] ?? null, $pin)
                 : self::stream($method, $url, $headers, $body, $timeout, $maxBytes);
             if (in_array($res['status'], [301, 302, 303, 307, 308], true) && isset($res['headers']['location'])) {
-                $url = self::resolve($url, $res['headers']['location']);
+                if ($redirects === 0) {
+                    break; // redirections désactivées : l'appelant décide
+                }
+                $next = self::resolve($url, $res['headers']['location']);
+                if (strtolower((string) parse_url($next, PHP_URL_HOST)) !== strtolower((string) parse_url($url, PHP_URL_HOST))) {
+                    // Changement d'hôte : les identifiants ne suivent pas la redirection.
+                    $headers = array_values(array_filter($headers, static fn ($h) => !preg_match('/^\s*(authorization|proxy-authorization|cookie|x-api-key)\s*:/i', (string) $h)));
+                }
+                $url = $next;
                 if ($res['status'] === 303) {
                     $method = 'GET';
                     $body = null;
                 }
                 continue;
             }
+            $res['url'] = $url;
+            return $res;
+        }
+        if ($redirects === 0 && isset($res)) {
             $res['url'] = $url;
             return $res;
         }

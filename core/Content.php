@@ -183,9 +183,16 @@ final class Content
         }
         $c['slug'] = $slug;
         $terms = self::incomingTerms($in);
+        // Contenu importé de WordPress : il garde son adresse d'origine (même hors du modèle de
+        // Wordless : accents, sous-dossiers, types personnalisés) tant que le slug et le parent restent.
+        $keepPath = $old && (string) ($old['path'] ?? '') !== '' && !empty($old['wp_id'])
+            && (!array_key_exists('slug', $in) || trim((string) $in['slug']) === '' || slugify((string) $in['slug']) === slugify((string) $old['slug']))
+            && (int) ($c['parent_id'] ?? 0) === (int) ($old['parent_id'] ?? 0);
         if (!empty($opt['path'])) {
             $c['path'] = self::normalizePath((string) $opt['path']);
             $c['path'] = self::uniquePath($c['path'], $id);
+        } elseif ($keepPath) {
+            $c['path'] = self::uniquePath((string) $old['path'], $id);
         } else {
             $c['path'] = self::uniquePath(self::buildPath($c, $terms['category'] ?? null), $id);
         }

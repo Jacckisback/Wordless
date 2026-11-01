@@ -100,9 +100,10 @@ final class Auth
         }
         $user = Db::one('SELECT * FROM users WHERE email = ? OR slug = ?', [$email, $email]);
         $hash = $user['password'] ?? '';
-        // Vérification à temps constant même si l'utilisateur n'existe pas.
-        $valid = password_verify($password, $hash !== '' ? $hash : self::hashPassword('wordless-timing-guard'));
-        if (!$user || !$valid || $user['status'] !== 'active') {
+        // Vérification à temps constant même si l'utilisateur n'existe pas (empreinte aléatoire,
+        // jamais vérifiable) ; un compte sans mot de passe (ex. importé) ne peut pas se connecter.
+        $valid = password_verify($password, $hash !== '' ? $hash : self::hashPassword(bin2hex(random_bytes(16))));
+        if (!$user || !$valid || $hash === '' || $user['status'] !== 'active') {
             Throttle::hit($ipKey, 30, 900, 900);
             Throttle::hit($userKey, 5, 900, 900);
             Activity::log('login_failed', 'user', $user ? (int) $user['id'] : null, $email);
@@ -199,9 +200,11 @@ final class Auth
         self::clearCookie();
     }
 
+    /** Ferme toutes les sessions et coupe les connexions d'IA (OAuth) ; les clés API restent. */
     public static function logoutEverywhere(int $userId): void
     {
         Db::delete('sessions', ['user_id' => $userId]);
+        Db::run("DELETE FROM tokens WHERE user_id = ? AND kind IN ('oauth_code', 'oauth_access', 'oauth_refresh')", [$userId]);
     }
 
     public static function csrf(): string

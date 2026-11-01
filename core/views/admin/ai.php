@@ -37,7 +37,7 @@ use Wordless\I18n;
         </div>
         <div class="field"><label for="anthropic_model"><?= e(__('Modèle Claude')) ?></label>
           <select id="anthropic_model" name="anthropic_model" <?= $canSettings ? '' : 'disabled' ?>>
-            <?php foreach (Client::ANTHROPIC_MODELS as $id => $label): ?><option value="<?= e($id) ?>" <?= $anthropicModel === $id ? 'selected' : '' ?>><?= e($label) ?></option><?php endforeach ?>
+            <?php foreach (Client::anthropicModels() as $id => $label): ?><option value="<?= e($id) ?>" <?= $anthropicModel === $id ? 'selected' : '' ?>><?= e($label) ?></option><?php endforeach ?>
             <?php if (!isset(Client::ANTHROPIC_MODELS[$anthropicModel])): ?><option value="<?= e($anthropicModel) ?>" selected><?= e($anthropicModel) ?></option><?php endif ?>
           </select></div>
         <div class="field">

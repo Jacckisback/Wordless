@@ -43,7 +43,11 @@ final class ImportController
                 }
                 $dest = $dir . '/wxr-' . bin2hex(random_bytes(6)) . '.xml';
                 move_uploaded_file((string) $f['tmp_name'], $dest);
-                $job = Importer::create(['type' => 'wxr', 'file' => $dest], $options);
+                try {
+                    $job = Importer::create(['type' => 'wxr', 'file' => $dest], $options);
+                } finally {
+                    @unlink($dest); // le fichier n'est lu qu'à la création de la tâche
+                }
             } else {
                 $url = trim((string) ($_POST['url'] ?? ''));
                 if (!preg_match('#^https?://#i', $url)) {

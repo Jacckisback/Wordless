@@ -38,15 +38,35 @@ final class Cli
                     fwrite(STDERR, $p . PHP_EOL);
                     return 1;
                 }
-                $n = Db::update('users', ['password' => Auth::hashPassword($pass)], ['email' => mb_strtolower($email)]);
-                echo $n ? "OK\n" : "Utilisateur introuvable\n";
-                return $n ? 0 : 1;
+                $id = (int) Db::val('SELECT id FROM users WHERE email = ?', [mb_strtolower($email)]);
+                if (!$id) {
+                    echo "Utilisateur introuvable\n";
+                    return 1;
+                }
+                Db::update('users', ['password' => Auth::hashPassword($pass)], ['id' => $id]);
+                Auth::logoutEverywhere($id); // un mot de passe changé ferme toutes les sessions
+                echo "OK\n";
+                return 0;
             }],
             'user:2fa-reset' => ['user:2fa-reset <email>', static function (array $o, array $args): int {
                 $n = Db::update('users', ['totp_enabled' => 0, 'totp_secret' => '', 'recovery_codes' => '[]'], ['email' => mb_strtolower($args[0] ?? '')]);
                 echo $n ? "OK\n" : "Utilisateur introuvable\n";
                 return $n ? 0 : 1;
             }],
+            'plugin:list' => [__('Liste les extensions du dossier plugins/'), static function (): int {
+                $active = (array) Settings::get('plugins.active', []);
+                $found = glob(WL_PLUGINS . '/*/plugin.php') ?: [];
+                foreach ($found as $f) {
+                    $name = basename(dirname($f));
+                    echo (in_array($name, $active, true) ? '[actif]   ' : '[inactif] ') . $name . PHP_EOL;
+                }
+                if (!$found) {
+                    echo "Aucune extension (plugins/<nom>/plugin.php).\n";
+                }
+                return 0;
+            }],
+            'plugin:enable' => ['plugin:enable <nom>', static fn (array $o, array $args): int => self::togglePlugin((string) ($args[0] ?? ''), true)],
+            'plugin:disable' => ['plugin:disable <nom>', static fn (array $o, array $args): int => self::togglePlugin((string) ($args[0] ?? ''), false)],
         ];
         foreach (['Migrate', 'Mcp', 'Ai'] as $module) {
             $class = 'Wordless\\' . $module . '\\Cli';
@@ -87,6 +107,23 @@ final class Cli
             fwrite(STDERR, get_class($e) . ': ' . $e->getMessage() . PHP_EOL);
             return 1;
         }
+    }
+
+    private static function togglePlugin(string $name, bool $on): int
+    {
+        $name = basename($name);
+        if ($name === '' || !is_file(WL_PLUGINS . '/' . $name . '/plugin.php')) {
+            fwrite(STDERR, "Extension introuvable : plugins/{$name}/plugin.php\n");
+            return 1;
+        }
+        $active = array_values(array_filter((array) Settings::get('plugins.active', []), static fn ($p) => $p !== $name));
+        if ($on) {
+            $active[] = $name;
+        }
+        Settings::set('plugins.active', $active);
+        Cache::purge();
+        echo ($on ? 'Activée : ' : 'Désactivée : ') . $name . PHP_EOL;
+        return 0;
     }
 
     public static function help(): int

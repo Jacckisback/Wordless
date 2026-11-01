@@ -9,6 +9,7 @@
     c: D.content, blocks: D.content.blocks || [], sel: null, dirty: false, saving: false, ready: false,
     analysis: null, slugTouched: !!D.content.id, tab: 'block'
   };
+  var H = { stack: [], pos: -1, timer: null }; // historique pour annuler / rétablir
   var $ = function (s, r) { return (r || document).querySelector(s); };
   var $$ = function (s, r) { return Array.prototype.slice.call((r || document).querySelectorAll(s)); };
   var el = function (tag, attrs, kids) {
@@ -64,7 +65,43 @@
     setState(T('Modifications non enregistrées', 'Unsaved changes', 'Cambios sin guardar'), 'is-dirty');
     analyzeSoon();
     saveLocal();
+    recordSoon();
   }
+
+  // ------------------------------------------------------------------
+  // Historique : annuler / rétablir (une étape par action ou par pause de frappe)
+  // ------------------------------------------------------------------
+  function snapshot() { return JSON.stringify({ blocks: S.blocks, title: S.c.title || '' }); }
+  function record() {
+    clearTimeout(H.timer); H.timer = null;
+    var s = snapshot();
+    if (H.stack[H.pos] !== s) {
+      H.stack = H.stack.slice(0, H.pos + 1);
+      H.stack.push(s);
+      if (H.stack.length > 100) H.stack.shift();
+      H.pos = H.stack.length - 1;
+    }
+    histButtons();
+  }
+  function recordSoon() { clearTimeout(H.timer); H.timer = setTimeout(record, 600); histButtons(); }
+  function histButtons() {
+    var u = $('#ed-undo'), r = $('#ed-redo');
+    if (u) u.disabled = !(H.pos > 0 || H.timer);
+    if (r) r.disabled = !!H.timer || H.pos >= H.stack.length - 1;
+  }
+  function restore(s) {
+    var st = JSON.parse(s);
+    S.blocks = st.blocks; S.c.title = st.title;
+    $('#ed-title').value = st.title;
+    if (S.sel && idx(S.sel) < 0) S.sel = null;
+    post({ type: 'select', id: S.sel }); // l'aperçu suit la sélection sans attendre le nouveau rendu
+    S.dirty = true;
+    setState(T('Modifications non enregistrées', 'Unsaved changes', 'Cambios sin guardar'), 'is-dirty');
+    analyzeSoon(); saveLocal();
+    renderAll(); outline(); inspector(); histButtons();
+  }
+  function undo() { if (H.timer) record(); if (H.pos > 0) { H.pos--; restore(H.stack[H.pos]); } }
+  function redo() { if (H.timer) record(); if (H.pos < H.stack.length - 1) { H.pos++; restore(H.stack[H.pos]); } }
   var saveLocal = debounce(function () {
     try { localStorage.setItem('wl-draft-' + (S.c.id || 'new-' + S.c.type), JSON.stringify({ at: Date.now(), state: payload(S.c.status) })); } catch (e) {}
   }, 800);
@@ -119,6 +156,8 @@
     else if (d.type === 'action') { act(d.action, d.id); }
     else if (d.type === 'title') { S.c.title = d.title; $('#ed-title').value = d.title; autoSlug(); dirty(); }
     else if (d.type === 'save') { save(); }
+    else if (d.type === 'undo') { undo(); }
+    else if (d.type === 'redo') { redo(); }
   });
 
   // ------------------------------------------------------------------
@@ -793,8 +832,16 @@
     document.body.appendChild(f); f.submit(); f.remove();
   });
   document.addEventListener('keydown', function (e) {
-    if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === 's') { e.preventDefault(); save(); }
+    if (!(e.ctrlKey || e.metaKey) || e.altKey) return;
+    var k = e.key.toLowerCase(), t = e.target;
+    if (k === 's') { e.preventDefault(); save(); return; }
+    if (k !== 'z' && k !== 'y') return;
+    if (t && (t.isContentEditable || /^(INPUT|TEXTAREA|SELECT)$/.test(t.tagName))) return; // annulation native du champ
+    e.preventDefault();
+    if (k === 'y' || e.shiftKey) redo(); else undo();
   });
+  $('#ed-undo').addEventListener('click', undo);
+  $('#ed-redo').addEventListener('click', redo);
   window.addEventListener('beforeunload', function (e) { if (S.dirty) { e.preventDefault(); e.returnValue = ''; } });
 
   // Titre
@@ -847,6 +894,7 @@
   setState(S.c.id ? T('Enregistré', 'Saved', 'Guardado') : T('Nouveau brouillon', 'New draft', 'Nuevo borrador'));
   analyze();
   if (!S.blocks.length && D.templates.length) setTimeout(templates, 300);
+  record(); // état de départ de l'historique
   // Exposé pour les autres scripts (IA)
-  window.WLEditor = { state: S, renderAll: renderAll, dirty: dirty };
+  window.WLEditor = { state: S, renderAll: renderAll, dirty: dirty, undo: undo, redo: redo };
 })();

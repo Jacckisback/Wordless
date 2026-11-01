@@ -77,12 +77,12 @@ declare(strict_types=1);
     }
     readfile($file);
 
-    if ($ext === 'html' && !empty($meta['stats'])) {
+    if (!empty($meta['stats']) && in_array($ext, ['html', 'md', 'txt'], true)) {
         if (function_exists('fastcgi_finish_request')) {
             fastcgi_finish_request();
         }
         require __DIR__ . '/hit.php';
-        wl_track_hit($path);
+        wl_track_hit($path, $ext !== 'html');
     }
     exit;
 })();
