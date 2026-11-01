@@ -1,0 +1,21 @@
+/* Styles ajoutés dans la toile de l'éditeur (jamais sur le site public). */
+[data-wl-block]{position:relative;outline:1px dashed transparent;outline-offset:2px;transition:outline-color .15s;cursor:default}
+[data-wl-block]:hover{outline-color:rgb(39 71 212/.45)}
+[data-wl-block].is-selected{outline:2px solid #2747d4;outline-offset:2px}
+[data-wl-field]{cursor:text;border-radius:2px}
+[data-wl-field]:focus{outline:2px solid rgb(39 71 212/.35);outline-offset:3px}
+[data-wl-field].is-empty::before{content:attr(data-wl-placeholder);color:rgb(120 120 130/.85);pointer-events:none;font-style:normal}
+.wl-text[data-wl-field].is-empty{min-height:3em}
+.wl-faq details>summary{pointer-events:none}
+.wl-faq details>summary h3{pointer-events:auto}
+#wl-title-area[hidden]{display:none}
+#wl-title:empty::before{content:attr(data-placeholder);color:rgb(120 120 130/.8)}
+.wl-blockbar{position:absolute;z-index:40;display:flex;gap:2px;padding:3px;background:#1d2433;border-radius:7px;box-shadow:0 6px 18px rgb(0 0 0/.25);transform:translateY(-110%)}
+.wl-blockbar button{border:0;background:none;color:#fff;font:600 12px/1 system-ui,sans-serif;padding:6px 8px;border-radius:5px;cursor:pointer}
+.wl-blockbar button:hover{background:rgb(255 255 255/.14)}
+.wl-blockbar .lbl{color:rgb(255 255 255/.7);padding:6px 8px;font:500 12px/1 system-ui,sans-serif}
+.wl-rtb{position:absolute;z-index:50;display:flex;gap:2px;padding:3px;background:#1d2433;border-radius:7px;box-shadow:0 6px 18px rgb(0 0 0/.25)}
+.wl-rtb button{border:0;background:none;color:#fff;font:600 13px/1 system-ui,sans-serif;min-width:28px;height:28px;padding:0 6px;border-radius:5px;cursor:pointer}
+.wl-rtb button:hover{background:rgb(255 255 255/.16)}
+.wl-empty-canvas{max-width:40rem;margin:4rem auto;padding:2rem;text-align:center;border:2px dashed rgb(120 120 130/.35);border-radius:12px;color:rgb(100 100 110);font:15px/1.5 system-ui,sans-serif}
+.wl-code-preview{white-space:pre-wrap;font:12px/1.5 ui-monospace,monospace;background:rgb(0 0 0/.05);padding:1rem;border-radius:6px;max-height:12rem;overflow:hidden}

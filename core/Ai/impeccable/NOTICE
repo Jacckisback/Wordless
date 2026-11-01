@@ -1,0 +1,15 @@
+Wordless — directeur artistique
+
+Les principes de direction artistique (ArtDirector::principles) et une partie des
+règles d'audit déterministes (palette violette, fond crème, polices surutilisées,
+hiérarchie typographique plate, longueur de ligne, jargon marketing, tirets
+cadratins, cadence d'aphorismes, grilles de cartes identiques, chiffres en
+ouverture, contraste) sont adaptés, traduits et condensés à partir du projet
+Impeccable de Paul Bakaus :
+
+  https://github.com/pbakaus/impeccable
+  Licence : Apache License 2.0 (copie dans le fichier LICENSE de ce dossier)
+
+Modifications : traduction en français, condensation, réécriture des règles en PHP
+pour s'appliquer aux jetons de design et aux blocs de Wordless. Aucun fichier
+d'Impeccable n'est copié tel quel, hormis le texte de la licence.

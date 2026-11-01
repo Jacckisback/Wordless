@@ -1,0 +1,17 @@
+#!/usr/bin/env php
+<?php
+/**
+ * Wordless en ligne de commande.
+ *   php bin/wordless help
+ */
+declare(strict_types=1);
+
+if (PHP_SAPI !== 'cli') {
+    exit(1);
+}
+define('WL_ROOT', dirname(__DIR__));
+require WL_ROOT . '/core/bootstrap.php';
+
+use Wordless\Cli;
+
+exit(Cli::run(array_slice($argv, 1)));

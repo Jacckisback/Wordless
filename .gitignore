@@ -1,0 +1,7 @@
+# Données d'exécution (jamais versionnées)
+/data/*
+!/data/.htaccess
+!/data/index.html
+/media/*
+!/media/.htaccess
+!/media/index.html

@@ -1,0 +1,7 @@
+/* Thème clair/sombre de l'admin appliqué avant l'affichage (évite le flash). */
+(function () {
+  try {
+    var t = localStorage.getItem('wl-theme');
+    if (t === 'dark' || t === 'light') document.documentElement.setAttribute('data-theme', t);
+  } catch (e) {}
+})();
