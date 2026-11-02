@@ -140,7 +140,7 @@ final class Installer
         Cache::refreshMeta();
     }
 
-    /** .htaccess de protection (Apache/LiteSpeed). Nginx : voir docs/NGINX.md. */
+    /** .htaccess de protection (Apache/LiteSpeed). Nginx : règles équivalentes dans le README (section Nginx) et dans Réglages › Santé du système. */
     public static function protectDirectories(): void
     {
         $deny = "# Wordless : dossier privé, jamais servi par le web.\nRequire all denied\n<IfModule !mod_authz_core.c>\n  Order allow,deny\n  Deny from all\n</IfModule>\n";

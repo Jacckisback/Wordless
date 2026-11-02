@@ -6,6 +6,7 @@ namespace Wordless\Admin;
 use Wordless\Auth;
 use Wordless\Config;
 use Wordless\Http;
+use Wordless\I18n;
 use Wordless\Router;
 use Wordless\Settings;
 use Wordless\View;
@@ -87,6 +88,7 @@ final class Kernel
         $r->get('/import', [ImportController::class, 'index']);
         $r->post('/api/import/start', [ImportController::class, 'start']);
         $r->post('/api/import/step', [ImportController::class, 'step']);
+        $r->post('/api/import/cancel', [ImportController::class, 'cancel']);
 
         $r->get('/backups', [Tools::class, 'backups']);
         $r->post('/backups', [Tools::class, 'backupAction']);
@@ -117,6 +119,11 @@ final class Kernel
                 }
                 $back = Config::basePath() . Config::adminPath() . ($path === '/' ? '' : $path) . (Http::query() !== '' ? '?' . Http::query() : '');
                 redirect(admin_url('login') . '?redirect=' . rawurlencode($back));
+            }
+            // Langue de l'administration choisie dans le profil (vide = langue du site).
+            $lang = (string) (Auth::user()['lang'] ?? '');
+            if ($lang !== '' && $lang !== I18n::lang() && isset(I18n::LANGUAGES[$lang])) {
+                I18n::load($lang);
             }
             if (Settings::get('security.require_2fa', false) && Auth::user()['role'] === 'admin' && !(int) Auth::user()['totp_enabled']
                 && !in_array($path, ['/profile/2fa', '/logout'], true)) {

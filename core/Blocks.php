@@ -178,7 +178,7 @@ final class Blocks
                     'consent' => ['type' => 'text', 'label' => __('Mention RGPD'), 'help' => __('Affichée sous le bouton')],
                     'button' => ['type' => 'text', 'label' => __('Texte du bouton')],
                     'success' => ['type' => 'text', 'label' => __('Message de confirmation')],
-                    'recipient' => ['type' => 'email', 'label' => __('Envoyer à (e-mail)'), 'help' => __('Vide = e-mail du site')],
+                    'recipient' => ['type' => 'email', 'label' => __('Envoyer à (e-mail)'), 'help' => __('Vide = tous les administrateurs du site')],
                 ], 'defaults' => ['title' => __('Contactez-nous'), 'intro' => '', 'phone' => false, 'subject' => false,
                     'consent' => __('Vos données servent uniquement à vous répondre.'), 'button' => __('Envoyer'),
                     'success' => __('Merci, votre message est bien parti. Nous vous répondons rapidement.'), 'recipient' => '']],
@@ -881,6 +881,23 @@ final class Blocks
                 foreach ((array) ($b['data']['items'] ?? []) as $it) {
                     if (trim((string) ($it['q'] ?? '')) !== '' && trim(plain_text((string) ($it['a'] ?? ''))) !== '') {
                         $out[] = ['q' => (string) $it['q'], 'a' => (string) $it['a']];
+                    }
+                }
+            }
+        }
+        return $out;
+    }
+
+    /** Points de « L'essentiel » (texte brut, dans l'ordre). @return list<string> */
+    public static function takeaways(array $blocks): array
+    {
+        $out = [];
+        foreach ($blocks as $b) {
+            if (($b['type'] ?? '') === 'takeaways') {
+                foreach ((array) ($b['data']['items'] ?? []) as $it) {
+                    $t = trim((string) ($it['text'] ?? ''));
+                    if ($t !== '') {
+                        $out[] = $t;
                     }
                 }
             }

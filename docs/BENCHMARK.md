@@ -3,18 +3,18 @@
 Mesures faites le 1er novembre 2026, sur la même machine et dans les mêmes conditions pour les deux logiciels.
 
 - **WordPress 7.1.4** : archive officielle `latest.zip` de wordpress.org, thème par défaut Twenty Twenty-Five, extension officielle *SQLite Database Integration* (aucun serveur MySQL dans l'environnement de test).
-- **Wordless 1.0** : archive `dist/wordless-1.0.0.zip` de ce dépôt.
+- **Wordless 1.0** : archive `dist/wordless-1.0.0.zip` de ce dépôt pour les mesures de performance. Le poids du logiciel est donné pour la version corrective 1.0.1 (`dist/wordless-1.0.1.zip`), qui produit les mêmes pages à un ajout près : le résumé « L'essentiel » dans les données structurées.
 - **Même site des deux côtés** : le site de démonstration « Atelier Lumière » (7 pages, 11 articles, 5 images, menus, commentaires) a été construit sous WordPress, puis migré vers Wordless avec l'outil de migration intégré. Mêmes contenus, mêmes images, mêmes adresses.
 
 ## Poids du logiciel
 
-| | WordPress 7.1.4 | Wordless 1.0 | Écart |
+| | WordPress 7.1.4 | Wordless 1.0.1 | Écart |
 |---|---:|---:|---:|
-| Archive à télécharger | 37,2 Mo | 606 Ko | 61× plus petite |
-| Taille une fois décompressé | 110,1 Mo | 1,9 Mo | 58× plus léger |
-| Nombre de fichiers | 3 782 | 170 | 22× moins |
-| Lignes de PHP | 635 602 | 28 018 (dont environ 3 200 de traductions) | 23× moins |
-| JavaScript livré | 64,4 Mo | 127 Ko | |
+| Archive à télécharger | 37,2 Mo | 620 Ko | 60× plus petite |
+| Taille une fois décompressé | 110,1 Mo | 1,95 Mo | 56× plus léger |
+| Nombre de fichiers | 3 782 | 172 | 22× moins |
+| Lignes de PHP | 635 602 | 28 529 (dont environ 3 300 de traductions) | 22× moins |
+| JavaScript livré | 64,4 Mo | 129 Ko | |
 | CSS livré | 8,7 Mo | 64 Ko | |
 | Base de données | serveur MySQL/MariaDB à créer | un fichier SQLite créé tout seul | |
 

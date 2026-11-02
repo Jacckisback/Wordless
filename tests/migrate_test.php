@@ -711,6 +711,14 @@ check($err['finished'] === true && str_contains((string) $err['error'], 'mot de 
 check(wl($a, 'echo json_encode(Wordless\Migrate\Importer::get("../../etc/passwd"));') === null, 'identifiant de tâche invalide refusé');
 $cancel = wl($a, '$s = Wordless\Migrate\Importer::create(["type" => "wxr", "file" => ' . var_export($FIXTURE_DIR . '/export.xml', true) . ']); Wordless\Migrate\Importer::cancel($s["id"]); echo json_encode(Wordless\Migrate\Importer::get($s["id"]), JSON_UNESCAPED_UNICODE);');
 check($cancel['finished'] === true && $cancel['cancelled'] === true, 'annulation d’une migration');
+$latest = wl($a, '$l = Wordless\Migrate\Job::latest(); echo json_encode($l ? $l->d["finished"] : null);');
+check($latest === true, 'migration annulée : plus rien à reprendre', $latest);
+// Onglet fermé juste après le lancement : la tâche est retrouvée, puis reprise jusqu'au bout.
+$resume = wl($a, '$s = Wordless\Migrate\Importer::create(["type" => "wxr", "file" => ' . var_export($FIXTURE_DIR . '/export.xml', true) . '], ["media" => false]); $l = Wordless\Migrate\Job::latest(); echo json_encode(["id" => $s["id"], "finished" => $s["finished"], "latest" => $l ? $l->d["id"] : null, "latestFinished" => $l ? $l->d["finished"] : null], JSON_UNESCAPED_UNICODE);');
+check($resume['finished'] === false && $resume['latest'] === $resume['id'] && $resume['latestFinished'] === false, 'migration interrompue : retrouvée pour être proposée à la reprise', $resume);
+$resumed = wl($a, '$id = ' . var_export((string) $resume['id'], true) . '; $n = 0; do { $s = Wordless\Migrate\Importer::step($id, 5); } while (!$s["finished"] && ++$n < 200); $l = Wordless\Migrate\Job::latest(); echo json_encode(["finished" => $s["finished"], "error" => $s["error"], "cancelled" => $s["cancelled"], "latestFinished" => $l ? $l->d["finished"] : null], JSON_UNESCAPED_UNICODE);');
+check($resumed['finished'] === true && $resumed['error'] === null && $resumed['cancelled'] === false && $resumed['latestFinished'] === true, 'reprise : la migration va au bout, plus rien à reprendre', $resumed);
+check((int) val($a, "SELECT COUNT(*) FROM content WHERE wp_id IS NOT NULL") === count(array_unique(array_column(q($a, "SELECT wp_id FROM content WHERE wp_id IS NOT NULL"), 'wp_id'))), 'reprise : aucun doublon');
 
 // ----------------------------------------------------------------------
 // 4. Fonctions de conversion

@@ -9,7 +9,7 @@ if (PHP_VERSION_ID < 80100) {
     exit('Wordless nécessite PHP 8.1 ou plus récent.');
 }
 
-const WL_VERSION = '1.0.0';
+const WL_VERSION = '1.0.1';
 /** Adresse du code source (licence AGPL-3.0, article 13 : à adapter dans une version modifiée). */
 const WL_SOURCE = 'https://github.com/Jacckisback/Wordless';
 defined('WL_ROOT') || define('WL_ROOT', dirname(__DIR__));

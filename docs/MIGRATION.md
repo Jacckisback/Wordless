@@ -64,7 +64,10 @@ Bon à savoir :
 
 La migration avance par étapes : catégories et étiquettes, auteurs, images et fichiers, pages et
 articles, commentaires, menus, finalisation. Vous suivez la progression à l’écran. Vous pouvez
-fermer l’onglet et revenir : la migration reprend là où elle s’était arrêtée.
+fermer l’onglet ou perdre la connexion : en revenant sur la page Migration, un bandeau « Une
+migration n’est pas terminée » propose de la **reprendre** là où elle s’était arrêtée, ou de
+l’abandonner. La reprise reste proposée pendant 7 jours. En ligne de commande, la migration va
+d’une traite jusqu’au bout.
 
 **Relancer une migration ne crée jamais de doublon** : les éléments déjà importés sont mis à
 jour. C’est pratique pour reprendre les derniers articles publiés sur WordPress juste avant de

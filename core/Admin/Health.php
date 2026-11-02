@@ -203,7 +203,7 @@ final class Health
         }
         $exposed = Settings::get('security.data_exposed', null);
         if ($exposed === true) {
-            $issues[] = self::issue(0, __('Le dossier data/ est accessible depuis Internet'), __('Votre serveur ignore le fichier .htaccess (Nginx ?). Ajoutez la règle indiquée dans Outils > Système, sinon votre base de données peut être téléchargée.'), admin_url('system'), __('Corriger'));
+            $issues[] = self::issue(0, __('Le dossier data/ est accessible depuis Internet'), __('Votre serveur ignore le fichier .htaccess (Nginx ?). Ajoutez les règles indiquées dans Réglages › Santé du système, sinon votre base de données peut être téléchargée.'), admin_url('system'), __('Corriger'));
         } else {
             $score += 15;
         }

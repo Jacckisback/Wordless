@@ -17,7 +17,7 @@ final class Cli
     {
         return [
             'import:wxr' => [
-                'import:wxr <fichier.xml> [--no-media] [--no-comments] [--no-users] [--no-menus] [--keep-starter]',
+                __('import:wxr <fichier.xml> [--no-media] [--no-comments] [--no-users] [--no-menus] [--keep-starter]'),
                 static fn (array $opts, array $args): int => self::run(['type' => 'wxr', 'file' => (string) ($args[0] ?? ($opts['file'] ?? ''))], $opts),
             ],
             'import:wp' => [

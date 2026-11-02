@@ -101,6 +101,24 @@
       setTimeout(function () { loop(job); }, 3000);
     });
   }
+  // Migration interrompue : reprise là où elle s'était arrêtée (l'état est conservé sur le serveur).
+  var resumeBox = document.getElementById('import-resume');
+  if (resumeBox) {
+    resumeBox.addEventListener('click', function (e) {
+      var go = e.target.closest('[data-resume]'), drop = e.target.closest('[data-discard]');
+      if (go) {
+        resumeBox.hidden = true;
+        form.querySelector('[type=submit]').disabled = true;
+        document.getElementById('import-progress').hidden = false;
+        statusEl.textContent = T('Reprise…', 'Resuming…', 'Reanudando…');
+        WL.api('api/import/step', { id: go.dataset.resume }).then(function (r) { loop(r.job); })
+          .catch(function (err) { statusEl.textContent = ''; WL.toast(err.message, 'bad'); resumeBox.hidden = false; form.querySelector('[type=submit]').disabled = false; });
+      } else if (drop) {
+        WL.api('api/import/cancel', { id: drop.dataset.discard }).then(function () { resumeBox.hidden = true; })
+          .catch(function (err) { WL.toast(err.message, 'bad'); });
+      }
+    });
+  }
   form.addEventListener('submit', function (e) {
     e.preventDefault();
     var btn = form.querySelector('[type=submit]');

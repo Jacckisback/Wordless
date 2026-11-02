@@ -9,6 +9,7 @@ use Wordless\Config;
 use Wordless\Crypto;
 use Wordless\Db;
 use Wordless\Http;
+use Wordless\HttpClient;
 use Wordless\Settings;
 use Wordless\Throttle;
 use Wordless\View;
@@ -17,6 +18,9 @@ use Wordless\View;
  * Serveur d'autorisation OAuth 2.1 du connecteur IA, sur la même origine que le site :
  * - métadonnées : ressource protégée (RFC 9728) et serveur d'autorisation (RFC 8414) ;
  * - inscription dynamique des clients (RFC 7591), comme le font Claude.ai et ChatGPT ;
+ * - clients identifiés par une adresse https (« Client ID Metadata Documents »,
+ *   spécification MCP 2025-11-25) : la fiche JSON publiée par l'application est lue,
+ *   vérifiée et gardée en cache ;
  * - autorisation par code avec PKCE S256 obligatoire et écran de consentement ;
  * - jetons d'accès (1 h) et de rafraîchissement (60 jours, rotation à chaque usage,
  *   réutilisation détectée => toute l'autorisation est révoquée) ;
@@ -29,6 +33,13 @@ final class OAuth
 
     /** Durée minimale d'affichage de l'écran de consentement avant approbation (ms). */
     private const MIN_CONSENT_MS = 1000;
+
+    /** Fiche d'un client identifié par une adresse : taille maximale (5 Ko, valeur du brouillon IETF). */
+    private const CIMD_MAX_BYTES = 5120;
+
+    /** Durée de cache d'une fiche sans en-tête de cache, et durée maximale (secondes). */
+    private const CIMD_TTL = 3600;
+    private const CIMD_MAX_TTL = 86400;
 
     private const API_PATHS = [
         '/.well-known/oauth-protected-resource', '/.well-known/oauth-protected-resource/mcp',
@@ -144,6 +155,7 @@ final class OAuth
             'revocation_endpoint_auth_methods_supported' => ['none', 'client_secret_post', 'client_secret_basic'],
             'scopes_supported' => [self::SCOPE],
             'authorization_response_iss_parameter_supported' => true,
+            'client_id_metadata_document_supported' => true,
         ];
     }
 
@@ -271,9 +283,10 @@ final class OAuth
                  AND NOT EXISTS (SELECT 1 FROM tokens t WHERE t.client_id = oauth_clients.id)", [time() - 86400]);
     }
 
+    /** Client connu du site (inscrit, ou fiche déjà lue pour un identifiant en adresse https). */
     public static function client(string $id): ?array
     {
-        if ($id === '' || strlen($id) > 128) {
+        if ($id === '' || strlen($id) > 2000) {
             return null;
         }
         $row = Db::one('SELECT * FROM oauth_clients WHERE id = ?', [$id]);
@@ -283,6 +296,150 @@ final class OAuth
         $row['redirect_uris'] = (array) json_dec((string) $row['redirect_uris'], []);
         $row['data'] = (array) json_dec((string) $row['data'], []);
         return $row;
+    }
+
+    // ------------------------------------------------------------------
+    // Clients identifiés par une adresse (Client ID Metadata Documents)
+    // ------------------------------------------------------------------
+
+    /** Vrai si l'identifiant est une adresse : les identifiants inscrits n'en contiennent jamais. */
+    public static function isMetadataUrl(string $id): bool
+    {
+        return str_contains($id, '://');
+    }
+
+    /** null si l'adresse peut servir d'identifiant de client (brouillon IETF, §3), sinon la raison. */
+    public static function clientIdUrlProblem(string $url): ?string
+    {
+        if (strlen($url) > 2000 || preg_match('/[\x00-\x20\x7f]/', $url)) {
+            return __('adresse invalide');
+        }
+        $p = parse_url($url);
+        if ($p === false || strtolower((string) ($p['scheme'] ?? '')) !== 'https' || empty($p['host'])) {
+            return __('l’adresse doit commencer par https://');
+        }
+        if (isset($p['user']) || isset($p['pass'])) {
+            return __('l’adresse ne doit pas contenir d’identifiants');
+        }
+        if (isset($p['fragment']) || str_contains($url, '#')) {
+            return __('l’adresse ne doit pas contenir de fragment (#)');
+        }
+        $path = (string) ($p['path'] ?? '');
+        if ($path === '') {
+            return __('l’adresse doit désigner un document (exemple : https://exemple.com/client.json)');
+        }
+        foreach (explode('/', $path) as $segment) {
+            if (in_array(rawurldecode($segment), ['.', '..'], true)) {
+                return __('l’adresse ne doit pas contenir de segment « . » ou « .. »');
+            }
+        }
+        return null;
+    }
+
+    /**
+     * Client identifié par une adresse https : la fiche JSON publiée à cette adresse est
+     * lue (5 Ko au plus, sans redirection, adresses internes refusées), vérifiée, puis
+     * gardée en cache selon ses en-têtes HTTP (24 h au plus). Une erreur ou une fiche
+     * invalide n'est jamais gardée.
+     * @return array{0: ?array, 1: string} [client, raison du refus]
+     */
+    private static function metadataClient(string $url): array
+    {
+        if (($problem = self::clientIdUrlProblem($url)) !== null) {
+            return [null, $problem];
+        }
+        $cached = self::client($url);
+        if ($cached && !empty($cached['data']['cimd']) && (int) ($cached['data']['expires_at'] ?? 0) > time()) {
+            return [$cached, ''];
+        }
+        $key = 'oauth:cimd:' . ip_hash();
+        if (Throttle::blocked($key) > 0 || Throttle::hit($key, 30, 3600, 3600) > 0) {
+            return [null, __('trop de tentatives, réessayez dans une heure')];
+        }
+        try {
+            $res = HttpClient::get($url, ['max_bytes' => self::CIMD_MAX_BYTES, 'timeout' => 5, 'redirects' => 0, 'headers' => ['Accept: application/json']]);
+        } catch (\Throwable $e) {
+            return [null, __('lecture impossible ({error})', ['error' => $e->getMessage()])];
+        }
+        if ($res['status'] !== 200) {
+            return [null, __('la fiche est inaccessible (code HTTP {code})', ['code' => $res['status']])];
+        }
+        $doc = json_decode($res['body'], true);
+        if (!is_array($doc) || $doc === [] || array_is_list($doc)) {
+            return [null, __('la fiche n’est pas un objet JSON valide')];
+        }
+        if (($doc['client_id'] ?? null) !== $url) {
+            return [null, __('le champ client_id de la fiche ne correspond pas à son adresse')];
+        }
+        $name = self::cleanText(is_string($doc['client_name'] ?? null) ? $doc['client_name'] : '', 100);
+        if ($name === '') {
+            return [null, __('le champ client_name est absent')];
+        }
+        $uris = $doc['redirect_uris'] ?? null;
+        if (!is_array($uris) || $uris === [] || !array_is_list($uris) || count($uris) > 20) {
+            return [null, __('le champ redirect_uris est absent ou invalide')];
+        }
+        foreach ($uris as $u) {
+            if (!is_string($u) || self::redirectUriProblem($u) !== null) {
+                return [null, __('adresse de retour non conforme : {uri}', ['uri' => is_string($u) ? substr($u, 0, 200) : '?'])];
+            }
+        }
+        if (array_key_exists('client_secret', $doc) || array_key_exists('client_secret_expires_at', $doc)) {
+            return [null, __('une fiche publique ne doit pas contenir de secret')];
+        }
+        // Pas de secret partagé possible. private_key_jwt est accepté, mais le client est traité
+        // comme un client public : PKCE et l'adresse de retour exacte protègent l'échange.
+        $method = $doc['token_endpoint_auth_method'] ?? 'none';
+        if (!in_array($method, ['none', 'private_key_jwt'], true)) {
+            return [null, __('méthode d’authentification non prise en charge : {method}', ['method' => is_string($method) ? substr($method, 0, 40) : '?'])];
+        }
+        if (isset($doc['grant_types']) && (!is_array($doc['grant_types']) || !in_array('authorization_code', $doc['grant_types'], true))) {
+            return [null, __('le champ grant_types doit contenir authorization_code')];
+        }
+        if (isset($doc['response_types']) && (!is_array($doc['response_types']) || !in_array('code', $doc['response_types'], true))) {
+            return [null, __('le champ response_types doit contenir code')];
+        }
+        $now = time();
+        $data = [
+            'cimd' => true,
+            'token_endpoint_auth_method' => 'none',
+            'grant_types' => ['authorization_code', 'refresh_token'],
+            'client_uri' => is_string($doc['client_uri'] ?? null) && preg_match('#^https://#i', $doc['client_uri']) ? substr($doc['client_uri'], 0, 300) : '',
+            'fetched_at' => $now,
+            'expires_at' => $now + self::cacheTtl($res['headers']),
+        ];
+        if (!empty($cached['data']['authorized_at'])) {
+            $data['authorized_at'] = (int) $cached['data']['authorized_at'];
+        }
+        if (!$cached) {
+            self::purgeClients();
+        }
+        Db::upsert('oauth_clients', [
+            'id' => $url,
+            'secret' => null,
+            'name' => $name,
+            'redirect_uris' => json_enc(array_values($uris)),
+            'data' => json_enc($data),
+            'created_at' => $cached ? (int) $cached['created_at'] : $now,
+        ], ['id']);
+        return [self::client($url), ''];
+    }
+
+    /** Durée de cache d'une fiche selon Cache-Control (max-age, no-store, no-cache) ou Expires. */
+    private static function cacheTtl(array $headers): int
+    {
+        $cc = strtolower((string) ($headers['cache-control'] ?? ''));
+        if (preg_match('/\b(no-store|no-cache)\b/', $cc)) {
+            return 0;
+        }
+        if (preg_match('/\bmax-age\s*=\s*"?(\d+)/', $cc, $m)) {
+            $ttl = (int) $m[1] - (int) ($headers['age'] ?? 0);
+        } elseif (($expires = strtotime((string) ($headers['expires'] ?? ''))) !== false && isset($headers['expires'])) {
+            $ttl = $expires - time();
+        } else {
+            $ttl = self::CIMD_TTL;
+        }
+        return max(0, min(self::CIMD_MAX_TTL, $ttl));
     }
 
     /**
@@ -320,7 +477,26 @@ final class OAuth
     /** @param array<string, string> $p paramètres de la requête (GET) ou du formulaire (POST) */
     private static function authorize(array $p, bool $isPost): void
     {
-        $client = self::client($p['client_id'] ?? '');
+        $clientId = $p['client_id'] ?? '';
+        if (self::isMetadataUrl($clientId)) {
+            $host = (string) parse_url($clientId, PHP_URL_HOST);
+            if (($problem = self::clientIdUrlProblem($clientId)) !== null) {
+                self::errorPage(400, __('Application non vérifiable'), __('L’identifiant de cette application n’est pas une adresse valable ({reason}). Par sécurité, la connexion est bloquée.', ['reason' => $problem]));
+                return;
+            }
+            if (!Auth::user()) {
+                // Un visiteur anonyme ne déclenche aucune requête sortante : connexion d'abord.
+                self::loginFirst($isPost);
+                return;
+            }
+            [$client, $problem] = self::metadataClient($clientId);
+            if (!$client) {
+                self::errorPage(400, __('Application non vérifiable'), __('Ce site n’a pas pu valider la fiche publiée par l’application sur {host} : {reason}. Relancez la connexion dans quelques minutes ; si le problème persiste, contactez l’éditeur de l’application.', ['host' => $host, 'reason' => $problem]));
+                return;
+            }
+        } else {
+            $client = self::client($clientId);
+        }
         if (!$client) {
             self::errorPage(400, __('Application inconnue'), __('Cette demande de connexion vient d’une application qui n’est pas (ou plus) inscrite sur ce site. Relancez la connexion depuis votre assistant IA.'));
             return;
@@ -356,14 +532,7 @@ final class OAuth
 
         $user = Auth::user();
         if (!$user) {
-            if ($isPost) {
-                self::errorPage(401, __('Session expirée'), __('Votre session a expiré. Relancez la connexion depuis votre assistant IA.'));
-                return;
-            }
-            // Même convention que l'administration : chemin depuis la racine du serveur (sous-dossier compris).
-            $back = Config::basePath() . '/oauth/authorize' . (Http::query() !== '' ? '?' . Http::query() : '');
-            self::sendHtmlHeaders();
-            header('Location: ' . admin_url('login') . '?redirect=' . rawurlencode($back), true, 302);
+            self::loginFirst($isPost);
             return;
         }
 
@@ -403,10 +572,24 @@ final class OAuth
         self::consentPage($client, $redirect, $p, $user);
     }
 
+    /** Visiteur non connecté : page de connexion de l'administration, puis retour à l'autorisation. */
+    private static function loginFirst(bool $isPost): void
+    {
+        if ($isPost) {
+            self::errorPage(401, __('Session expirée'), __('Votre session a expiré. Relancez la connexion depuis votre assistant IA.'));
+            return;
+        }
+        // Même convention que l'administration : chemin depuis la racine du serveur (sous-dossier compris).
+        $back = Config::basePath() . '/oauth/authorize' . (Http::query() !== '' ? '?' . Http::query() : '');
+        self::sendHtmlHeaders();
+        header('Location: ' . admin_url('login') . '?redirect=' . rawurlencode($back), true, 302);
+    }
+
     /** Écran de consentement ; les paramètres d'origine sont renvoyés tels quels dans le formulaire. */
     private static function consentPage(array $client, string $redirect, array $p, array $user, string $notice = ''): void
     {
         $host = (string) parse_url($redirect, PHP_URL_HOST);
+        $cimd = !empty($client['data']['cimd']);
         $fields = [];
         foreach (['response_type', 'client_id', 'redirect_uri', 'code_challenge', 'code_challenge_method', 'state', 'scope', 'resource'] as $k) {
             if (($p[$k] ?? '') !== '') {
@@ -422,6 +605,8 @@ final class OAuth
                 'name' => (string) $client['name'] !== '' ? (string) $client['name'] : $host,
                 'host' => $host,
                 'local' => self::isLoopback($host),
+                // Fiche publiée par l'application : l'hôte de son identifiant est affiché (anti-hameçonnage).
+                'publisher' => $cimd ? (string) parse_url((string) $client['id'], PHP_URL_HOST) : '',
             ],
             'permissions' => self::permissions($user),
             'fields' => $fields,
@@ -831,6 +1016,7 @@ final class OAuth
                 'id' => (string) $client['id'],
                 'name' => (string) $client['name'] !== '' ? (string) $client['name'] : $host,
                 'redirect_host' => $host,
+                'publisher' => !empty($client['data']['cimd']) ? (string) parse_url((string) $client['id'], PHP_URL_HOST) : '',
                 'connected_at' => (int) $r['since'],
                 'last_used_at' => (int) $r['last_used'] > 0 ? (int) $r['last_used'] : null,
                 'expires_at' => (int) $r['expires'],

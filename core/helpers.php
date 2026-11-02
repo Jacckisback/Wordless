@@ -239,9 +239,11 @@ function word_count(string $text): int
     return count(preg_split('/[\s\x{00A0}]+/u', trim($text), -1, PREG_SPLIT_NO_EMPTY) ?: []);
 }
 
+/** Adresse du visiteur (REMOTE_ADDR, ou l'adresse transmise par un proxy déclaré : voir core/ip.php). */
 function client_ip(): string
 {
-    return (string) ($_SERVER['REMOTE_ADDR'] ?? '0.0.0.0');
+    require_once WL_CORE . '/ip.php';
+    return wl_client_ip(wl_trusted_proxies(Config::installed() ? (array) Config::get('trusted_proxies', []) : []));
 }
 
 /** Empreinte d'IP non réversible (anti-spam, journaux) : on ne stocke jamais l'IP brute. */

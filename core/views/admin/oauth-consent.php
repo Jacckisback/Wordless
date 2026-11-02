@@ -5,7 +5,7 @@
  *
  * @var array $user                   utilisateur connecté
  * @var string $roleLabel             rôle lisible
- * @var array{name: string, host: string, local: bool} $client
+ * @var array{name: string, host: string, local: bool, publisher: string} $client  publisher : hôte de la fiche publiée par l'application (identifiant en adresse https), sinon vide
  * @var list<string> $permissions     ce que l'application pourra faire
  * @var array<string, string> $fields paramètres d'origine, renvoyés tels quels
  * @var string $notice                avertissement éventuel (approbation trop rapide)
@@ -43,8 +43,14 @@ $logo = WL_ROOT . '/admin/assets/logo.svg';
         <?= e(__('vous renverra ensuite vers {host}.', ['host' => $client['host']])) ?>
       <?php endif ?>
     </p>
+    <?php if (($client['publisher'] ?? '') !== ''): ?>
+      <p><?= e(__('Fiche d’identité publiée par : {host}', ['host' => $client['publisher']])) ?></p>
+    <?php endif ?>
     <p><?= e(__('Autorisez seulement si vous venez de lancer cette connexion vous-même, depuis cet assistant. Dans le doute, refusez.')) ?></p>
   </div>
+  <?php if (($client['publisher'] ?? '') !== '' && $client['local']): ?>
+    <div class="notice notice--warn"><p><?= e(__('Le code d’accès sera remis à un programme de votre ordinateur. N’importe quel programme peut reprendre la fiche de {host} : vérifiez que vous venez bien de lancer la connexion depuis cette application.', ['host' => $client['publisher']])) ?></p></div>
+  <?php endif ?>
 
   <?php if ($permissions): ?>
     <p><?= e(__('En votre nom, cette application pourra :')) ?></p>

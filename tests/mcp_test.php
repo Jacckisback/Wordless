@@ -7,9 +7,11 @@ declare(strict_types=1);
  *   php tests/mcp_test.php            (KEEP=1 pour conserver le dossier temporaire)
  *
  * Copie Wordless dans un dossier temporaire, l'installe, lance `php -S` sur
- * 127.0.0.1:8093 (le site) et 127.0.0.1:8094 (image de test), puis rejoue les
- * parcours de Claude.ai / ChatGPT (inscription dynamique, consentement, PKCE),
- * de Claude Code (clé API) et les cas d'erreur. Code de sortie 1 en cas d'échec.
+ * 127.0.0.1:8093 (le site) et 127.0.0.1:8094 (image de test), un petit serveur
+ * HTTPS sur 127.0.0.1:8095 (fiches de clients « Client ID Metadata Documents »),
+ * puis rejoue les parcours de Claude.ai / ChatGPT (inscription dynamique ou fiche
+ * publiée, consentement, PKCE), de Claude Code (clé API) et les cas d'erreur.
+ * Code de sortie 1 en cas d'échec.
  */
 
 if (PHP_SAPI !== 'cli') {
@@ -18,6 +20,8 @@ if (PHP_SAPI !== 'cli') {
 
 const PORT = 8093;
 const ASSET_PORT = 8094;
+const TLS_PORT = 8095;
+const CIMD_BASE = 'https://127.0.0.1:8095';
 const BASE = 'http://127.0.0.1:8093';
 const ADMIN_EMAIL = 'admin@example.test';
 const ADMIN_PASSWORD = 'Correct-horse-battery-staple-42';
@@ -29,6 +33,8 @@ final class T
     public static int $fail = 0;
     public static string $root = '';
     public static string $assets = '';
+    /** Dossier servi en HTTPS (fiches CIMD) */
+    public static string $cimd = '';
     /** @var list<resource> */
     public static array $procs = [];
     public static ?PDO $db = null;
@@ -254,6 +260,94 @@ function set_setting(string $key, mixed $value): void
     T::$db->prepare('INSERT INTO settings (key, value) VALUES (?, ?) ON CONFLICT(key) DO UPDATE SET value = excluded.value')->execute([$key, json_encode($value)]);
 }
 
+/** Certificat auto-signé pour 127.0.0.1 (serveur HTTPS de test), sans outil externe. */
+function make_tls_cert(string $dir): bool
+{
+    if (!function_exists('openssl_pkey_new')) {
+        return false;
+    }
+    mkdir($dir, 0775, true);
+    $cnf = $dir . '/openssl.cnf';
+    file_put_contents($cnf, "[req]\ndistinguished_name = dn\n[dn]\n[v3]\nsubjectAltName = IP:127.0.0.1\nbasicConstraints = critical, CA:TRUE\n"
+        . "keyUsage = critical, digitalSignature, keyEncipherment, keyCertSign\nextendedKeyUsage = serverAuth\n");
+    $opts = ['config' => $cnf, 'digest_alg' => 'sha256', 'x509_extensions' => 'v3', 'private_key_bits' => 2048, 'private_key_type' => OPENSSL_KEYTYPE_RSA];
+    $key = openssl_pkey_new($opts);
+    $csr = $key ? openssl_csr_new(['commonName' => '127.0.0.1'], $key, $opts) : false;
+    $crt = $csr ? openssl_csr_sign($csr, null, $key, 2, $opts, random_int(1, PHP_INT_MAX)) : false;
+    if (!$crt || !openssl_x509_export($crt, $pem) || !openssl_pkey_export($key, $keyPem, null, $opts)) {
+        return false;
+    }
+    file_put_contents($dir . '/ca.pem', $pem);
+    file_put_contents($dir . '/server.pem', $pem . $keyPem);
+    // Serveur HTTPS minimal : sert les fichiers du dossier, statut et en-têtes dans <fichier>.status
+    // et <fichier>.headers, et note chaque chemin demandé dans requests.log.
+    file_put_contents($dir . '/server.php', <<<'PHP'
+<?php
+[, $port, $root, $cert] = $argv;
+$ctx = stream_context_create(['ssl' => ['local_cert' => $cert, 'verify_peer' => false]]);
+$server = stream_socket_server('tls://127.0.0.1:' . $port, $errno, $errstr, STREAM_SERVER_BIND | STREAM_SERVER_LISTEN, $ctx);
+if (!$server) {
+    fwrite(STDERR, $errstr . "\n");
+    exit(1);
+}
+while (true) {
+    $conn = @stream_socket_accept($server, -1);
+    if (!$conn) {
+        continue;
+    }
+    stream_set_timeout($conn, 5);
+    $head = '';
+    while (!str_contains($head, "\r\n\r\n") && strlen($head) < 16384 && ($line = fgets($conn)) !== false) {
+        $head .= $line;
+    }
+    $path = preg_match('#^GET (\S+)#', $head, $m) ? (string) parse_url($m[1], PHP_URL_PATH) : '';
+    file_put_contents($root . '/requests.log', $path . "\n", FILE_APPEND);
+    $file = $root . '/' . basename($path);
+    $status = is_file($file . '.status') ? trim((string) file_get_contents($file . '.status')) : (is_file($file) ? '200 OK' : '404 Not Found');
+    $headers = is_file($file . '.headers') ? trim((string) file_get_contents($file . '.headers')) : 'Content-Type: text/plain';
+    $body = is_file($file) ? (string) file_get_contents($file) : 'not found';
+    @fwrite($conn, "HTTP/1.1 $status\r\n$headers\r\nContent-Length: " . strlen($body) . "\r\nConnection: close\r\n\r\n" . $body);
+    @fclose($conn);
+}
+PHP);
+    return true;
+}
+
+function start_tls_server(string $dir, array $env): void
+{
+    $log = T::$root . '-' . TLS_PORT . '.log';
+    $proc = proc_open([PHP_BINARY, $dir . '/server.php', (string) TLS_PORT, T::$cimd, $dir . '/server.pem'], [0 => ['pipe', 'r'], 1 => ['file', $log, 'a'], 2 => ['file', $log, 'a']], $pipes, $dir, $env);
+    if (!is_resource($proc)) {
+        throw new RuntimeException('Impossible de lancer le serveur HTTPS de test');
+    }
+    T::$procs[] = $proc;
+    for ($i = 0; $i < 100; $i++) {
+        $s = @fsockopen('127.0.0.1', TLS_PORT, $errno, $errstr, 0.2);
+        if ($s) {
+            fclose($s);
+            return;
+        }
+        usleep(100000);
+    }
+    throw new RuntimeException('Le serveur HTTPS de test ne répond pas');
+}
+
+/** Publie une fiche (ou une réponse quelconque) sur le serveur HTTPS de test. */
+function cimd_file(string $name, array|string $doc, string $headers = 'Content-Type: application/json', string $status = ''): void
+{
+    $file = T::$cimd . '/' . $name;
+    file_put_contents($file, is_string($doc) ? $doc : (string) json_encode($doc, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE));
+    file_put_contents($file . '.headers', $headers);
+    $status !== '' ? file_put_contents($file . '.status', $status) : @unlink($file . '.status');
+}
+
+/** @return list<string> chemins demandés au serveur HTTPS de test, dans l'ordre */
+function cimd_fetches(): array
+{
+    $log = T::$cimd . '/requests.log';
+    return is_file($log) ? array_values(array_filter(explode("\n", (string) file_get_contents($log)))) : [];
+}
+
 // ----------------------------------------------------------------------
 // Préparation
 // ----------------------------------------------------------------------
@@ -274,12 +368,14 @@ register_shutdown_function(static function (): void {
     remove_tree(T::$root);
     remove_tree(T::$assets);
     remove_tree(T::$root . '-sub');
+    remove_tree(T::$root . '-cimd');
+    remove_tree(T::$root . '-tls');
     foreach (glob(T::$root . '-*.log') ?: [] as $f) {
         @unlink($f);
     }
 });
 
-foreach ([PORT, ASSET_PORT] as $port) {
+foreach ([PORT, ASSET_PORT, TLS_PORT] as $port) {
     $s = @fsockopen('127.0.0.1', $port, $errno, $errstr, 0.2);
     if ($s) {
         fclose($s);
@@ -333,8 +429,17 @@ if ($hasGd) {
 }
 
 $env = array_merge(getenv(), ['WL_ALLOW_PRIVATE_FETCH' => '1']);
-start_server(PORT, T::$root, ['router.php'], $env);
+// Serveur HTTPS des fiches CIMD : son certificat est la seule autorité reconnue par le site de test.
+T::$cimd = T::$root . '-cimd';
+mkdir(T::$cimd, 0775, true);
+$tls = T::$root . '-tls';
+$tlsReady = make_tls_cert($tls);
+$siteArgs = $tlsReady ? ['-d', 'curl.cainfo=' . $tls . '/ca.pem', '-d', 'openssl.cafile=' . $tls . '/ca.pem', 'router.php'] : ['router.php'];
+start_server(PORT, T::$root, $siteArgs, $env);
 start_server(ASSET_PORT, T::$assets, ['-t', T::$assets], $env);
+if ($tlsReady) {
+    start_tls_server($tls, $env);
+}
 
 // ----------------------------------------------------------------------
 T::section('Métadonnées OAuth (RFC 9728, RFC 8414)');
@@ -511,6 +616,102 @@ T::check($r['status'] === 401 && ($r['json']['error'] ?? '') === 'invalid_client
 $tokens = full_oauth($claudeId, $cookie, $csrf);
 $access = (string) ($tokens['json']['access_token'] ?? '');
 T::check($tokens['status'] === 200 && $access !== '', 'nouvelle autorisation : jetons délivrés', $tokens['body']);
+
+// ----------------------------------------------------------------------
+T::section('Clients identifiés par une adresse (Client ID Metadata Documents)');
+// ----------------------------------------------------------------------
+
+$asMeta = req('GET', '/.well-known/oauth-authorization-server')['json'] ?? [];
+T::check(($asMeta['client_id_metadata_document_supported'] ?? null) === true, 'métadonnées : client_id_metadata_document_supported = true');
+if (!$tlsReady) {
+    echo "  (extension openssl indisponible : parcours de bout en bout ignoré)\n";
+} else {
+    $cimdId = CIMD_BASE . '/client.json';
+    $cimdRedirect = 'https://app.example/callback';
+    $cimdDoc = [
+        'client_id' => $cimdId, 'client_name' => 'Assistant CIMD', 'client_uri' => CIMD_BASE . '/',
+        'redirect_uris' => [$cimdRedirect, 'http://127.0.0.1/callback'], 'grant_types' => ['authorization_code', 'refresh_token'],
+        'response_types' => ['code'], 'token_endpoint_auth_method' => 'none',
+    ];
+    cimd_file('client.json', $cimdDoc, "Content-Type: application/json\r\nCache-Control: max-age=600");
+    [$cimdVerifier, $cimdChallenge] = pkce();
+    $cimdParams = authorize_params($cimdId, $cimdRedirect, $cimdChallenge);
+
+    $r = req('GET', '/oauth/authorize?' . http_build_query($cimdParams));
+    T::check($r['status'] === 302 && str_contains(hdr($r, 'Location'), '/admin/login?redirect=') && cimd_fetches() === [], 'non connecté : connexion d’abord, aucune requête sortante', [$r['status'], cimd_fetches()]);
+    $badIds = [
+        'http://127.0.0.1:8095/client.json' => 'http', CIMD_BASE . '/client.json#x' => 'fragment', CIMD_BASE . '/a/../client.json' => 'segment ..',
+        CIMD_BASE => 'sans chemin', 'https://moi:secret@127.0.0.1:8095/client.json' => 'identifiants dans l’adresse',
+    ];
+    foreach ($badIds as $badId => $why) {
+        $r = req('GET', '/oauth/authorize?' . http_build_query(['client_id' => $badId] + $cimdParams), [], null, $cookie);
+        T::check($r['status'] === 400 && hdr($r, 'Location') === '' && str_contains($r['body'], 'Application non vérifiable'), "identifiant refusé ($why) : page d’erreur, pas de redirection", $r['status']);
+    }
+    T::check(cimd_fetches() === [], 'identifiants refusés : aucune requête sortante', cimd_fetches());
+
+    $r = req('GET', '/oauth/authorize?' . http_build_query($cimdParams), [], null, $cookie);
+    T::check($r['status'] === 200 && str_contains($r['body'], 'Assistant CIMD') && str_contains($r['body'], 'value="approve"'), 'fiche lue en HTTPS : consentement au nom déclaré par l’application', substr($r['body'], 0, 500));
+    T::check(str_contains($r['body'], 'publiée par : 127.0.0.1') && str_contains($r['body'], 'app.example') && !str_contains($r['body'], 'notice--warn'), 'consentement : hôte de la fiche et hôte de retour affichés');
+    T::check(cimd_fetches() === ['/client.json'], 'fiche lue une fois', cimd_fetches());
+    $cimdRow = T::$db->query('SELECT * FROM oauth_clients WHERE id = ' . T::$db->quote($cimdId))->fetch() ?: [];
+    $cimdData = json_decode((string) ($cimdRow['data'] ?? '{}'), true);
+    T::check(array_key_exists('secret', $cimdRow) && $cimdRow['secret'] === null && !empty($cimdData['cimd']) && abs((int) ($cimdData['expires_at'] ?? 0) - (time() + 600)) <= 5, 'fiche gardée en cache selon Cache-Control: max-age=600', $cimdRow);
+
+    $r = approve($cimdParams, $cookie, $csrf);
+    $cimdCode = (string) (location_params($r)['code'] ?? '');
+    T::check($r['status'] === 302 && str_starts_with(hdr($r, 'Location'), $cimdRedirect . '?') && $cimdCode !== '' && (location_params($r)['iss'] ?? '') === BASE, 'approbation : code renvoyé à une adresse de la fiche', hdr($r, 'Location'));
+    $r = token_request(['grant_type' => 'authorization_code', 'code' => $cimdCode, 'redirect_uri' => $cimdRedirect, 'client_id' => $cimdId, 'code_verifier' => $cimdVerifier, 'resource' => BASE . '/mcp']);
+    $cimdTokens = $r['json'] ?? [];
+    T::check($r['status'] === 200 && str_starts_with((string) ($cimdTokens['access_token'] ?? ''), 'wlat_'), 'échange du code avec l’adresse comme client_id', $r['body']);
+    T::check(rpc((string) ($cimdTokens['access_token'] ?? ''), 'ping')['status'] === 200, 'le jeton d’accès fonctionne sur /mcp');
+    $r = token_request(['grant_type' => 'refresh_token', 'refresh_token' => (string) ($cimdTokens['refresh_token'] ?? ''), 'client_id' => $cimdId]);
+    $cimdAccess = (string) ($r['json']['access_token'] ?? '');
+    T::check($r['status'] === 200 && $cimdAccess !== '', 'rafraîchissement avec l’adresse comme client_id', $r['body']);
+    T::check(cimd_fetches() === ['/client.json'], 'cache utilisé : approbation et jetons sans nouvelle lecture', cimd_fetches());
+    $apps = probe('clients', (string) $adminId);
+    $cimdApp = array_values(array_filter(is_array($apps) ? $apps : [], static fn ($a) => ($a['id'] ?? '') === $cimdId))[0] ?? [];
+    T::check(($cimdApp['name'] ?? '') === 'Assistant CIMD' && ($cimdApp['publisher'] ?? '') === '127.0.0.1', 'applications connectées : nom et hôte de la fiche', $apps);
+
+    $r = req('GET', '/oauth/authorize?' . http_build_query(['redirect_uri' => 'https://attacker.example/cb'] + $cimdParams), [], null, $cookie);
+    T::check($r['status'] === 400 && hdr($r, 'Location') === '' && str_contains($r['body'], 'Adresse de retour refusée'), 'adresse de retour absente de la fiche : refusée');
+    $r = req('GET', '/oauth/authorize?' . http_build_query(['redirect_uri' => 'http://127.0.0.1:43123/callback'] + $cimdParams), [], null, $cookie);
+    T::check($r['status'] === 200 && str_contains($r['body'], 'notice--warn') && str_contains($r['body'], 'N’importe quel programme'), 'retour vers l’ordinateur (port libre, RFC 8252) : avertissement renforcé', $r['status']);
+
+    // Fiche modifiée : relue seulement quand le cache a expiré.
+    cimd_file('client.json', ['redirect_uris' => ['https://app.example/autre']] + $cimdDoc, "Content-Type: application/json\r\nCache-Control: no-store");
+    $r = req('GET', '/oauth/authorize?' . http_build_query($cimdParams), [], null, $cookie);
+    T::check($r['status'] === 200 && count(cimd_fetches()) === 1, 'cache valide : l’ancienne fiche sert encore');
+    T::$db->exec("UPDATE oauth_clients SET data = json_set(data, '$.expires_at', 0) WHERE id = " . T::$db->quote($cimdId));
+    $r = req('GET', '/oauth/authorize?' . http_build_query($cimdParams), [], null, $cookie);
+    T::check($r['status'] === 400 && str_contains($r['body'], 'Adresse de retour refusée') && count(cimd_fetches()) === 2, 'cache expiré : fiche relue, nouvelles adresses appliquées', cimd_fetches());
+    $r = req('GET', '/oauth/authorize?' . http_build_query(['redirect_uri' => 'https://app.example/autre'] + $cimdParams), [], null, $cookie);
+    T::check($r['status'] === 200 && count(cimd_fetches()) === 3, 'Cache-Control: no-store : fiche relue à chaque autorisation', cimd_fetches());
+    T::check(rpc($cimdAccess, 'ping')['status'] === 200, 'fiche modifiée : les jetons déjà délivrés restent valables');
+
+    $refused = [
+        'mismatch.json' => [['client_id' => CIMD_BASE . '/autre.json'] + $cimdDoc, '', 'client_id'],
+        'secret.json' => [['client_id' => CIMD_BASE . '/secret.json', 'token_endpoint_auth_method' => 'client_secret_basic'] + $cimdDoc, '', 'client_secret_basic'],
+        'withsecret.json' => [['client_id' => CIMD_BASE . '/withsecret.json', 'client_secret' => 'abc'] + $cimdDoc, '', 'secret'],
+        'noname.json' => [array_diff_key(['client_id' => CIMD_BASE . '/noname.json'] + $cimdDoc, ['client_name' => true]), '', 'client_name'],
+        'badredirect.json' => [['client_id' => CIMD_BASE . '/badredirect.json', 'redirect_uris' => ['http://evil.example/cb']] + $cimdDoc, '', 'evil.example'],
+        'big.json' => [['client_id' => CIMD_BASE . '/big.json', 'client_name' => str_repeat('x', 6000)] + $cimdDoc, '', 'volumineux'],
+        'redirect.json' => ['', '302 Found', 'code HTTP 302'],
+        'notjson.json' => ['ceci n’est pas du JSON', '', 'JSON'],
+        'missing.json' => [null, '', 'code HTTP 404'],
+    ];
+    foreach ($refused as $file => [$doc, $status, $expect]) {
+        if ($doc !== null) {
+            cimd_file($file, $doc, $file === 'redirect.json' ? 'Location: ' . $cimdId : 'Content-Type: application/json', $status);
+        }
+        $r = req('GET', '/oauth/authorize?' . http_build_query(['client_id' => CIMD_BASE . '/' . $file] + $cimdParams), [], null, $cookie);
+        T::check($r['status'] === 400 && hdr($r, 'Location') === '' && str_contains($r['body'], 'Application non vérifiable') && str_contains($r['body'], $expect), "fiche refusée ($file) : « $expect »", substr(strip_tags($r['body']), 0, 600));
+    }
+    $fetched = cimd_fetches();
+    T::check(count($fetched) === 3 + count($refused) && end($fetched) === '/missing.json' && !in_array('/client.json', array_slice($fetched, 3), true), 'redirection jamais suivie (une lecture par fiche)', $fetched);
+    T::check((int) T::$db->query("SELECT COUNT(*) FROM oauth_clients WHERE id LIKE 'https://%'")->fetchColumn() === 1, 'fiches refusées jamais gardées en cache');
+    $r = token_request(['grant_type' => 'authorization_code', 'code' => 'x', 'client_id' => CIMD_BASE . '/jamais.json', 'code_verifier' => $cimdVerifier]);
+    T::check($r['status'] === 401 && ($r['json']['error'] ?? '') === 'invalid_client' && !in_array('/jamais.json', cimd_fetches(), true), 'point d’accès token : adresse jamais autorisée = invalid_client, sans requête sortante', $r['body']);
+}
 
 // ----------------------------------------------------------------------
 T::section('Protocole MCP');

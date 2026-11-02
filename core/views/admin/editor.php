@@ -77,6 +77,18 @@ $back = admin_url('content?type=' . $c['type']);
   <div class="dialog-body"><div class="preset-grid" id="ed-template-list"></div></div>
 </dialog>
 <div class="toasts" aria-live="polite"></div>
+<dialog id="cmdk" aria-label="<?= e(__('Recherche rapide')) ?>">
+  <input class="cmdk-input" type="search" placeholder="<?= e(__('Aller à une page, chercher un contenu…')) ?>" aria-label="<?= e(__('Recherche')) ?>" autocomplete="off">
+  <ul class="cmdk-list" role="listbox"></ul>
+</dialog>
+<nav data-cmdk-pages hidden>
+  <a href="<?= e(admin_url()) ?>"><?= e(__('Tableau de bord')) ?></a>
+<?php foreach ([['content?type=page', __('Pages'), 'edit_content'], ['content?type=post', __('Articles'), 'edit_content'], ['media', __('Médias'), 'upload'],
+    ['menus', __('Menus'), 'manage_menus'], ['seo', __('SEO & GEO'), 'manage_seo'], ['design', __('Design & DA IA'), 'manage_design'], ['settings', __('Réglages'), 'manage_settings']] as [$path, $label, $cap]): ?>
+<?php if (\Wordless\Auth::can($cap)): ?>  <a href="<?= e(admin_url($path)) ?>"><?= e($label) ?></a>
+<?php endif ?>
+<?php endforeach ?>
+</nav>
 <script src="<?= e(asset_url('admin/assets/admin.js')) ?>" defer></script>
 <script src="<?= e(asset_url('admin/assets/media.js')) ?>" defer></script>
 <script src="<?= e(asset_url('admin/assets/editor.js')) ?>" defer></script>

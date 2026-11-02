@@ -98,7 +98,8 @@ final class Auth
         if ($wait > 0) {
             return ['ok' => false, 'error' => __('Trop de tentatives. Réessayez dans {n} minute(s).', ['n' => (int) ceil($wait / 60)])];
         }
-        $user = Db::one('SELECT * FROM users WHERE email = ? OR slug = ?', [$email, $email]);
+        // Connexion par e-mail uniquement : l'identifiant public d'auteur (/author/<slug>/) n'ouvre pas de session.
+        $user = $email !== '' ? Db::one('SELECT * FROM users WHERE email = ?', [$email]) : null;
         $hash = $user['password'] ?? '';
         // Vérification à temps constant même si l'utilisateur n'existe pas (empreinte aléatoire,
         // jamais vérifiable) ; un compte sans mot de passe (ex. importé) ne peut pas se connecter.
